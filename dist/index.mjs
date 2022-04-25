@@ -414,7 +414,7 @@ var _Element = class {
       enterEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       exitEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       stayEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
-      isBackground: (v) => !util_default.isUndefined(v) && util_default.booleanParse(v),
+      isBackground: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       children: (datas) => util_default.isArray(datas) ? datas.map((data) => _Element.isInstance(data) ? data : ElementFactory_default.createElement(data)) : []
     }, {
       type: (v) => util_default.isString(v),
@@ -763,8 +763,8 @@ var _Image = class extends Element_default {
     util_default.optionsInject(this, options, {
       mode: (v) => util_default.defaultTo(v, ImageModes_default.ScaleToFill),
       crop: (v) => v && new Crop(v),
-      loop: (v) => !util_default.isUndefined(v) && util_default.booleanParse(v),
-      dynamic: (v) => !util_default.isUndefined(v) && util_default.booleanParse(v)
+      loop: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
+      dynamic: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0
     }, {
       src: (v) => util_default.isString(v),
       path: (v) => util_default.isUndefined(v) || util_default.isString(v),
@@ -1740,6 +1740,7 @@ var _Template = class {
         poster,
         width: global.videoWidth,
         height: global.videoHeight,
+        aspectRatio: global.videoSize,
         duration: duration * 1e3,
         backgroundColor: sceneBackgroundColor,
         transition,

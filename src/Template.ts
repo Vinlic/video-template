@@ -637,6 +637,7 @@ class Template {
         poster: poster,
         width: global.videoWidth,
         height: global.videoHeight,
+        aspectRatio: global.videoSize,
         duration: duration * 1000,
         backgroundColor: sceneBackgroundColor,
         transition,

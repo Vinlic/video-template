@@ -87,7 +87,7 @@ class Element {
         enterEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
         exitEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
         stayEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
-        isBackground: (v: any) => !util.isUndefined(v) && util.booleanParse(v),
+        isBackground: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
         children: (datas: IElementOptions[]) =>
           util.isArray(datas)
             ? datas.map((data) => (Element.isInstance(data) ? data : ElementFactory.createElement(data)))

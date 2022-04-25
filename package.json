@@ -1,6 +1,6 @@
 {
   "name": "video-template",
-  "version": "1.0.77",
+  "version": "1.0.79",
   "description": "Template model describing video structure",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -9,7 +9,8 @@
     "dist": "dist"
   },
   "scripts": {
-    "test": "node test/compile.js",
+    "test_parse": "node test/parse.js",
+    "test_compile": "node test/compile.js",
     "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "release": "npm run build && npm publish"
   },

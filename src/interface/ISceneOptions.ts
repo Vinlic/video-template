@@ -10,6 +10,7 @@ interface ISceneOptions {
   poster?: string;
   width?: number | string;
   height?: number | string;
+  aspectRatio?: string;
   duration?: number | string;
   backgroundColor?: string;
   transition?: ITransitionOptions;

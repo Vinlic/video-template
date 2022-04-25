@@ -59,8 +59,8 @@ class Image extends Element {
       {
         mode: (v: any) => util.defaultTo(v, ImageModes.ScaleToFill),
         crop: (v: any) => v && new Crop(v),
-        loop: (v: any) => !util.isUndefined(v) && util.booleanParse(v),
-        dynamic: (v: any) => !util.isUndefined(v) && util.booleanParse(v),
+        loop: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
+        dynamic: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
       },
       {
         src: (v: any) => util.isString(v),
