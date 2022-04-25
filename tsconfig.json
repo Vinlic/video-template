@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "baseUrl": "./",
+      "target": "es6",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "useDefineForClassFields": true,
+      "removeComments": true,
+      "isolatedModules": true,
+      "strict": true,
+      "sourceMap": true,
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "allowJs": false,
+      "checkJs": false,
+      "outDir": "./dist",
+      "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    },
+    "exclude": ["node_modules", "dist"]
+  }
+  

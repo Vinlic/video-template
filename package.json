@@ -1,0 +1,22 @@
+{
+  "name": "video-template-ts",
+  "version": "1.0.0",
+  "description": "Template model describing video structure",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "release": "tsc && npm publish"
+  },
+  "author": "Vinlic",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/uuid": "^8.3.4",
+    "fast-xml-parser": "^4.0.7",
+    "goodid.js": "^1.0.8",
+    "lodash": "^4.17.21",
+    "typescript": "^4.6.3",
+    "xmlbuilder": "^15.1.1"
+  }
+}
