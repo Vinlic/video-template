@@ -142,6 +142,7 @@ class Scene {
           poster: this.poster,
           width: this.width,
           height: this.height,
+          aspectRatio: this.aspectRatio,
           duration: this.duration,
           backgroundColor: this.backgroundColor,
         })

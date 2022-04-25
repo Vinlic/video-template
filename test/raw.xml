@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<data>
+    <base>/files/</base>
+    <name>Test Video</name>
+    <mode>scene</mode>
+    <width>1080</width>
+    <height>1920</height>
+    <aspectRatio>9:16</aspectRatio>
+    <fps>60</fps>
+    <date>2022-03-02</date>
+    <text>Hello World</text>
+</data>
+<vars>
+
+</vars>
+<template name="{{name}}" mode="{{mode}}" poster="{{base}}cover.png" width="{{width}}" height="{{height}}" aspectRatio="{{aspectRatio}}" fps="{{fps}}" compile>
+    <audio src="{{base}}audios/bgm.mp3" volume="0.2" loop="true"/>
+    <scene width="{{width}}" height="{{height}}" aspectRatio="{{aspectRatio}}" duration="5000" transition-type="wipeLeft" transition-duration="300" for="{{[1,2,3]}}">
+        <video x="0" y="0" width="{{width}}" height="{{height}}" src="{{base}}videos/pt.mp4" volume="1" loop="false" muted="false" isBackground="true"/>
+        <image x="{{270 + index * 5}}" y="220" width="70" height="60" zIndex="2" src="{{base}}images/left_jt.png"/>
+        <image x="740" y="220" width="70" height="60" zIndex="2" src="{{base}}images/left_jt.png" if="{{index != 2}}"/>
+        <image x="740" y="220" width="70" height="60" zIndex="2" src="{{base}}images/right_jt.png" else/>
+        <text x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000">Test {{item}}</text>
+        <text x="0" y="1640" width="1080" height="32" textAlign="center" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="32" fontWeight="400" fontColor="#FFFFFF">{{date}}</text>
+        <voice startTime="500" volume="100" loop="false" playbackRate="1" muted="false" provider="microsoft" text="{{text}}" declaimer="xiaoxiao" speechRate="0"/>
+    </scene>
+</template>

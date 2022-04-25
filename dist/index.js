@@ -411,6 +411,7 @@ var _Element = class {
     __publicField(this, "enterEffect");
     __publicField(this, "exitEffect");
     __publicField(this, "stayEffect");
+    __publicField(this, "isBackground");
     __publicField(this, "backgroundColor");
     __publicField(this, "startTime");
     __publicField(this, "endTime");
@@ -436,6 +437,7 @@ var _Element = class {
       enterEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       exitEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       stayEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
+      isBackground: (v) => !util_default.isUndefined(v) && util_default.booleanParse(v),
       children: (datas) => util_default.isArray(datas) ? datas.map((data) => _Element.isInstance(data) ? data : ElementFactory_default.createElement(data)) : []
     }, {
       type: (v) => util_default.isString(v),
@@ -453,6 +455,7 @@ var _Element = class {
       enterEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       exitEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       stayEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
+      isBackground: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       startTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       endTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
@@ -484,6 +487,7 @@ var _Element = class {
       "stayEffect-type": (_p = (_o = this.stayEffect) == null ? void 0 : _o.type) != null ? _p : void 0,
       "stayEffect-duration": (_r = (_q = this.stayEffect) == null ? void 0 : _q.duration) != null ? _r : void 0,
       "stayEffect-path": (_u = (_t = (_s = this.stayEffect) == null ? void 0 : _s.path) == null ? void 0 : _t.join(",")) != null ? _u : void 0,
+      isBackground: this.isBackground,
       backgroundColor: this.backgroundColor,
       startTime: this.startTime,
       endTime: this.endTime
@@ -782,8 +786,8 @@ var _Image = class extends Element_default {
     util_default.optionsInject(this, options, {
       mode: (v) => util_default.defaultTo(v, ImageModes_default.ScaleToFill),
       crop: (v) => v && new Crop(v),
-      loop: (v) => v && util_default.booleanParse(v),
-      dynamic: (v) => v && util_default.booleanParse(v)
+      loop: (v) => !util_default.isUndefined(v) && util_default.booleanParse(v),
+      dynamic: (v) => !util_default.isUndefined(v) && util_default.booleanParse(v)
     }, {
       src: (v) => util_default.isString(v),
       path: (v) => util_default.isUndefined(v) || util_default.isString(v),
@@ -1096,6 +1100,7 @@ var _Scene = class {
     __publicField(this, "poster");
     __publicField(this, "width", 0);
     __publicField(this, "height", 0);
+    __publicField(this, "aspectRatio", "");
     __publicField(this, "duration", 0);
     __publicField(this, "backgroundColor");
     __publicField(this, "transition");
@@ -1118,6 +1123,7 @@ var _Scene = class {
       poster: (v) => util_default.isUndefined(v) || util_default.isString(v),
       width: (v) => util_default.isFinite(v),
       height: (v) => util_default.isFinite(v),
+      aspectRatio: (v) => util_default.isString(v),
       duration: (v) => util_default.isFinite(v),
       backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       transition: (v) => util_default.isUndefined(v) || Transition.isInstance(v),
@@ -1145,6 +1151,7 @@ var _Scene = class {
       poster: this.poster,
       width: this.width,
       height: this.height,
+      aspectRatio: this.aspectRatio,
       duration: this.duration,
       backgroundColor: this.backgroundColor
     }) : __privateMethod(this, _createXMLRoot, createXMLRoot_fn).call(this);
@@ -1211,6 +1218,7 @@ createXMLRoot_fn = function(tagName = "scene", headless = true) {
   scene.att("poster", this.poster);
   scene.att("width", this.width);
   scene.att("height", this.height);
+  scene.att("aspectRatio", this.aspectRatio);
   scene.att("duration", this.duration);
   scene.att("backgroundColor", this.backgroundColor);
   return scene;
@@ -1331,6 +1339,12 @@ var _Template = class {
     if (!Scene_default.isInstance(node) && !Element_default.isInstance(node))
       throw new TypeError("node must be an Scene instance or Element instance");
     (_a = this.children) == null ? void 0 : _a.push(node);
+  }
+  toBASE64() {
+    return Buffer.from(this.toXML()).toString("base64");
+  }
+  toOldBASE64() {
+    return Buffer.from(this.toOldXML()).toString("base64");
   }
   toXML(pretty = false) {
     var _a;
@@ -1553,6 +1567,7 @@ var _Template = class {
             y: 0,
             width: global.videoWidth,
             height: global.videoHeight,
+            isBackground: true,
             src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : void 0
           })));
           break;
@@ -1580,6 +1595,7 @@ var _Template = class {
             volume: tag.volume,
             muted: tag.muted,
             loop: tag.loop,
+            isBackground: true,
             seekStart: tag.seekStart ? tag.seekStart * 1e3 : void 0,
             seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0
           })));
@@ -1602,6 +1618,7 @@ var _Template = class {
               y: 0,
               width: global.videoWidth,
               height: global.videoHeight,
+              isBackground: true,
               src: resourceMap[data2.resId] ? resourceMap[data2.resId].resPath : void 0
             })));
             break;
@@ -1617,6 +1634,7 @@ var _Template = class {
               volume: data2.volume,
               muted: data2.muted,
               loop: data2.loop,
+              isBackground: true,
               seekStart: data2.seekStart ? data2.seekStart * 1e3 : void 0,
               seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0
             })));

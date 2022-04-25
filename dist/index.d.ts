@@ -42,6 +42,7 @@ declare class Element {
     enterEffect?: Effect;
     exitEffect?: Effect;
     stayEffect?: Effect;
+    isBackground?: boolean;
     backgroundColor?: string;
     startTime?: number;
     endTime?: number;
@@ -74,6 +75,7 @@ interface IElementOptions {
     enterEffect?: IEffectOptions;
     exitEffect?: IEffectOptions;
     stayEffect?: IEffectOptions;
+    isBackground?: boolean | string;
     backgroundColor?: string;
     startTime?: number | string;
     endTime?: number | string;
@@ -376,6 +378,7 @@ declare class Scene {
     poster?: string;
     width: number;
     height: number;
+    aspectRatio: string;
     duration: number;
     backgroundColor?: string;
     transition?: Transition;
@@ -455,6 +458,8 @@ declare class Template {
     constructor(options: ITemplateOptions, data?: {}, vars?: {});
     scenesSplice(start: number, end: number): void;
     appendChild(node: Scene | Element): void;
+    toBASE64(): string;
+    toOldBASE64(): string;
     toXML(pretty?: boolean): string;
     toOldXML(pretty?: boolean): string;
     static isId(value: any): boolean;

@@ -1,1 +1,0 @@
-const { Template } = require("../dist");

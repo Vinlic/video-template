@@ -73,10 +73,10 @@ class Template {
         children: (datas: any) =>
           util.isArray(datas)
             ? datas.map((data) => {
-                if (Scene.isInstance(data) || Element.isInstance(data)) return data; //如果是已实例化对象则直接使用
-                if (data.type === 'scene') return new Scene(data); //场景对象实例化
-                else return ElementFactory.createElement(data); //元素对象实例化
-              })
+              if (Scene.isInstance(data) || Element.isInstance(data)) return data; //如果是已实例化对象则直接使用
+              if (data.type === 'scene') return new Scene(data); //场景对象实例化
+              else return ElementFactory.createElement(data); //元素对象实例化
+            })
             : [], //实例化模板子节点
       },
       {
@@ -129,6 +129,14 @@ class Template {
     if (!Scene.isInstance(node) && !Element.isInstance(node))
       throw new TypeError('node must be an Scene instance or Element instance');
     this.children?.push(node);
+  }
+
+  toBASE64() {
+    return Buffer.from(this.toXML()).toString("base64");
+  }
+
+  toOldBASE64() {
+    return Buffer.from(this.toOldXML()).toString("base64");
   }
 
   /**
@@ -370,15 +378,15 @@ class Template {
         zIndex: obj.index,
         enterEffect: obj.animationIn
           ? {
-              type: obj.animationIn,
-              duration: obj.animationInDuration * 1000,
-            }
+            type: obj.animationIn,
+            duration: obj.animationInDuration * 1000,
+          }
           : undefined,
         exitEffect: obj.animationOut
           ? {
-              type: obj.animationOut,
-              duration: obj.animationOutDuration * 1000,
-            }
+            type: obj.animationOut,
+            duration: obj.animationOutDuration * 1000,
+          }
           : undefined,
         backgroundColor: obj.fillColor,
         startTime: obj.inPoint ? obj.inPoint * 1000 : undefined,
@@ -400,6 +408,7 @@ class Template {
               y: 0,
               width: global.videoWidth,
               height: global.videoHeight,
+              isBackground: true,
               src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : undefined,
             }),
           );
@@ -433,6 +442,7 @@ class Template {
               volume: tag.volume,
               muted: tag.muted,
               loop: tag.loop,
+              isBackground: true,
               seekStart: tag.seekStart ? tag.seekStart * 1000 : undefined,
               seekEnd: tag.seekEnd ? tag.seekEnd * 1000 : undefined,
             }),
@@ -458,6 +468,7 @@ class Template {
                 y: 0,
                 width: global.videoWidth,
                 height: global.videoHeight,
+                isBackground: true,
                 src: resourceMap[data.resId] ? resourceMap[data.resId].resPath : undefined,
               }),
             );
@@ -476,6 +487,7 @@ class Template {
                 volume: data.volume,
                 muted: data.muted,
                 loop: data.loop,
+                isBackground: true,
                 seekStart: data.seekStart ? data.seekStart * 1000 : undefined,
                 seekEnd: data.seekEnd ? data.seekEnd * 1000 : undefined,
               }),
@@ -518,12 +530,12 @@ class Template {
                     ...buildBaseData(tag),
                     crop: tag.cropStyle
                       ? {
-                          style: tag.cropStyle === 'circle' ? 'circle' : 'rect',
-                          x: tag.cropX,
-                          y: tag.cropY,
-                          width: tag.cropWidth,
-                          height: tag.cropHeight,
-                        }
+                        style: tag.cropStyle === 'circle' ? 'circle' : 'rect',
+                        x: tag.cropX,
+                        y: tag.cropY,
+                        width: tag.cropWidth,
+                        height: tag.cropHeight,
+                      }
                       : undefined,
                     src: resPath,
                     loop: tag.loop,
@@ -586,10 +598,10 @@ class Template {
                   provider: voice.provider,
                   children: voice.children[0]
                     ? [
-                        new SSML({
-                          value: voice.children[0]?.children[0],
-                        }),
-                      ]
+                      new SSML({
+                        value: voice.children[0]?.children[0],
+                      }),
+                    ]
                     : [],
                   text: voice.text,
                   declaimer: voice.voice,
