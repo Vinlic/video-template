@@ -39,6 +39,8 @@ class Effect {
 }
 
 class Element {
+  public static Type = ElementTypes;
+
   public type: ElementTypes = ElementTypes.Element; //元素类型
   public id = ''; //元素ID
   public name?: string; //元素名称
@@ -54,6 +56,7 @@ class Element {
   public enterEffect?: Effect; //元素入场动效
   public exitEffect?: Effect; //元素退场动效
   public stayEffect?: Effect; //元素驻留动效
+  public isBackground?: boolean;  //元素是否为背景
   public backgroundColor?: string; //元素背景颜色
   public startTime?: number; //元素入场时间点
   public endTime?: number; //元素退场时间点
@@ -84,6 +87,7 @@ class Element {
         enterEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
         exitEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
         stayEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
+        isBackground: (v: any) => !util.isUndefined(v) && util.booleanParse(v),
         children: (datas: IElementOptions[]) =>
           util.isArray(datas)
             ? datas.map((data) => (Element.isInstance(data) ? data : ElementFactory.createElement(data)))

@@ -62,6 +62,7 @@ class Scene {
   public poster?: string; // 场景封面图
   public width = 0; // 场景宽度
   public height = 0; // 场景高度
+  public aspectRatio = '';  //场景比例
   public duration = 0; // 场景总时长
   public backgroundColor?: string; // 场景背景颜色
   public transition?: Transition; // 场景转场效果
@@ -92,6 +93,7 @@ class Scene {
         poster: (v: any) => util.isUndefined(v) || util.isString(v),
         width: (v: any) => util.isFinite(v),
         height: (v: any) => util.isFinite(v),
+        aspectRatio: (v: any) => util.isString(v),
         duration: (v: any) => util.isFinite(v),
         backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
         transition: (v: any) => util.isUndefined(v) || Transition.isInstance(v),
@@ -183,6 +185,7 @@ class Scene {
     scene.att('poster', this.poster);
     scene.att('width', this.width);
     scene.att('height', this.height);
+    scene.att('aspectRatio', this.aspectRatio);
     scene.att('duration', this.duration);
     scene.att('backgroundColor', this.backgroundColor);
     return scene;

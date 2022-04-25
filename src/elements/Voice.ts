@@ -7,6 +7,8 @@ import Media from './Media';
 import util from '../util';
 
 class Voice extends Media {
+  public static Provider = VoiceProviders;
+
   public provider = ''; // 文本转语音提供商名称
   public text?: string; // 语音文本
   public declaimer?: string; // 语音发音人

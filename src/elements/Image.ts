@@ -41,6 +41,8 @@ class Crop {
 }
 
 class Image extends Element {
+  public static Mode = ImageModes;
+
   public src = ''; //图像来源
   public path?: string; //图像本地路径
   public mode: ImageModes = ImageModes.ScaleToFill; //图像显示模式
@@ -57,8 +59,8 @@ class Image extends Element {
       {
         mode: (v: any) => util.defaultTo(v, ImageModes.ScaleToFill),
         crop: (v: any) => v && new Crop(v),
-        loop: (v: any) => v && util.booleanParse(v),
-        dynamic: (v: any) => v && util.booleanParse(v),
+        loop: (v: any) => !util.isUndefined(v) && util.booleanParse(v),
+        dynamic: (v: any) => !util.isUndefined(v) && util.booleanParse(v),
       },
       {
         src: (v: any) => util.isString(v),

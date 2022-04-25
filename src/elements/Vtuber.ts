@@ -1,11 +1,14 @@
 import IVtuberOptions from './interface/IVtuberOptions';
 
 import ElementTypes from '../enums/ElementTypes';
+import VtuberProviders from '../enums/VtuberProviders';
 
 import Media from './Media';
 import util from '../util';
 
 class Vtuber extends Media {
+  public static Provider = VtuberProviders;
+
   public provider = ''; //虚拟人服务提供商
   public text = ''; //虚拟人阅读文本
   public solution = ''; //虚拟人形象

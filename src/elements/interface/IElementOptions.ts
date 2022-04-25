@@ -19,6 +19,7 @@ interface IElementOptions {
   enterEffect?: IEffectOptions;
   exitEffect?: IEffectOptions;
   stayEffect?: IEffectOptions;
+  isBackground?: boolean | string;
   backgroundColor?: string;
   startTime?: number | string;
   endTime?: number | string;

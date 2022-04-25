@@ -1,12 +1,32 @@
 {
-  "name": "video-template-ts",
-  "version": "1.0.0",
+  "name": "video-template",
+  "version": "1.0.76",
   "description": "Template model describing video structure",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "directories": {
+    "dist": "dist"
+  },
   "scripts": {
-    "build": "tsc",
-    "release": "tsc && npm publish"
+    "test": "node test/test.js",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "release": "npm run build && npm publish"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "keywords": [
+    "video",
+    "template"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vinlic/video-template"
   },
   "author": "Vinlic",
   "license": "ISC",
@@ -17,6 +37,10 @@
     "goodid.js": "^1.0.8",
     "lodash": "^4.17.21",
     "typescript": "^4.6.3",
+    "uuid": "^8.3.2",
     "xmlbuilder": "^15.1.1"
+  },
+  "engines": {
+    "node": ">=14.15.4"
   }
 }

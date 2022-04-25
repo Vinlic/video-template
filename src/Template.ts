@@ -5,8 +5,6 @@ import ITemplateOptions from './interface/ITemplateOptions';
 import ISceneOptions from './interface/ISceneOptions';
 import IElementOptions from './elements/interface/IElementOptions';
 
-import ElementTypes from './enums/ElementTypes';
-
 import util from './util';
 import Compiler from './compiler';
 import Scene from './Scene';
