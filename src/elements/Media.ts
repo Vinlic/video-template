@@ -20,7 +20,7 @@ class Media extends Element {
     public filter?: IFilterOptions; //媒体滤镜
     public muted = false; //媒体是否静音
 
-    public constructor(options: IMediaOptions, type: ElementTypes) {
+    public constructor(options: IMediaOptions, type: ElementTypes = ElementTypes.Media) {
         super(options, type);
         util.optionsInject(
             this,
@@ -104,17 +104,20 @@ class Media extends Element {
     }
 
     public toOptions() {
-        const baseOptions = super.toOptions();
+        const parentOptions = super.toOptions();
         return {
-            ...baseOptions,
+            ...parentOptions,
             src: this.src,
             poster: this.poster,
+            format: this.format,
             duration: this.duration ? util.millisecondsToSenconds(this.duration) : undefined,
             volume: this.volume,
             loop: this.loop,
             seekStart: this.seekStart,
             seekEnd: this.seekEnd,
-            muted: this.muted
+            playbackRate: this.playbackRate,
+            muted: this.muted,
+            filter: this.filter
         };
     }
 

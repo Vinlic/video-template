@@ -332,6 +332,7 @@ var ElementTypes = /* @__PURE__ */ ((ElementTypes2) => {
   ElementTypes2["Voice"] = "voice";
   ElementTypes2["Video"] = "video";
   ElementTypes2["Vtuber"] = "vtuber";
+  ElementTypes2["Canvas"] = "canvas";
   ElementTypes2["Chart"] = "chart";
   ElementTypes2["Media"] = "media";
   ElementTypes2["SSML"] = "ssml";
@@ -368,6 +369,14 @@ var Effect = class {
       duration: (v) => util_default.isFinite(v),
       path: (v) => util_default.isUndefined(v) || util_default.isArray(v)
     });
+  }
+  toOptions(startTime = 0) {
+    return {
+      name: this.type,
+      delay: startTime,
+      duration: util_default.millisecondsToSenconds(this.duration),
+      path: this.path
+    };
   }
   static isInstance(value) {
     return value instanceof Effect;
@@ -526,6 +535,29 @@ var _Element = class {
     (_g = this.children) == null ? void 0 : _g.forEach((node) => _Element.isInstance(node) && node.renderOldXML(element, resources, global));
     return element;
   }
+  toOptions() {
+    return {
+      elementType: this.type,
+      id: this.id,
+      type: {
+        image: "img",
+        video: "video",
+        audio: "sound",
+        voice: "voice"
+      }[this.type],
+      name: this.name,
+      left: this.x,
+      top: this.y,
+      width: this.width,
+      height: this.height,
+      rotate: this.rotate,
+      opacity: this.opacity,
+      index: this.zIndex || 0,
+      animationIn: this.enterEffect ? this.enterEffect.toOptions(this.startTime) : void 0,
+      animationOut: this.exitEffect ? this.exitEffect.toOptions(this.endTime) : void 0,
+      fillColor: this.backgroundColor
+    };
+  }
   static isId(value) {
     return util_default.isString(value) && /^[a-zA-Z0-9]{16}$/.test(value);
   }
@@ -563,7 +595,7 @@ var Media = class extends Element_default {
   playbackRate;
   filter;
   muted = false;
-  constructor(options, type) {
+  constructor(options, type = ElementTypes_default.Media) {
     super(options, type);
     util_default.optionsInject(this, options, {
       loop: (v) => util_default.booleanParse(util_default.defaultTo(v, false)),
@@ -634,6 +666,22 @@ var Media = class extends Element_default {
     });
     return media;
   }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      src: this.src,
+      poster: this.poster,
+      format: this.format,
+      duration: this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0,
+      volume: this.volume,
+      loop: this.loop,
+      seekStart: this.seekStart,
+      seekEnd: this.seekEnd,
+      playbackRate: this.playbackRate,
+      muted: this.muted,
+      filter: this.filter
+    });
+  }
   static isInstance(value) {
     return value instanceof Media;
   }
@@ -703,7 +751,7 @@ var Text = class extends Element_default {
     caption.att("fontWeight", this.fontWeight);
     caption.att("fontStyle", this.fontStyle);
     caption.att("fontColor", this.fontColor);
-    caption.att("lineHeight", this.lineHeight * this.fontSize);
+    caption.att("lineHeight", (this.lineHeight || 1) * this.fontSize);
     caption.att("wordSpacing", this.wordSpacing);
     caption.att("textAlign", this.textAlign);
     caption.att("lineWrap", this.lineWrap);
@@ -712,6 +760,23 @@ var Text = class extends Element_default {
     caption.att("effectWordInterval", this.effectWordInterval);
     const text = caption.ele("text");
     text.txt(this.value);
+  }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      content: this.value,
+      fontSize: this.fontSize,
+      fontColor: this.fontColor,
+      textAlign: this.textAlign,
+      fontFamily: this.fontFamily,
+      lineHeight: (this.lineHeight || 1) * this.fontSize,
+      wordSpacing: this.wordSpacing,
+      bold: this.fontWeight ? this.fontWeight > 400 : void 0,
+      italic: this.fontStyle === "italic",
+      effectType: this.effectType,
+      effectWordDuration: util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0,
+      effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0
+    });
   }
   static isInstance(value) {
     return value instanceof Text;
@@ -752,6 +817,17 @@ var Crop = class {
       clipType: (v) => util_default.isUndefined(v) || util_default.isString(v),
       clipStyle: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
+  }
+  toOptions() {
+    return {
+      style: this.style,
+      width: this.width,
+      height: this.height,
+      left: this.x,
+      right: this.y,
+      clipStyle: this.clipStyle,
+      clipType: this.clipType
+    };
   }
   static isInstance(value) {
     return value instanceof Crop;
@@ -824,6 +900,16 @@ var _Image = class extends Element_default {
     });
     return image;
   }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      src: this.src,
+      mode: this.mode,
+      crop: this.crop ? this.crop.toOptions() : void 0,
+      loop: this.loop,
+      dynamic: this.dynamic
+    });
+  }
   static isInstance(value) {
     return value instanceof _Image;
   }
@@ -857,6 +943,13 @@ var Audio = class extends Media_default {
     const audio = super.renderOldXML(parent, resources, global);
     util_default.isNumber(this.fadeInDuration) && audio.att("fadeIn", this.fadeInDuration / 1e3);
     util_default.isNumber(this.fadeOutDuration) && audio.att("fadeOut", this.fadeOutDuration / 1e3);
+  }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      fadeIn: this.fadeInDuration,
+      fadeOut: this.fadeOutDuration
+    });
   }
   static isInstance(value) {
     return value instanceof Audio;
@@ -920,6 +1013,19 @@ var _Voice = class extends Media_default {
     voice.att("speechRate", this.speechRate);
     voice.att("pitchRate", this.pitchRate);
   }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      provider: this.provider,
+      voice: this.declaimer,
+      sampleRate: this.sampleRate,
+      playbackRate: this.speechRate,
+      speechRate: this.speechRate,
+      pitchRate: this.pitchRate,
+      enableSubtitle: this.enableSubtitle,
+      ssml: this.ssml
+    });
+  }
   get ssml() {
     var _a, _b;
     return ((_a = this.children) == null ? void 0 : _a.length) ? (_b = this.children[0].value) == null ? void 0 : _b.trim() : null;
@@ -970,16 +1076,25 @@ var _Vtuber = class extends Media_default {
   renderXML(parent) {
     const vtuber = super.renderXML(parent);
     vtuber.att("provider", this.provider);
-    vtuber.att("text", this.text);
+    vtuber.att("text", this.value || this.text);
     vtuber.att("solution", this.solution);
     vtuber.att("declaimer", this.declaimer);
   }
   renderOldXML(parent, resources, global) {
     const vtuber = super.renderOldXML(parent, resources, global);
     vtuber.att("provider", this.provider);
-    vtuber.att("text", this.text);
+    vtuber.att("text", this.value || this.text);
     vtuber.att("solution", this.solution);
     vtuber.att("declaimer", this.declaimer);
+  }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      provider: this.provider,
+      text: this.value || this.text,
+      declaimer: this.declaimer,
+      solution: this.solution
+    });
   }
   static isInstance(value) {
     return value instanceof _Vtuber;
@@ -989,30 +1104,64 @@ var Vtuber = _Vtuber;
 __publicField(Vtuber, "Provider", VtuberProviders_default);
 var Vtuber_default = Vtuber;
 
-// src/elements/Chart.ts
-var Chart = class extends Element_default {
-  chartId;
+// src/elements/Canvas.ts
+var Canvas = class extends Element_default {
   configSrc = "";
   dataSrc = "";
-  constructor(options) {
-    super(options, ElementTypes_default.Chart);
+  constructor(options, type = ElementTypes_default.Canvas) {
+    super(options, type);
     util_default.optionsInject(this, options, {}, {
-      chartId: (v) => util_default.isUndefined(v) || util_default.isString(v),
       configSrc: (v) => util_default.isString(v),
       dataSrc: (v) => util_default.isString(v)
     });
   }
   renderXML(parent) {
+    const canvas = super.renderXML(parent);
+    canvas.att("configSrc", this.configSrc);
+    canvas.att("dataSrc", this.dataSrc);
+    return canvas;
+  }
+  renderOldXML(parent, resources, global) {
+    const canvas = super.renderOldXML(parent, resources, global);
+    canvas.att("optionsPath", this.configSrc);
+    canvas.att("dataPath", this.dataSrc);
+    return canvas;
+  }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      optionsPath: this.configSrc,
+      dataPath: this.dataSrc
+    });
+  }
+  static isInstance(value) {
+    return value instanceof Canvas;
+  }
+};
+var Canvas_default = Canvas;
+
+// src/elements/Chart.ts
+var Chart = class extends Canvas_default {
+  chartId;
+  constructor(options) {
+    super(options, ElementTypes_default.Chart);
+    util_default.optionsInject(this, options, {}, {
+      chartId: (v) => util_default.isUndefined(v) || util_default.isString(v)
+    });
+  }
+  renderXML(parent) {
     const chart = super.renderXML(parent);
     chart.att("chartId", this.chartId);
-    chart.att("configSrc", this.configSrc);
-    chart.att("dataSrc", this.dataSrc);
   }
   renderOldXML(parent, resources, global) {
     const chart = super.renderOldXML(parent, resources, global);
     chart.att("chartId", this.chartId);
-    chart.att("optionsPath", this.configSrc);
-    chart.att("dataPath", this.dataSrc);
+  }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      chartId: this.chartId
+    });
   }
   static isInstance(value) {
     return value instanceof Chart;
@@ -1135,8 +1284,7 @@ var _Scene = class {
     });
   }
   appendChild(node) {
-    var _a;
-    (_a = this.children) == null ? void 0 : _a.push(node);
+    this.children.push(node);
   }
   toXML(pretty = false) {
     const scene = this.renderXML();
@@ -1146,8 +1294,40 @@ var _Scene = class {
     const board = this.renderOldXML();
     return board.end({ pretty });
   }
+  toOptions() {
+    let backgroundImage;
+    let backgroundVideo;
+    let backgroundAudio;
+    this.children.forEach((node) => {
+      switch (node.type) {
+        case "image":
+          node.isBackground && (backgroundImage = node);
+          break;
+        case "video":
+          node.isBackground && (backgroundVideo = node);
+          break;
+        case "audio":
+          node.isBackground && (backgroundAudio = node);
+          break;
+      }
+    });
+    return {
+      id: this.id,
+      duration: util_default.millisecondsToSenconds(this.duration),
+      poster: this.poster,
+      bgColor: this.backgroundColor,
+      bgImage: backgroundImage ? backgroundImage.toOptions() : void 0,
+      bgVideo: backgroundVideo ? backgroundVideo.toOptions() : void 0,
+      bgMusic: backgroundAudio ? backgroundAudio.toOptions() : void 0,
+      transition: this.transition ? {
+        name: this.transition.type,
+        duration: util_default.millisecondsToSenconds(this.transition.duration)
+      } : void 0,
+      elements: this.children.map((node) => node.toOptions()).sort((a, b) => a.index - b.index)
+    };
+  }
   renderXML(parent) {
-    var _a, _b;
+    var _a;
     const scene = parent ? parent.ele(this.type, {
       id: this.id,
       name: this.name,
@@ -1159,11 +1339,11 @@ var _Scene = class {
       backgroundColor: this.backgroundColor
     }) : __privateMethod(this, _createXMLRoot, createXMLRoot_fn).call(this);
     (_a = this.transition) == null ? void 0 : _a.renderXML(scene);
-    (_b = this.children) == null ? void 0 : _b.forEach((node) => node.renderXML(scene));
+    this.sortedChildren.forEach((node) => node.renderXML(scene));
     return scene;
   }
   renderOldXML(parent, resources) {
-    var _a, _b;
+    var _a;
     const board = parent ? parent.ele("board", {
       id: this.id,
       name: this.name,
@@ -1178,12 +1358,12 @@ var _Scene = class {
       });
     }
     const tagMap = {};
-    (_a = this.children) == null ? void 0 : _a.forEach((node) => node.renderOldXML((tagName) => {
+    this.sortedChildren.forEach((node) => node.renderOldXML((tagName) => {
       if (tagMap[tagName])
         return tagMap[tagName];
       return tagMap[tagName] = board.ele(tagName);
     }, resources));
-    (_b = this.transition) == null ? void 0 : _b.renderOldXML(board);
+    (_a = this.transition) == null ? void 0 : _a.renderOldXML(board);
     return board;
   }
   static isId(value) {
@@ -1193,17 +1373,20 @@ var _Scene = class {
     return value instanceof _Scene;
   }
   generateAllTrack(baseTime = 0) {
-    var _a;
-    const track = (_a = this.children) == null ? void 0 : _a.map((node) => {
+    const track = this.children.map((node) => {
       node.setParentSection(baseTime, this.duration);
       return node;
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }
+  get sortedChildren() {
+    const _children = util_default.clone(this.children);
+    _children.sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
+    return _children;
+  }
   get fontFamilys() {
-    var _a;
     const fontFamilys = [];
-    (_a = this.children) == null ? void 0 : _a.forEach((node) => {
+    this.children.forEach((node) => {
       if (Text_default.isInstance(node)) {
         const text = node;
         text.fontFamily && fontFamilys.push(text.fontFamily);
@@ -1322,9 +1505,8 @@ var _Template = class {
     });
   }
   scenesSplice(start, end) {
-    var _a;
     let index = 0;
-    this.children = (_a = this.children) == null ? void 0 : _a.filter((node) => {
+    this.children = this.children.filter((node) => {
       if (Scene_default.isInstance(node))
         return true;
       if (index < start) {
@@ -1338,19 +1520,23 @@ var _Template = class {
     });
   }
   appendChild(node) {
-    var _a;
     if (!Scene_default.isInstance(node) && !Element_default.isInstance(node))
       throw new TypeError("node must be an Scene instance or Element instance");
-    (_a = this.children) == null ? void 0 : _a.push(node);
+    this.children.push(node);
   }
   toBASE64() {
-    return Buffer.from(this.toXML()).toString("base64");
+    return this.toBuffer().toString("base64");
   }
   toOldBASE64() {
-    return Buffer.from(this.toOldXML()).toString("base64");
+    return this.toOldBuffer().toString("base64");
+  }
+  toBuffer() {
+    return Buffer.from(this.toXML());
+  }
+  toOldBuffer() {
+    return Buffer.from(this.toOldXML());
   }
   toXML(pretty = false) {
-    var _a;
     const template = xmlBuilder2.create("template");
     template.att("version", this.version);
     template.att("id", this.id);
@@ -1377,11 +1563,10 @@ var _Template = class {
     template.att("createTime", this.createTime);
     template.att("updateTime", this.updateTime);
     template.att("buildBy", this.buildBy);
-    (_a = this.children) == null ? void 0 : _a.forEach((node) => node.renderXML(template));
+    this.children.forEach((node) => node.renderXML(template));
     return template.end({ pretty });
   }
   toOldXML(pretty = false) {
-    var _a;
     const project = xmlBuilder2.create("project");
     project.att("version", "1.0.0");
     project.att("id", this.id);
@@ -1406,7 +1591,7 @@ var _Template = class {
       });
     }
     const storyBoards = project.ele("storyBoards");
-    (_a = this.children) == null ? void 0 : _a.forEach((node) => node.renderOldXML(storyBoards, resources, global));
+    this.children.forEach((node) => node.renderOldXML(storyBoards, resources, global));
     return project.end({ pretty });
   }
   toOptions() {
@@ -1414,6 +1599,9 @@ var _Template = class {
     let globalVideo;
     let globalAudio;
     this.children.forEach((node) => {
+      if (!Element_default.isInstance(node))
+        return;
+      node = node;
       switch (node.type) {
         case "image":
           node.isBackground && (globalImage = node);
@@ -1426,6 +1614,24 @@ var _Template = class {
           break;
       }
     });
+    return {
+      id: this.id,
+      name: this.name,
+      actuator: this.actuator,
+      videoSize: this.aspectRatio,
+      videoWidth: this.width,
+      videoHeight: this.height,
+      poster: this.poster,
+      fps: this.fps,
+      duration: util_default.millisecondsToSenconds(this.duration),
+      videoBitrate: this.videoBitrate,
+      audioBitrate: this.audioBitrate,
+      bgColor: this.backgroundColor,
+      bgImage: globalImage ? globalImage.toOptions() : void 0,
+      bgVideo: globalVideo ? globalVideo.toOptions() : void 0,
+      bgMusic: globalAudio ? globalAudio.toOptions() : void 0,
+      storyboards: this.children.map((node) => node.toOptions())
+    };
   }
   static isId(value) {
     return util_default.isString(value) && /^[a-zA-Z0-9]{32}$/.test(value);
@@ -1433,7 +1639,7 @@ var _Template = class {
   static isInstance(value) {
     return value instanceof _Template;
   }
-  static async parse(content, data, vars, dataProcessor, varsProcessor) {
+  static parse(content, data, vars) {
     if (!util_default.isString(content) && !util_default.isObject(content))
       throw new TypeError("content must be an string or object");
     if (util_default.isBuffer(content))
@@ -1441,13 +1647,89 @@ var _Template = class {
     if (util_default.isObject(content))
       return new _Template(content);
     if (/\<template/.test(content))
-      return await _Template.parseXML(content, data, vars, dataProcessor, varsProcessor);
+      return _Template.parseXML(content, data, vars);
     else if (/\<project/.test(content))
       return _Template.parseOldXML(content, data, vars);
     else
-      return await _Template.parseJSON(content, data, vars, dataProcessor, varsProcessor);
+      return _Template.parseJSON(content, data, vars);
   }
-  static async parseJSON(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+  static parseJSON(content, data = {}, vars = {}) {
+    return new _Template(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
+  }
+  static parseXML(content, data = {}, vars = {}) {
+    let xmlObject, varsObject, dataObject;
+    xmlParser.parse(content).forEach((o) => {
+      if (o.template)
+        xmlObject = o;
+      if (o.vars)
+        varsObject = o;
+      if (o.data)
+        dataObject = o;
+    });
+    if (!xmlObject)
+      throw new Error("template xml invalid");
+    function parse(obj, target = {}) {
+      const type = Object.keys(obj)[0];
+      target.type = type;
+      for (let key in obj[":@"]) {
+        const value = obj[":@"][key];
+        let index;
+        if (key === "for-index")
+          key = "forIndex";
+        else if (key === "for-item")
+          key = "forItem";
+        else if ((index = key.indexOf("-")) != -1) {
+          const pkey = key.substring(0, index);
+          const ckey = key.substring(index + 1, key.length);
+          if (!target[pkey])
+            target[pkey] = {};
+          target[pkey][ckey] = value;
+          continue;
+        }
+        target[key] = value;
+      }
+      target.children = [];
+      obj[type].forEach((v) => {
+        if (v["#text"])
+          return target.value = v["#text"];
+        const result = parse(v, {});
+        result && target.children.push(result);
+      });
+      return target;
+    }
+    const completeObject = parse(xmlObject);
+    const _vars = {};
+    const _data = {};
+    if (varsObject || dataObject) {
+      let processing = function(obj, target) {
+        obj.children.forEach((o) => {
+          if (!target[o.type])
+            target[o.type] = {};
+          if (o.value)
+            target[o.type] = o.value;
+          processing(o, target[o.type]);
+        });
+      };
+      varsObject && processing(parse(varsObject), _vars);
+      dataObject && processing(parse(dataObject), _data);
+    }
+    return new _Template(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
+  }
+  static async parseAndProcessing(content, data, vars, dataProcessor, varsProcessor) {
+    if (!util_default.isString(content) && !util_default.isObject(content))
+      throw new TypeError("content must be an string or object");
+    if (util_default.isBuffer(content))
+      content = content.toString();
+    if (util_default.isObject(content))
+      return new _Template(content);
+    if (/\<template/.test(content))
+      return await _Template.parseXMLPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+    else if (/\<project/.test(content))
+      return _Template.parseOldXML(content, data, vars);
+    else
+      return await _Template.parseJSONPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+  }
+  static async parseJSONPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
     const object = util_default.isString(content) ? JSON.parse(content) : content;
     if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
       const result = await dataProcessor(object.dataSrc);
@@ -1459,7 +1741,7 @@ var _Template = class {
     }
     return new _Template(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
   }
-  static async parseXML(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+  static async parseXMLPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
     let xmlObject, varsObject, dataObject;
     xmlParser.parse(content).forEach((o) => {
       if (o.template)
@@ -1807,11 +2089,10 @@ var _Template = class {
     }, data, vars);
   }
   generateAllTrack() {
-    var _a;
     let track = [];
     let baseTime = 0;
     const duration = this.duration;
-    (_a = this.children) == null ? void 0 : _a.forEach((node) => {
+    this.children.forEach((node) => {
       if (Scene_default.isInstance(node)) {
         track = track.concat(node.generateAllTrack(baseTime));
         baseTime += node.duration;
@@ -1823,13 +2104,23 @@ var _Template = class {
     return track;
   }
   get duration() {
-    var _a;
-    return (_a = this.children) == null ? void 0 : _a.reduce((duration, node) => Scene_default.isInstance(node) ? duration + node.duration : duration, 0);
+    return this.children.reduce((duration, node) => Scene_default.isInstance(node) ? duration + node.duration : duration, 0);
+  }
+  get sortedChilren() {
+    const elements = this.elements;
+    elements.sort((a, b) => {
+      if (Scene_default.isInstance(a))
+        return -1;
+      return (a.zIndex || 0) - (b.zIndex || 0);
+    });
+    return [
+      ...this.scenes.map((scene) => scene.sortedChildren),
+      ...this.elements
+    ];
   }
   get fontFamilys() {
-    var _a;
     let fontFamilys = [];
-    (_a = this.children) == null ? void 0 : _a.forEach((node) => {
+    this.children.forEach((node) => {
       if (Scene_default.isInstance(node))
         fontFamilys = fontFamilys.concat(node.fontFamilys);
       else if (node.fontFamily)
@@ -1838,8 +2129,10 @@ var _Template = class {
     return Array.from(new Set(fontFamilys));
   }
   get scenes() {
-    var _a;
-    return (_a = this.children) == null ? void 0 : _a.filter((node) => Scene_default.isInstance(node));
+    return this.children.filter((node) => Scene_default.isInstance(node));
+  }
+  get elements() {
+    return this.children.filter((node) => Element_default.isInstance(node));
   }
 };
 var Template = _Template;

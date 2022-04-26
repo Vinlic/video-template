@@ -37,7 +37,7 @@ class Vtuber extends Media {
   public renderXML(parent: any) {
     const vtuber = super.renderXML(parent);
     vtuber.att('provider', this.provider);
-    vtuber.att('text', this.text);
+    vtuber.att('text', this.value || this.text);
     vtuber.att('solution', this.solution);
     vtuber.att('declaimer', this.declaimer);
   }
@@ -45,10 +45,21 @@ class Vtuber extends Media {
   public renderOldXML(parent: any, resources: any, global: any) {
     const vtuber = super.renderOldXML(parent, resources, global);
     vtuber.att('provider', this.provider);
-    vtuber.att('text', this.text);
+    vtuber.att('text', this.value || this.text);
     vtuber.att('solution', this.solution);
     vtuber.att('declaimer', this.declaimer);
   }
+
+  public toOptions() {
+    const parentOptions = super.toOptions();
+    return {
+        ...parentOptions,
+        provider: this.provider,
+        text: this.value || this.text,
+        declaimer: this.declaimer,
+        solution: this.solution
+    };
+}
 
   public static isInstance(value: any) {
     return value instanceof Vtuber;

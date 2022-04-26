@@ -27,6 +27,15 @@ class Effect {
         );
     }
 
+    public toOptions(startTime: number = 0) {
+        return {
+            name: this.type,
+            delay: util.millisecondsToSenconds(startTime),
+            duration: util.millisecondsToSenconds(this.duration),
+            path: this.path
+        };
+    }
+
     /**
      * 是否为动效实例
      *
@@ -238,7 +247,10 @@ class Element {
             height: this.height,
             rotate: this.rotate,
             opacity: this.opacity,
-
+            index: this.zIndex || 0,
+            animationIn: this.enterEffect ? this.enterEffect.toOptions(this.startTime) : undefined,
+            animationOut: this.exitEffect ? this.exitEffect.toOptions(this.endTime) : undefined,
+            fillColor: this.backgroundColor
         };
     }
 

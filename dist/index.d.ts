@@ -12,6 +12,7 @@ declare enum ElementTypes {
     Voice = "voice",
     Video = "video",
     Vtuber = "vtuber",
+    Canvas = "canvas",
     Chart = "chart",
     Media = "media",
     SSML = "ssml"
@@ -22,6 +23,12 @@ declare class Effect {
     duration: number;
     path?: number[];
     constructor(options: IEffectOptions);
+    toOptions(startTime?: number): {
+        name: string;
+        delay: number;
+        duration: number;
+        path: number[] | undefined;
+    };
     static isInstance(value: any): boolean;
 }
 declare class Element {
@@ -52,6 +59,7 @@ declare class Element {
     constructor(options: IElementOptions, type?: ElementTypes);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources?: any, global?: any): any;
+    toOptions(): any;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
     setParentSection(baseTime: number, duration: number): void;
@@ -135,9 +143,10 @@ declare class Media extends Element {
     playbackRate?: number;
     filter?: IFilterOptions;
     muted: boolean;
-    constructor(options: IMediaOptions, type: ElementTypes);
+    constructor(options: IMediaOptions, type?: ElementTypes);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
+    toOptions(): any;
     static isInstance(value: any): boolean;
 }
 
@@ -172,6 +181,7 @@ declare class Text extends Element {
     constructor(options: ITextOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
+    toOptions(): any;
     static isInstance(value: any): boolean;
 }
 
@@ -210,6 +220,15 @@ declare class Crop {
     clipType?: string;
     clipStyle?: string;
     constructor(options: ICropOptions);
+    toOptions(): {
+        style: string;
+        width: number;
+        height: number;
+        left: number;
+        right: number;
+        clipStyle: string | undefined;
+        clipType: string | undefined;
+    };
     static isInstance(value: any): boolean;
 }
 declare class Image extends Element {
@@ -224,6 +243,7 @@ declare class Image extends Element {
     constructor(options: IImageOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): any;
+    toOptions(): any;
     static isInstance(value: any): boolean;
 }
 
@@ -238,6 +258,7 @@ declare class Audio extends Media {
     constructor(options: IAudioOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
+    toOptions(): any;
     static isInstance(value: any): boolean;
 }
 
@@ -272,6 +293,7 @@ declare class Voice extends Media {
     constructor(options: IVoiceOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
+    toOptions(): any;
     get ssml(): string | null | undefined;
     static isInstance(value: any): boolean;
 }
@@ -305,6 +327,7 @@ declare class Vtuber extends Media {
     constructor(options: IVtuberOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
+    toOptions(): any;
     static isInstance(value: any): boolean;
 }
 
@@ -314,13 +337,27 @@ interface IChartOptions extends IElementOptions {
     dataSrc?: string;
 }
 
-declare class Chart extends Element {
-    chartId?: string;
+interface ICanvasOptions extends IElementOptions {
+    configSrc?: string;
+    dataSrc?: string;
+}
+
+declare class Canvas extends Element {
     configSrc: string;
     dataSrc: string;
+    constructor(options: ICanvasOptions, type?: ElementTypes);
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
+    toOptions(): any;
+    static isInstance(value: any): boolean;
+}
+
+declare class Chart extends Canvas {
+    chartId?: string;
     constructor(options: IChartOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
+    toOptions(): any;
     static isInstance(value: any): boolean;
 }
 
@@ -395,11 +432,13 @@ declare class Scene {
     appendChild(node: Element): void;
     toXML(pretty?: boolean): any;
     toOldXML(pretty?: boolean): any;
+    toOptions(): any;
     renderXML(parent?: any): any;
     renderOldXML(parent?: any, resources?: any): any;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
     generateAllTrack(baseTime?: number): Element[];
+    get sortedChildren(): Element[];
     get fontFamilys(): string[];
 }
 
@@ -467,19 +506,26 @@ declare class Template {
     appendChild(node: any): void;
     toBASE64(): string;
     toOldBASE64(): string;
+    toBuffer(): Buffer;
+    toOldBuffer(): Buffer;
     toXML(pretty?: boolean): string;
     toOldXML(pretty?: boolean): string;
-    toOptions(): void;
+    toOptions(): any;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
-    static parse(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any): Promise<Template>;
-    static parseJSON(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
-    static parseXML(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
+    static parse(content: any, data?: object, vars?: object): Template;
+    static parseJSON(content: any, data?: {}, vars?: {}): Template;
+    static parseXML(content: string, data?: {}, vars?: {}): Template;
+    static parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any): Promise<Template>;
+    static parseJSONPreProcessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
+    static parseXMLPreProcessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
     static parseOldXML(content: string, data?: {}, vars?: {}): Template;
     generateAllTrack(): any;
     get duration(): number;
+    get sortedChilren(): (Element | Element[])[];
     get fontFamilys(): string[];
-    get scenes(): (Element | Scene)[];
+    get scenes(): Scene[];
+    get elements(): Element[];
 }
 
 export { Scene, Template, index as elements };

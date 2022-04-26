@@ -139,10 +139,14 @@ class Image extends Element {
     }
 
     public toOptions() {
-        const baseOptions = super.toOptions();
+        const parentOptions = super.toOptions();
         return {
-            ...baseOptions,
-            crop: this.crop ? this.crop.toOptions() : undefined
+            ...parentOptions,
+            src: this.src,
+            mode: this.mode,
+            crop: this.crop ? this.crop.toOptions() : undefined,
+            loop: this.loop,
+            dynamic: this.dynamic
         };
     }
 

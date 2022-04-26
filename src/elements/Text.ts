@@ -80,7 +80,7 @@ class Text extends Element {
         caption.att('fontWeight', this.fontWeight);
         caption.att('fontStyle', this.fontStyle);
         caption.att('fontColor', this.fontColor);
-        caption.att('lineHeight', (this.lineHeight as number) * (this.fontSize as number));
+        caption.att('lineHeight', (this.lineHeight || 1) * this.fontSize);
         caption.att('wordSpacing', this.wordSpacing);
         caption.att('textAlign', this.textAlign);
         caption.att('lineWrap', this.lineWrap);
@@ -92,17 +92,21 @@ class Text extends Element {
     }
 
     public toOptions() {
-        const baseOptions = super.toOptions();
+        const parentOptions = super.toOptions();
         return {
-            ...baseOptions,
+            ...parentOptions,
             content: this.value,
             fontSize: this.fontSize,
             fontColor: this.fontColor,
             textAlign: this.textAlign,
             fontFamily: this.fontFamily,
-            lineHeight: this.lineHeight,
+            lineHeight: (this.lineHeight || 1) * this.fontSize,
             wordSpacing: this.wordSpacing,
-            bold: this.fontWeight ? this.fontWeight > 400 : undefined
+            bold: this.fontWeight ? this.fontWeight > 400 : undefined,
+            italic: this.fontStyle === "italic",
+            effectType: this.effectType,
+            effectWordDuration: util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration as number) : undefined,
+            effectWordInterval: util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval as number) : undefined
         };
     }
 

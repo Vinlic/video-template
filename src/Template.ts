@@ -316,13 +316,13 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-    public static async parse(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
+     public static parse(content: any, data?: object, vars?: object) {
         if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
         if (util.isBuffer(content)) content = content.toString();
         if (util.isObject(content)) return new Template(content);
-        if (/\<template/.test(content)) return await Template.parseXML(content, data, vars, dataProcessor, varsProcessor);
+        if (/\<template/.test(content)) return Template.parseXML(content, data, vars);
         else if (/\<project/.test(content)) return Template.parseOldXML(content, data, vars);
-        else return await Template.parseJSON(content, data, vars, dataProcessor, varsProcessor);
+        else return Template.parseJSON(content, data, vars);
     }
 
     /**
@@ -331,7 +331,88 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-    public static async parseJSON(content: any, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
+     public static parseJSON(content: any, data = {}, vars = {}) {
+        return new Template(util.isString(content) ? JSON.parse(content) : content, data, vars);
+    }
+
+    /**
+     * 解析XML文档为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static parseXML(content: string, data = {}, vars = {}) {
+        let xmlObject, varsObject, dataObject;
+        xmlParser.parse(content).forEach((o: any) => {
+            if (o.template) xmlObject = o;
+            if (o.vars) varsObject = o;
+            if (o.data) dataObject = o;
+        });
+        if (!xmlObject) throw new Error('template xml invalid');
+        function parse(obj: any, target: any = {}) {
+            const type = Object.keys(obj)[0];
+            target.type = type;
+            for (let key in obj[':@']) {
+                const value = obj[':@'][key];
+                let index;
+                if (key === 'for-index') key = 'forIndex';
+                else if (key === 'for-item') key = 'forItem';
+                else if ((index = key.indexOf('-')) != -1) {
+                    const pkey = key.substring(0, index);
+                    const ckey = key.substring(index + 1, key.length);
+                    if (!target[pkey]) target[pkey] = {};
+                    target[pkey][ckey] = value;
+                    continue;
+                }
+                target[key] = value;
+            }
+            target.children = [];
+            obj[type].forEach((v: any) => {
+                if (v['#text']) return (target.value = v['#text']);
+                const result = parse(v, {});
+                result && target.children.push(result);
+            });
+            return target;
+        }
+        const completeObject = parse(xmlObject);
+        const _vars = {};
+        const _data = {};
+        if (varsObject || dataObject) {
+            function processing(obj: any, target: any) {
+                obj.children.forEach((o: any) => {
+                    if (!target[o.type]) target[o.type] = {};
+                    if (o.value) target[o.type] = o.value;
+                    processing(o, target[o.type]);
+                });
+            }
+            varsObject && processing(parse(varsObject), _vars);
+            dataObject && processing(parse(dataObject), _data);
+        }
+        return new Template(completeObject, util.assign(_data, data), util.assign(_vars, vars));
+    }
+
+    /**
+     * 解析入口同时处理数据
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static async parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
+        if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
+        if (util.isBuffer(content)) content = content.toString();
+        if (util.isObject(content)) return new Template(content);
+        if (/\<template/.test(content)) return await Template.parseXMLPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+        else if (/\<project/.test(content)) return Template.parseOldXML(content, data, vars);
+        else return await Template.parseJSONPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+    }
+
+    /**
+     * 解析JSON数据为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static async parseJSONPreProcessing(content: any, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
         const object = util.isString(content) ? JSON.parse(content) : content;
         if (util.isFunction(dataProcessor) && util.isString(object.dataSrc)) {
             const result = await dataProcessor(object.dataSrc);
@@ -345,12 +426,12 @@ class Template {
     }
 
     /**
-     * 解析XML文档为模型
+     * 解析XML文档为模型并预处理
      *
      * @param {String} content
      * @returns {Template}
      */
-    public static async parseXML(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
+    public static async parseXMLPreProcessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
         let xmlObject, varsObject, dataObject;
         xmlParser.parse(content).forEach((o: any) => {
             if (o.template) xmlObject = o;

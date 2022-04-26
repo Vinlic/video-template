@@ -6,6 +6,7 @@ enum ElementTypes {
   Voice = 'voice',
   Video = 'video',
   Vtuber = 'vtuber',
+  Canvas = 'canvas',
   Chart = 'chart',
   Media = 'media',
   SSML = 'ssml',
