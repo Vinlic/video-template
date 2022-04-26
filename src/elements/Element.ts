@@ -178,11 +178,11 @@ class Element {
             rotate: this.rotate,
             opacity: this.opacity,
             animationIn: this.enterEffect?.type ?? undefined,
-            animationInDuration: this.enterEffect?.duration ? this.enterEffect.duration / 1000 : undefined,
+            animationInDuration: this.enterEffect?.duration ? util.millisecondsToSenconds(this.enterEffect.duration) : undefined,
             animationOut: this.exitEffect?.type ?? undefined,
-            animationOutDuration: this.exitEffect?.duration ? this.exitEffect.duration / 1000 : undefined,
-            inPoint: util.isNumber(this.startTime) ? (this.startTime as number) / 1000 : undefined,
-            outPoint: util.isNumber(this.endTime) ? (this.endTime as number) / 1000 : undefined,
+            animationOutDuration: this.exitEffect?.duration ? util.millisecondsToSenconds(this.exitEffect.duration) : undefined,
+            inPoint: util.isNumber(this.startTime) ? util.millisecondsToSenconds(this.startTime) : undefined,
+            outPoint: util.isNumber(this.endTime) ? util.millisecondsToSenconds(this.endTime) : undefined,
         };
         let element: any;
         if (global) {
@@ -248,8 +248,8 @@ class Element {
             rotate: this.rotate,
             opacity: this.opacity,
             index: this.zIndex || 0,
-            animationIn: this.enterEffect ? this.enterEffect.toOptions(this.startTime) : undefined,
-            animationOut: this.exitEffect ? this.exitEffect.toOptions(this.endTime) : undefined,
+            animationIn: this.startTime ? (this.enterEffect?.toOptions(this.startTime) || { delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
+            animationOut: this.endTime ? (this.exitEffect?.toOptions(this.endTime) || { delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
             fillColor: this.backgroundColor
         };
     }

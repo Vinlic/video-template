@@ -331,20 +331,20 @@ declare class Vtuber extends Media {
     static isInstance(value: any): boolean;
 }
 
-interface IChartOptions extends IElementOptions {
-    chartId?: string;
-    configSrc?: string;
-    dataSrc?: string;
-}
-
 interface ICanvasOptions extends IElementOptions {
     configSrc?: string;
     dataSrc?: string;
+    poster?: string;
+}
+
+interface IChartOptions extends ICanvasOptions {
+    chartId?: string;
 }
 
 declare class Canvas extends Element {
     configSrc: string;
     dataSrc: string;
+    poster?: string;
     constructor(options: ICanvasOptions, type?: ElementTypes);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;

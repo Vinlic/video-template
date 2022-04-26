@@ -7,6 +7,7 @@ import util from '../util';
 class Canvas extends Element {
     public configSrc = ''; //画布配置路径
     public dataSrc = ''; //画布数据路径
+    public poster?: string;  //画布封面图
 
     public constructor(options: ICanvasOptions, type: ElementTypes = ElementTypes.Canvas) {
         super(options, type);
@@ -17,6 +18,7 @@ class Canvas extends Element {
             {
                 configSrc: (v: any) => util.isString(v),
                 dataSrc: (v: any) => util.isString(v),
+                poster: (v: any) => util.isUndefined(v) || util.isString(v)
             },
         );
     }
@@ -28,6 +30,7 @@ class Canvas extends Element {
      */
     public renderXML(parent: any) {
         const canvas = super.renderXML(parent);
+        canvas.att('poster', this.poster);
         canvas.att('configSrc', this.configSrc);
         canvas.att('dataSrc', this.dataSrc);
         return canvas;
@@ -35,6 +38,7 @@ class Canvas extends Element {
 
     public renderOldXML(parent: any, resources: any, global: any) {
         const canvas = super.renderOldXML(parent, resources, global);
+        canvas.att('poster', this.poster);
         canvas.att('optionsPath', this.configSrc);
         canvas.att('dataPath', this.dataSrc);
         return canvas;
@@ -44,6 +48,7 @@ class Canvas extends Element {
         const parentOptions = super.toOptions();
         return {
             ...parentOptions,
+            poster: this.poster,
             optionsPath: this.configSrc,
             dataPath: this.dataSrc
         };

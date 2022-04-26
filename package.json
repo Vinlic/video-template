@@ -1,6 +1,6 @@
 {
   "name": "video-template",
-  "version": "1.0.86",
+  "version": "1.0.87",
   "description": "Template model describing video structure",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -35,7 +35,6 @@
     "fast-xml-parser": "^4.0.7",
     "goodid.js": "^1.0.8",
     "lodash": "^4.17.21",
-    "typescript": "^4.6.3",
     "uuid": "^8.3.2",
     "xmlbuilder": "^15.1.1"
   },
@@ -43,16 +42,10 @@
     "node": ">=12.22.1"
   },
   "devDependencies": {
-    "@types/node": "^17.0.26",
     "@types/lodash": "^4.14.182",
+    "@types/node": "^17.0.26",
     "@types/uuid": "^8.3.4",
-    "@babel/eslint-parser": "^7.17.0",
-    "@typescript-eslint/eslint-plugin": "5.16.0",
-    "@typescript-eslint/parser": "5.16.0",
-    "eslint": "8.11.0",
-    "eslint-config-alloy": "^4.5.1",
-    "eslint-config-prettier": "^8.5.0",
-    "prettier": "^2.6.0",
-    "typescript": "^4.6.2"
+    "tsup": "^5.12.6",
+    "typescript": "^4.6.3"
   }
 }

@@ -153,7 +153,7 @@ class Scene {
             id: this.id,
             duration: util.millisecondsToSenconds(this.duration),
             poster: this.poster,
-            bgColor: this.backgroundColor,
+            bgColor: { id: util.uniqid(), fillColor: this.backgroundColor },
             bgImage: backgroundImage ? backgroundImage.toOptions() : undefined,
             bgVideo: backgroundVideo ? backgroundVideo.toOptions() : undefined,
             bgMusic: backgroundAudio ? backgroundAudio.toOptions() : undefined,

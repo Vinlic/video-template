@@ -1,9 +1,7 @@
-import IElementOptions from './IElementOptions';
+import ICanvasOptions from './ICanvasOptions';
 
-interface IChartOptions extends IElementOptions {
+interface IChartOptions extends ICanvasOptions {
   chartId?: string;
-  configSrc?: string;
-  dataSrc?: string;
 }
 
 export default IChartOptions;

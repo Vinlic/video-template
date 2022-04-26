@@ -136,7 +136,7 @@ var util_default = __spreadProps(__spreadValues({}, import_lodash.default), {
     return `${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes}:${seconds > 9 ? seconds : "0" + seconds}.${ms}`;
   },
   millisecondsToSenconds(milliseconds, precision = 3) {
-    return parseFloat(Math.floor(milliseconds / 1e3).toFixed(precision));
+    return parseFloat((milliseconds / 1e3).toFixed(precision));
   },
   arrayParse(value) {
     return this.isArray(value) ? value : [value];
@@ -520,11 +520,11 @@ var _Element = class {
       rotate: this.rotate,
       opacity: this.opacity,
       animationIn: (_b = (_a = this.enterEffect) == null ? void 0 : _a.type) != null ? _b : void 0,
-      animationInDuration: ((_c = this.enterEffect) == null ? void 0 : _c.duration) ? this.enterEffect.duration / 1e3 : void 0,
+      animationInDuration: ((_c = this.enterEffect) == null ? void 0 : _c.duration) ? util_default.millisecondsToSenconds(this.enterEffect.duration) : void 0,
       animationOut: (_e = (_d = this.exitEffect) == null ? void 0 : _d.type) != null ? _e : void 0,
-      animationOutDuration: ((_f = this.exitEffect) == null ? void 0 : _f.duration) ? this.exitEffect.duration / 1e3 : void 0,
-      inPoint: util_default.isNumber(this.startTime) ? this.startTime / 1e3 : void 0,
-      outPoint: util_default.isNumber(this.endTime) ? this.endTime / 1e3 : void 0
+      animationOutDuration: ((_f = this.exitEffect) == null ? void 0 : _f.duration) ? util_default.millisecondsToSenconds(this.exitEffect.duration) : void 0,
+      inPoint: util_default.isNumber(this.startTime) ? util_default.millisecondsToSenconds(this.startTime) : void 0,
+      outPoint: util_default.isNumber(this.endTime) ? util_default.millisecondsToSenconds(this.endTime) : void 0
     };
     let element;
     if (global) {
@@ -559,6 +559,7 @@ var _Element = class {
     return element;
   }
   toOptions() {
+    var _a, _b;
     return {
       elementType: this.type,
       id: this.id,
@@ -576,8 +577,8 @@ var _Element = class {
       rotate: this.rotate,
       opacity: this.opacity,
       index: this.zIndex || 0,
-      animationIn: this.enterEffect ? this.enterEffect.toOptions(this.startTime) : void 0,
-      animationOut: this.exitEffect ? this.exitEffect.toOptions(this.endTime) : void 0,
+      animationIn: this.startTime ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,
+      animationOut: this.endTime ? ((_b = this.exitEffect) == null ? void 0 : _b.toOptions(this.endTime)) || { delay: util_default.millisecondsToSenconds(this.endTime) } : void 0,
       fillColor: this.backgroundColor
     };
   }
@@ -1046,6 +1047,7 @@ var _Voice = class extends Media_default {
       speechRate: this.speechRate,
       pitchRate: this.pitchRate,
       enableSubtitle: this.enableSubtitle,
+      content: this.text,
       ssml: this.ssml
     });
   }
@@ -1131,21 +1133,25 @@ var Vtuber_default = Vtuber;
 var Canvas = class extends Element_default {
   configSrc = "";
   dataSrc = "";
+  poster;
   constructor(options, type = ElementTypes_default.Canvas) {
     super(options, type);
     util_default.optionsInject(this, options, {}, {
       configSrc: (v) => util_default.isString(v),
-      dataSrc: (v) => util_default.isString(v)
+      dataSrc: (v) => util_default.isString(v),
+      poster: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
   }
   renderXML(parent) {
     const canvas = super.renderXML(parent);
+    canvas.att("poster", this.poster);
     canvas.att("configSrc", this.configSrc);
     canvas.att("dataSrc", this.dataSrc);
     return canvas;
   }
   renderOldXML(parent, resources, global) {
     const canvas = super.renderOldXML(parent, resources, global);
+    canvas.att("poster", this.poster);
     canvas.att("optionsPath", this.configSrc);
     canvas.att("dataPath", this.dataSrc);
     return canvas;
@@ -1153,6 +1159,7 @@ var Canvas = class extends Element_default {
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
+      poster: this.poster,
       optionsPath: this.configSrc,
       dataPath: this.dataSrc
     });
@@ -1338,7 +1345,7 @@ var _Scene = class {
       id: this.id,
       duration: util_default.millisecondsToSenconds(this.duration),
       poster: this.poster,
-      bgColor: this.backgroundColor,
+      bgColor: { id: util_default.uniqid(), fillColor: this.backgroundColor },
       bgImage: backgroundImage ? backgroundImage.toOptions() : void 0,
       bgVideo: backgroundVideo ? backgroundVideo.toOptions() : void 0,
       bgMusic: backgroundAudio ? backgroundAudio.toOptions() : void 0,
@@ -1651,7 +1658,7 @@ var _Template = class {
       duration: util_default.millisecondsToSenconds(this.duration),
       videoBitrate: this.videoBitrate,
       audioBitrate: this.audioBitrate,
-      bgColor: this.backgroundColor,
+      bgColor: { id: util_default.uniqid(), fillColor: this.backgroundColor },
       bgImage: globalImage ? globalImage.toOptions() : void 0,
       bgVideo: globalVideo ? globalVideo.toOptions() : void 0,
       bgMusic: globalAudio ? globalAudio.toOptions() : void 0,
@@ -1907,6 +1914,7 @@ var _Template = class {
             seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0,
             muted: tag.muted,
             loop: tag.loop,
+            isBackground: true,
             fadeInDuration: tag.inPoint ? tag.inPoint * 1e3 : void 0,
             fadeOutDuration: tag.outPoint ? tag.outPoint * 1e3 : void 0
           })));
@@ -2043,6 +2051,7 @@ var _Template = class {
           case "dynDataCharts":
             data2.children.forEach((chart) => sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(chart)), {
               chartId: chart.chartId,
+              poster: chart.poster,
               configSrc: chart.optionsPath,
               dataSrc: chart.dataPath
             }))));

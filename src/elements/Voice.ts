@@ -75,6 +75,7 @@ class Voice extends Media {
             speechRate: this.speechRate,
             pitchRate: this.pitchRate,
             enableSubtitle: this.enableSubtitle,
+            content: this.text,
             ssml: this.ssml
         };
     }

@@ -280,7 +280,7 @@ class Template {
             videoBitrate: this.videoBitrate,
             audioBitrate: this.audioBitrate,
             // 全局背景颜色
-            bgColor: this.backgroundColor,
+            bgColor: { id: util.uniqid(), fillColor: this.backgroundColor },
             // 背景图片
             bgImage: globalImage ? globalImage.toOptions() : undefined,
             // 背景视频
@@ -501,6 +501,8 @@ class Template {
      * 解析过时的XML文档为模型
      *
      * @param {String} content
+     * @param {Object} data 数据对象
+     * @param {Object} vars 变量对象
      * @returns {Template}
      */
     public static parseOldXML(content: string, data = {}, vars = {}) {
@@ -532,18 +534,14 @@ class Template {
                 height: obj.height,
                 opacity: obj.opacity,
                 zIndex: obj.index,
-                enterEffect: obj.animationIn
-                    ? {
-                        type: obj.animationIn,
-                        duration: obj.animationInDuration * 1000,
-                    }
-                    : undefined,
-                exitEffect: obj.animationOut
-                    ? {
-                        type: obj.animationOut,
-                        duration: obj.animationOutDuration * 1000,
-                    }
-                    : undefined,
+                enterEffect: obj.animationIn ? {
+                    type: obj.animationIn,
+                    duration: obj.animationInDuration * 1000
+                } : undefined,
+                exitEffect: obj.animationOut ? {
+                    type: obj.animationOut,
+                    duration: obj.animationOutDuration * 1000,
+                } : undefined,
                 backgroundColor: obj.fillColor,
                 startTime: obj.inPoint ? obj.inPoint * 1000 : undefined,
                 endTime: obj.outPoint ? obj.outPoint * 1000 : undefined,
@@ -579,6 +577,7 @@ class Template {
                             seekEnd: tag.seekEnd ? tag.seekEnd * 1000 : undefined,
                             muted: tag.muted,
                             loop: tag.loop,
+                            isBackground: true,
                             fadeInDuration: tag.inPoint ? tag.inPoint * 1000 : undefined,
                             fadeOutDuration: tag.outPoint ? tag.outPoint * 1000 : undefined,
                         }),
@@ -729,15 +728,14 @@ class Template {
                         });
                         break;
                     case 'dynDataCharts':
-                        data.children.forEach((chart: any) =>
-                            sceneChildren.push(
-                                new Chart({
-                                    ...buildBaseData(chart),
-                                    chartId: chart.chartId,
-                                    configSrc: chart.optionsPath,
-                                    dataSrc: chart.dataPath,
-                                }),
-                            ),
+                        data.children.forEach((chart: any) => sceneChildren.push(
+                            new Chart({
+                                ...buildBaseData(chart),
+                                chartId: chart.chartId,
+                                poster: chart.poster,
+                                configSrc: chart.optionsPath,
+                                dataSrc: chart.dataPath,
+                            }))
                         );
                         break;
                     case 'textToSounds':
@@ -818,6 +816,34 @@ class Template {
             data,
             vars,
         );
+    }
+
+    /**
+     * 解析前端options
+     * 
+     * @param {Object} options options对象
+     * @returns {Template}
+     */
+     public static parseOptions(options: any) {
+        const templateChildren: any = [];
+        options.storyboards.forEach((storyboard: any) => {
+
+        });
+        options.bgImage && templateChildren.push(new Image({
+            
+        }));
+        return new Template({
+            id: options.id,
+            name: options.name,
+            fps: options.fps,
+            poster: options.poster,
+            width: options.videoWidth,
+            height: options.videoHeight,
+            aspectRatio: options.videoSize,
+            videoBitrate: options.videoBitrate,
+            backgroundColor: options.bgColor ? (options.bgColor.fillColor || undefined) : undefined,
+            children: templateChildren
+        });
     }
 
     /**

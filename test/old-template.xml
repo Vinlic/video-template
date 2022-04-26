@@ -1,525 +1,104 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<project id="3ec844ec407611ec96810a80ff2603de" name="聚焦基金经理" actuator="10000" buildBy="cz">
-  <projRes>
-    <resource type="sound" id="bg_audio" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg_audio.mp3"/>
-    <resource type="video" id="bg_video" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg_video.mp4"/>
-    <resource type="video" id="video" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/video.mp4"/>
-    <resource type="img" id="01" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/01.png"/>
-    <resource type="img" id="02" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/02.png"/>
-    <resource type="img" id="person" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/person.png"/>
-    <resource type="img" id="bg1" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg1.png"/>
-    <resource type="img" id="bg2" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg2.png"/>
-    <resource type="img" id="bg3" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg3.png"/>
-    <resource type="img" id="bg4" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg4.png"/>
-    <resource type="img" id="bar01" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bar01.png"/>
-    <resource type="img" id="bar02" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bar02.png"/>
-    <resource type="img" id="bar03" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bar03.png"/>
-    <resource type="img" id="bar04" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bar04.png"/>
-    <resource type="img" id="bar05" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bar05.png"/>
-    <resource type="img" id="bg_h2" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg_h2.png"/>
-    <resource type="img" id="t_bg" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/t_bg.png"/>
-    <resource type="img" id="table" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/table.png"/>
-    <resource type="img" id="bg5" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg5.png"/>
-    <resource type="img" id="rect" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/rect.png"/>
-    <resource type="img" id="bg6" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg6.png"/>
-    <resource type="img" id="bg7" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg7.png"/>
-    <resource type="img" id="bar6" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bar6.png"/>
-    <resource type="img" id="head" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/head.png"/>
-    <resource type="img" id="right" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/right.png"/>
-    <resource type="img" id="bg8" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg8.png"/>
-    <resource type="img" id="bg9" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg9.png"/>
-    <resource type="img" id="bg10" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg10.png"/>
-    <resource type="img" id="bg11" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg11.png"/>
-    <resource type="img" id="bg12" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg12.png"/>
-    <resource type="img" id="bg13" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg13.png"/>
-    <resource type="img" id="bg14" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg14.png"/>
-    <resource type="img" id="bg15" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/bg15.png"/>
-    <resource type="img" id="chart1" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/chart1.png"/>
-    <resource type="img" id="chart2" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/chart2.png"/>
-    <resource type="voice" id="f11047406dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11047406dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e506dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e506dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e516dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e516dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e526dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e526dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e536dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e536dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e546dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e546dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e556dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e556dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e566dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e566dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e576dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e576dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f1106e586dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f1106e586dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095606dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095606dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095616dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095616dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095626dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095626dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095636dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095636dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095646dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095646dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095656dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095656dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095666dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095666dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095676dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095676dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-    <resource type="voice" id="f11095686dca11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/focus_fundMan/tts/f11095686dca11ecaa1fad033c46ef8f.mp3" build="true"/>
-  </projRes>
-  <global videoSize="16:9" videoWidth="1280" videoHeight="720" fps="30" videoBitrate="2097152" audioBitrate="131072">
-    <bgmusic id="9b80bc204e9d11ec92c7df4d2a532c8a" resId="bg_audio" inPoint="0" loop="true" volume="0.2" fadeIn="3" fadeOut="3"/>
-  </global>
-  <storyBoards>
-    <board id="9b80e3304e9d11ec92c7df4d2a532c8a" duration="6" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover01.png">
-      <resources/>
-      <bgvideo id="9b810a404e9d11ec92c7df4d2a532c8a" resId="bg_video"/>
-      <textToSounds>
-        <textToSound id="9b810a414e9d11ec92c7df4d2a532c8a" text="良将配好基，选基重在挑人！大家好，欢迎收看《聚焦基金经理》！" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11047406dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b810a424e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b8131504e9d11ec92c7df4d2a532c8a" duration="15" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover02.png">
-      <resources>
-        <resource id="9b8131514e9d11ec92c7df4d2a532c8a" index="2" resId="rect" inPoint="2.5" scaleX="116" scaleY="84" width="583" height="300" animationIn="bounceIn" animationInDuration="0.5"/>
-        <resource id="9b8158604e9d11ec92c7df4d2a532c8a" index="1" resId="bg5" inPoint="0.5" scaleX="400" scaleY="170" width="880" height="550" animationIn="fadeInRight" animationInDuration="0.5"/>
-        <resource id="9b8158614e9d11ec92c7df4d2a532c8a" index="2" resId="person" inPoint="1" scaleX="703" scaleY="55" width="469" height="665" animationIn="fadeInLeft" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b8158624e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b817f704e9d11ec92c7df4d2a532c8a" index="3" inPoint="1.5" scaleX="561" scaleY="494" width="110" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#000000" animationIn="fadeInUp" animationInDuration="0.5">
-          <text>梁浩</text>
-        </caption>
-        <caption id="9b81a6804e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="543" scaleY="570" width="126" height="36" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontColor="#000000" animationIn="fadeInUp" animationInDuration="0.5">
-          <text>鹏华基金</text>
-        </caption>
-        <caption id="9b81a6814e9d11ec92c7df4d2a532c8a" index="3" inPoint="2.5" scaleX="178.6" scaleY="119.6" width="460.8" height="76.8" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="64" fontColor="#ffffff" animationIn="bounceIn" animationInDuration="0.5">
-          <text>新兴产业领域的</text>
-        </caption>
-        <caption id="9b81a6824e9d11ec92c7df4d2a532c8a" index="3" inPoint="2.5" scaleX="177" scaleY="192" width="336" height="104" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="80" fontColor="#ffffff" animationIn="bounceIn" animationInDuration="0.5">
-          <text>掘金能手</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b81cd904e9d11ec92c7df4d2a532c8a" text="近年来，以阿里、腾讯、京东等为代表的新经济红红火火，成为中国飞速发展旅程上的耀眼光环，这期就给大家介绍一位“新兴产业领域的掘金能手”——鹏华基金的老将基金经理梁浩！" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e506dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b81cd914e9d11ec92c7df4d2a532c8a" duration="3" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover03.png">
-      <resources/>
-      <bgvideo id="9b81cd924e9d11ec92c7df4d2a532c8a" resId="video"/>
-      <captions>
-        <caption id="9b81cd934e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="535" scaleY="325" width="210" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>从业经验</text>
-        </caption>
-      </captions>
-      <transition id="9b81cd944e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-      <textToSounds>
-        <textToSound id="9b821bb26e9d11ec92c7df4d2a532c8a" text="从业经验" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e516dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b81cd954e9d11ec92c7df4d2a532c8a" duration="20" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover04.png">
-      <resources>
-        <resource id="9b81cd964e9d11ec92c7df4d2a532c8a" index="1" resId="bg7" inPoint="0.5" scaleX="341" scaleY="0" width="939" height="720" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b81cd974e9d11ec92c7df4d2a532c8a" index="1" resId="bg6" inPoint="1" scaleX="128" scaleY="82" width="230" height="230" animationIn="fadeIn" animationInDuration="0.5" cropStyle="rect" cropX="0" cropY="0" cropWidth="100" cropHeight="100"/>
-        <resource id="9b81f4a04e9d11ec92c7df4d2a532c8a" index="2" resId="head" inPoint="1" scaleX="138" scaleY="92" width="200" height="200" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b81f4a14e9d11ec92c7df4d2a532c8a" index="2" resId="bar6" inPoint="1.5" scaleX="488" scaleY="110" width="678" height="70" animationIn="fadeInRightBig" animationInDuration="0.5"/>
-        <resource id="9b81f4a24e9d11ec92c7df4d2a532c8a" index="2" resId="bar6" inPoint="2" scaleX="449" scaleY="220" width="678" height="70" animationIn="fadeInRightBig" animationInDuration="0.5"/>
-        <resource id="9b81f4a34e9d11ec92c7df4d2a532c8a" index="2" resId="bar6" inPoint="2.5" scaleX="411" scaleY="330" width="678" height="70" animationIn="fadeInRightBig" animationInDuration="0.5"/>
-        <resource id="9b81f4a44e9d11ec92c7df4d2a532c8a" index="2" resId="bar6" inPoint="3" scaleX="379" scaleY="440" width="678" height="70" animationIn="fadeInRightBig" animationInDuration="0.5"/>
-        <resource id="9b81f4a54e9d11ec92c7df4d2a532c8a" index="2" resId="bar6" inPoint="3.5" scaleX="352" scaleY="550" width="678" height="70" animationIn="fadeInRightBig" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b81f4a64e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b81f4a74e9d11ec92c7df4d2a532c8a" index="3" inPoint="1.5" scaleX="552" scaleY="126" width="488" height="48" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeInRightBig" animationInDuration="0.5">
-          <text>中国人民大学经济学博士</text>
-        </caption>
-        <caption id="9b81f4a84e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="513" scaleY="231" width="568" height="48" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeInRightBig" animationInDuration="0.5">
-          <text>曾任职于信息产业部电信研究院</text>
-        </caption>
-        <caption id="9b81f4a94e9d11ec92c7df4d2a532c8a" index="3" inPoint="2.5" scaleX="475" scaleY="341" width="442" height="48" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeInRightBig" animationInDuration="0.5">
-          <text>2008年5月加入鹏华基金</text>
-        </caption>
-        <caption id="9b821bb04e9d11ec92c7df4d2a532c8a" index="3" inPoint="3" scaleX="443" scaleY="451" width="357" height="48" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeInRightBig" animationInDuration="0.5">
-          <text>12年证券从业经验</text>
-        </caption>
-        <caption id="9b821bb14e9d11ec92c7df4d2a532c8a" index="3" inPoint="3.5" scaleX="416" scaleY="561" width="403" height="48" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeInRightBig" animationInDuration="0.5">
-          <text>9年证券从业经验</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b821bb24e9d11ec92c7df4d2a532c8a" text="梁浩，中国人民大学经济学博士，曾任职于信息产业部电信研究院，从事产业政策研究；2008年5月加入鹏华基金，2011年7月开始担任基金经理，现担任研究部总经理、投资决策委员会成员。12年证券从业经验和9年公募基金管理经验。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e526dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b821bb34e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b8242c04e9d11ec92c7df4d2a532c8a" duration="3" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover05.png">
-      <resources/>
-      <bgvideo id="9b8242c14e9d11ec92c7df4d2a532c8a" resId="video"/>
-      <captions>
-        <caption id="9b8242c24e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="535" scaleY="325" width="210" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>业绩能力</text>
-        </caption>
-      </captions>
-      <transition id="9b8242c34e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-      <textToSounds>
-        <textToSound id="9b821bb26e8d11ec92c7df4d2a532c8a" text="业绩能力" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e536dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b8269d04e9d11ec92c7df4d2a532c8a" duration="15" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover06.png">
-      <resources>
-        <resource id="9b8269d14e9d11ec92c7df4d2a532c8a" index="1" resId="01" inPoint="0.5" scaleX="340" scaleY="0" width="600" height="250" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b8269d24e9d11ec92c7df4d2a532c8a" index="2" resId="bg8" inPoint="1" scaleX="70" scaleY="190" width="540" height="450" animationIn="fadeInLeft" animationInDuration="0.5"/>
-        <resource id="9b8269d34e9d11ec92c7df4d2a532c8a" index="3" resId="right" inPoint="1" scaleX="325" scaleY="380" width="30" height="30" animationIn="fadeInLeft" animationInDuration="0.5"/>
-        <resource id="9b8269d44e9d11ec92c7df4d2a532c8a" index="2" resId="bg8" inPoint="2" scaleX="680" scaleY="190" width="540" height="450" animationIn="fadeInRight" animationInDuration="0.5"/>
-        <resource id="9b8269d54e9d11ec92c7df4d2a532c8a" index="3" resId="right" inPoint="2" scaleX="935" scaleY="380" width="30" height="30" animationIn="fadeInRight" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b8269d64e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b8269d74e9d11ec92c7df4d2a532c8a" index="3" inPoint="0.5" scaleX="535" scaleY="35" width="210" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeInDown" animationInDuration="0.5">
-          <text>业绩回报</text>
-        </caption>
-        <caption id="9b8269d84e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="192.4" scaleY="242.4" width="295.2" height="43.2" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontColor="#000000" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>鹏华新兴产业混合</text>
-        </caption>
-        <caption id="9b8290e04e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="289.2" scaleY="291.2" width="101.6" height="33.6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="28" fontColor="#000000" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>206009</text>
-        </caption>
-        <caption id="9b8290e14e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="126.8" scaleY="375.8" width="187.4" height="38.4" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="32" fontColor="#000000" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>2011.07.14.</text>
-        </caption>
-        <caption id="9b8290e24e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="370.8" scaleY="375.8" width="178.4" height="38.4" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="32" fontColor="#000000" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>2021.05.18.</text>
-        </caption>
-        <caption id="9b8290e34e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="158.4" scaleY="477.4" width="109.2" height="31.2" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="26" fontColor="#000000" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>任职回报</text>
-        </caption>
-        <caption id="9b82b7f04e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="106" scaleY="520" width="270" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#CC4400" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>351.26%</text>
-        </caption>
-        <caption id="9b82df004e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="413.4" scaleY="477.4" width="109.2" height="31.2" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="26" fontColor="#000000" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>年化回报</text>
-        </caption>
-        <caption id="9b82df014e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="376" scaleY="520" width="270" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#CC4400" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>16.52%</text>
-        </caption>
-        <caption id="9b82df024e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="730.4" scaleY="242.4" width="439.2" height="43.2" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>鹏华研究精选灵活配置混合</text>
-        </caption>
-        <caption id="9b82df034e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="899.2" scaleY="291.2" width="101.6" height="33.6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="28" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>005028</text>
-        </caption>
-        <caption id="9b82df044e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="736.8" scaleY="375.8" width="187.4" height="38.4" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="32" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>2017.10.09.</text>
-        </caption>
-        <caption id="9b82df054e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="980.8" scaleY="375.8" width="178.4" height="38.4" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="32" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>2021.05.18.</text>
-        </caption>
-        <caption id="9b82df064e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="768.4" scaleY="477.4" width="109.2" height="31.2" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="26" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>任职回报</text>
-        </caption>
-        <caption id="9b82df074e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="716" scaleY="520" width="250" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#CC4400" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>130.94%</text>
-        </caption>
-        <caption id="9b82df084e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="1023.4" scaleY="477.4" width="109.2" height="31.2" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="26" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>年化回报</text>
-        </caption>
-        <caption id="9b82df094e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="986" scaleY="520" width="250" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#CC4400" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>26.14%</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b8306104e9d11ec92c7df4d2a532c8a" text="作为长期坚守成长风格的掘金者，梁浩业绩不俗，他管理的鹏华新兴产业、鹏华研究精选双双实现了其任职期内超翻倍的回报，年化回报分别达16.52%、26.14%。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e546dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b8306114e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b8306124e9d11ec92c7df4d2a532c8a" duration="12" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover07.png">
-      <resources>
-        <resource id="9b8306134e9d11ec92c7df4d2a532c8a" index="1" resId="01" inPoint="0.5" scaleX="340" scaleY="0" width="600" height="250" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b8306144e9d11ec92c7df4d2a532c8a" index="2" resId="bg9" inPoint="1" scaleX="70" scaleY="210" width="540" height="300" animationIn="fadeInLeft" animationInDuration="0.5"/>
-        <resource id="9b8306154e9d11ec92c7df4d2a532c8a" index="2" resId="bg9" inPoint="2" scaleX="680" scaleY="210" width="540" height="300" animationIn="fadeInRight" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b8306164e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b8306174e9d11ec92c7df4d2a532c8a" index="3" inPoint="0.5" scaleX="535" scaleY="35" width="210" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeInDown" animationInDuration="0.5">
-          <text>业绩回报</text>
-        </caption>
-        <caption id="9b8306184e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="136" scaleY="286" width="408" height="48" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>任职期间最佳基金回报</text>
-        </caption>
-        <caption id="9b832d204e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="180" scaleY="362" width="416" height="96" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="80" fontColor="#CC4400" animationIn="fadeInLeft" animationInDuration="0.5">
-          <text>351.26%</text>
-        </caption>
-        <caption id="9b832d214e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="826" scaleY="286" width="248" height="48" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>从业年均回报</text>
-        </caption>
-        <caption id="9b832d224e9d11ec92c7df4d2a532c8a" index="3" inPoint="2" scaleX="814" scaleY="362" width="416" height="96" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="80" fontColor="#CC4400" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>19.62%</text>
-        </caption>
-        <caption id="9b832d234e9d11ec92c7df4d2a532c8a" index="2" inPoint="2.5" scaleX="472" scaleY="574" width="336" height="36" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontColor="#FFFFFF" animationIn="fadeInUp" animationInDuration="0.5">
-          <text>（截止2021年5月18日）</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b832d244e9d11ec92c7df4d2a532c8a" text="其中，鹏华新兴产业在其任职期内回报达到351%，是回报最高的一只，也让梁浩从业年均回报达到 19%的佳绩。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e556dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b832d254e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b832d264e9d11ec92c7df4d2a532c8a" duration="3" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover08.png">
-      <resources/>
-      <bgvideo id="9b832d274e9d11ec92c7df4d2a532c8a" resId="video"/>
-      <captions>
-        <caption id="9b832d284e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="485" scaleY="325" width="310" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>管理基金规模</text>
-        </caption>
-      </captions>
-      <transition id="9b832d294e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-      <textToSounds>
-        <textToSound id="9b821bb26e8d11ec92c7df4d2a832c8a" text="管理基金规模" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e566dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b8354304e9d11ec92c7df4d2a532c8a" duration="12" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover09.png">
-      <resources>
-        <resource id="9b8354314e9d11ec92c7df4d2a532c8a" index="1" resId="bg15" inPoint="1" scaleX="0" scaleY="420" width="370" height="300" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b8354324e9d11ec92c7df4d2a532c8a" index="1" resId="bg6" inPoint="1" scaleX="149" scaleY="81" width="230" height="230" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b8354334e9d11ec92c7df4d2a532c8a" index="2" resId="head" inPoint="1" scaleX="159" scaleY="91" width="200" height="200" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b8354344e9d11ec92c7df4d2a532c8a" index="2" resId="bg11" inPoint="2" scaleX="470" scaleY="80" width="600" height="220" animationIn="fadeInRight" animationInDuration="0.5"/>
-        <resource id="9b8354354e9d11ec92c7df4d2a532c8a" index="2" resId="bg10" inPoint="3" scaleX="470" scaleY="340" width="600" height="300" animationIn="fadeInRight" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b8354364e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b8354374e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="210" scaleY="330" width="110" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>梁浩</text>
-        </caption>
-        <caption id="9b8354384e9d11ec92c7df4d2a532c8a" index="3" lineHeight="50" inPoint="2.5" scaleX="497" scaleY="112" width="216" height="156" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontColor="#FFFFFF" animationIn="fadeInUp" animationInDuration="0.5">
-          <text>累计任职： 
-任职起始日期： 
-现任基金公司</text>
-        </caption>
-        <caption id="9b8354394e9d11ec92c7df4d2a532c8a" index="3" lineHeight="50" inPoint="2.5" scaleX="707" scaleY="112" width="306" height="156" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontColor="#FFFFFF" animationIn="fadeInUp" animationInDuration="0.5">
-          <text>9年又311天 
-2011年7月14日 
-鹏华基金管理有限公司</text>
-        </caption>
-        <caption id="9b837b404e9d11ec92c7df4d2a532c8a" index="3" inPoint="3.5" scaleX="606" scaleY="416" width="328" height="48" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeIn" animationInDuration="0.5">
-          <text>现任基金资产规模</text>
-        </caption>
-        <caption id="9b837b414e9d11ec92c7df4d2a532c8a" index="3" inPoint="3.5" scaleX="581" scaleY="492" width="316" height="96" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="80" fontColor="#CC4400" animationIn="fadeIn" animationInDuration="0.5">
-          <text>373.23</text>
-        </caption>
-        <caption id="9b837b424e9d11ec92c7df4d2a532c8a" index="3" inPoint="3.5" scaleX="844" scaleY="520" width="113" height="69" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#CC4400" animationIn="fadeIn" animationInDuration="0.5">
-          <text>亿元</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b837b434e9d11ec92c7df4d2a532c8a" text="得益于其良好的口碑，梁浩也成为目前为数不多的管理规模超300亿元的顶流基金经理之一，目前基金资产规模达到373.23亿元" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e576dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b837b444e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b837b454e9d11ec92c7df4d2a532c8a" duration="12" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover10.png">
-      <resources>
-        <resource id="9b837b464e9d11ec92c7df4d2a532c8a" index="2" resId="bg_h2" inPoint="0.5" scaleX="310" scaleY="0" width="660" height="100" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b837b474e9d11ec92c7df4d2a532c8a" index="2" resId="table" inPoint="1" scaleX="90" scaleY="70" width="1100" height="640" animationIn="zoomIn" animationInDuration="0.5"/>
-        <resource id="9b837b484e9d11ec92c7df4d2a532c8a" index="1" resId="t_bg" inPoint="1" scaleX="190" scaleY="70" width="900" height="640" animationIn="zoomIn" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b837b494e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b837b4a4e9d11ec92c7df4d2a532c8a" index="3" inPoint="0.5" scaleX="416" scaleY="26" width="448" height="48" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="40" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>一季度基金经理规模榜单</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b83a2504e9d11ec92c7df4d2a532c8a" text="在一季度基金经理管理规模排名中，梁浩排名第30位，凸显了作为博士尖子生的他对大资金良好的管理能力。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f1106e586dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b83a2514e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b83a2524e9d11ec92c7df4d2a532c8a" duration="3" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover11.png">
-      <resources/>
-      <bgvideo id="9b83a2534e9d11ec92c7df4d2a532c8a" resId="video"/>
-      <captions>
-        <caption id="9b83a2544e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="485" scaleY="325" width="310" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>风险控制能力</text>
-        </caption>
-      </captions>
-      <transition id="9b83a2554e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-      <textToSounds>
-        <textToSound id="9b821bb26e8d11ec92c7df4d2a832c0a" text="风险控制能力" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095606dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b83a2564e9d11ec92c7df4d2a532c8a" duration="14" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover12.png">
-      <resources>
-        <resource id="9b83a2574e9d11ec92c7df4d2a532c8a" index="2" resId="bg12" inPoint="1" scaleX="70" scaleY="110" width="1100" height="530" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b83a2584e9d11ec92c7df4d2a532c8a" index="2" resId="chart1" inPoint="1.5" scaleX="115" scaleY="155" width="1010" height="430" animationIn="fadeIn" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b83a2594e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b83a25a4e9d11ec92c7df4d2a532c8a" index="2" inPoint="0.5" scaleX="511" scaleY="46" width="248" height="48" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="40" fontColor="#FFFFFF" animationIn="fadeInDown" animationInDuration="0.5">
-          <text>回撤控制优秀</text>
-        </caption>
-        <caption id="9b83a25b4e9d11ec92c7df4d2a532c8a" index="2" inPoint="2" scaleX="566.4" scaleY="678.4" width="147.2" height="19.2" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="16" fontColor="#FFFFFF" animationIn="fadeInUp" animationInDuration="0.5">
-          <text>数据来源：思迪信息</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b83c9604e9d11ec92c7df4d2a532c8a" text="梁浩非常重视基本面研究，回撤控制表现突出。以鹏华新兴产业为例，过去六年，两波明显单边下跌行情中，鹏华新兴产业跌幅均远小于沪深300指数跌幅。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095616dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b83c9614e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b83c9624e9d11ec92c7df4d2a532c8a" duration="8" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover13.png">
-      <resources>
-        <resource id="9b83c9634e9d11ec92c7df4d2a532c8a" index="2" resId="bg13" inPoint="1" scaleX="70" scaleY="200" width="1140" height="460" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b83c9644e9d11ec92c7df4d2a532c8a" index="2" resId="chart2" inPoint="1.5" scaleX="120" scaleY="250" width="1045" height="370" animationIn="fadeIn" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b83c9654e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b83c9664e9d11ec92c7df4d2a532c8a" index="2" inPoint="0.5" scaleX="265" scaleY="55" width="751" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeInDown" animationInDuration="0.5">
-          <text>2015—2016大起大落中也能抗住</text>
-        </caption>
-        <caption id="9b83c9674e9d11ec92c7df4d2a532c8a" index="2" inPoint="2" scaleX="566.4" scaleY="678.4" width="147.2" height="19.2" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="16" fontColor="#FFFFFF" animationIn="fadeInUp" animationInDuration="0.5">
-          <text>数据来源：思迪信息</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b83c9684e9d11ec92c7df4d2a532c8a" text="尤其2015至2016年，A股大起大落环境下，鹏华新兴产业顽强抵挡住了考验，" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095626dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b83c9694e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b83c96a4e9d11ec92c7df4d2a532c8a" duration="10" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover14.png">
-      <resources>
-        <resource id="9b83c96b4e9d11ec92c7df4d2a532c8a" index="1" resId="bg4" inPoint="1" scaleX="70" scaleY="170" width="1140" height="490" animationIn="fadeInLeft" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b83f0704e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b83f0714e9d11ec92c7df4d2a532c8a" index="2" inPoint="0.5" scaleX="265" scaleY="55" width="751" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeInDown" animationInDuration="0.5">
-          <text>2015—2016大起大落中也能抗住</text>
-        </caption>
-      </captions>
-      <dynDataCharts>
-        <dynDataChart id="9b83f0724e9d11ec92c7df4d2a532c8a" index="2" chartId="sdthinkive_year_quotechange_bar" inPoint="2" scaleX="70" scaleY="170" width="1140" height="490" optionsPath="/avesto/plat/material/chartoptions/project/sdthinkive/fundmanagers/sdthinkive_year_quotechange_bar/ddcoptions.json" dataPath="/avesto/plat/material/chartoptions/project/sdthinkive/fundmanagers/sdthinkive_year_quotechange_bar/ddcdata.json" animationIn="fadeInLeft" animationInDuration="0.5"/>
-      </dynDataCharts>
-      <textToSounds>
-        <textToSound id="9b8417804e9d11ec92c7df4d2a532c8a" text="保住了大部分胜利果实，且在2016全年也仅下跌8.54%（小于沪深300全年11.28%的跌幅）。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095636dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b8417814e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b8417824e9d11ec92c7df4d2a532c8a" duration="3" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover15.png">
-      <resources/>
-      <bgvideo id="9b8417834e9d11ec92c7df4d2a532c8a" resId="video"/>
-      <captions>
-        <caption id="9b8417844e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="535" scaleY="325" width="210" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>投资风格</text>
-        </caption>
-      </captions>
-      <transition id="9b8417854e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-      <textToSounds>
-        <textToSound id="9b821bb26e8d11ec92c4df4d2a832c0a" text="投资风格" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095646dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b8417864e9d11ec92c7df4d2a532c8a" duration="15" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover16.png">
-      <resources>
-        <resource id="9b8417874e9d11ec92c7df4d2a532c8a" index="1" resId="01" inPoint="0.5" scaleX="340" scaleY="0" width="600" height="250" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b8417884e9d11ec92c7df4d2a532c8a" index="2" resId="02" inPoint="1" scaleX="120" scaleY="270" width="300" height="300" animationIn="zoomIn" animationInDuration="0.5"/>
-        <resource id="9b8417894e9d11ec92c7df4d2a532c8a" index="2" resId="02" inPoint="1.5" scaleX="490" scaleY="270" width="300" height="300" animationIn="zoomIn" animationInDuration="0.5"/>
-        <resource id="9b84178a4e9d11ec92c7df4d2a532c8a" index="2" resId="02" inPoint="2" scaleX="860" scaleY="270" width="300" height="300" animationIn="zoomIn" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b84178b4e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b84178c4e9d11ec92c7df4d2a532c8a" index="3" inPoint="0.5" scaleX="535" scaleY="35" width="210" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>投资风格</text>
-        </caption>
-        <caption id="9b84178d4e9d11ec92c7df4d2a532c8a" index="3" lineHeight="50" inPoint="1" scaleX="186" scaleY="365" width="188" height="108" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="zoomIn" animationInDuration="0.5">
-          <text>  中小盘  
-成长风格</text>
-        </caption>
-        <caption id="9b843e904e9d11ec92c7df4d2a532c8a" index="3" lineHeight="50" inPoint="1.5" scaleX="556" scaleY="367" width="188" height="108" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="zoomIn" animationInDuration="0.5">
-          <text>行业配置
-适度分散</text>
-        </caption>
-        <caption id="9b843e914e9d11ec92c7df4d2a532c8a" index="3" lineHeight="50" inPoint="2" scaleX="926" scaleY="341" width="188" height="158" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="zoomIn" animationInDuration="0.5">
-          <text>长期持有
-分享企业
-成长红利</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b843e924e9d11ec92c7df4d2a532c8a" text="从梁浩的历史持仓看，中小盘成长风格显著且稳定，行业配置适度分散，侧重专注于挖掘优质成长股，通过长期持股分享上市公司的高成长，赚企业成长、产业发展的钱。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095656dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b843e934e9d11ec92c7df4d2a532c8a" duration="10" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover17.png">
-      <resources>
-        <resource id="9b843e944e9d11ec92c7df4d2a532c8a" index="1" resId="01" inPoint="0.5" scaleX="340" scaleY="0" width="600" height="250" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b8465a04e9d11ec92c7df4d2a532c8a" index="2" resId="02" inPoint="1" scaleX="120" scaleY="270" width="300" height="300" animationIn="zoomIn" animationInDuration="0.5"/>
-        <resource id="9b8465a14e9d11ec92c7df4d2a532c8a" index="2" resId="02" inPoint="1.5" scaleX="490" scaleY="270" width="300" height="300" animationIn="zoomIn" animationInDuration="0.5"/>
-        <resource id="9b8465a24e9d11ec92c7df4d2a532c8a" index="2" resId="02" inPoint="2" scaleX="860" scaleY="270" width="300" height="300" animationIn="zoomIn" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b8465a34e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b8465a44e9d11ec92c7df4d2a532c8a" index="3" inPoint="0.5" scaleX="535" scaleY="35" width="210" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>操作风格</text>
-        </caption>
-        <caption id="9b8465a54e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="186" scaleY="391" width="208" height="58" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="zoomIn" animationInDuration="0.5">
-          <text>不追热门</text>
-        </caption>
-        <caption id="9b8465a64e9d11ec92c7df4d2a532c8a" index="3" inPoint="1.5" scaleX="556" scaleY="391" width="208" height="58" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="zoomIn" animationInDuration="0.5">
-          <text>不赌风口</text>
-        </caption>
-        <caption id="9b8465a74e9d11ec92c7df4d2a532c8a" index="3" lineHeight="50" inPoint="2" scaleX="926" scaleY="366" width="188" height="108" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="zoomIn" animationInDuration="0.5">
-          <text>注重未来
-价值判断</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b8465a84e9d11ec92c7df4d2a532c8a" text="操作方面，梁浩不追热门、不赌风口，注重对上市公司未来价值判断，从而有效回避下行风险，重仓长线持有，赚取投资上的超额利润。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095666dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b8465a94e9d11ec92c7df4d2a532c8a" duration="3" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover18.png">
-      <resources/>
-      <bgvideo id="9b8465aa4e9d11ec92c7df4d2a532c8a" resId="video"/>
-      <captions>
-        <caption id="9b848cb04e9d11ec92c7df4d2a532c8a" index="3" inPoint="1" scaleX="535" scaleY="325" width="210" height="60" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="50" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="0.5">
-          <text>综合点评</text>
-        </caption>
-      </captions>
-      <transition id="9b848cb14e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-      <textToSounds>
-        <textToSound id="9b821bb26e4d11ec92c4df4d2a832c0a" text="综合点评" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095676dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-    </board>
-    <board id="9b848cb24e9d11ec92c7df4d2a532c8a" duration="15" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover19.png">
-      <resources>
-        <resource id="9b848cb34e9d11ec92c7df4d2a532c8a" index="1" resId="bg3" inPoint="0.5" scaleX="0" scaleY="0" width="570" height="720" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b848cb44e9d11ec92c7df4d2a532c8a" index="2" resId="person" inPoint="1" scaleX="63" scaleY="55" width="469" height="665" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b848cb54e9d11ec92c7df4d2a532c8a" index="1" resId="bar01" inPoint="1.5" scaleX="660" scaleY="70" width="840" height="100" animationIn="fadeInRight" animationInDuration="0.5"/>
-        <resource id="9b848cb64e9d11ec92c7df4d2a532c8a" index="1" resId="bar02" inPoint="2" scaleX="630" scaleY="190" width="840" height="100" animationIn="fadeInRight" animationInDuration="0.5"/>
-        <resource id="9b848cb74e9d11ec92c7df4d2a532c8a" index="1" resId="bar03" inPoint="2.5" scaleX="600" scaleY="310" width="840" height="100" animationIn="fadeInRight" animationInDuration="0.5"/>
-        <resource id="9b848cb84e9d11ec92c7df4d2a532c8a" index="1" resId="bar04" inPoint="3" scaleX="570" scaleY="430" width="840" height="100" animationIn="fadeInRight" animationInDuration="0.5"/>
-        <resource id="9b848cb94e9d11ec92c7df4d2a532c8a" index="1" resId="bar05" inPoint="3.5" scaleX="540" scaleY="550" width="840" height="100" animationIn="fadeInRight" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b848cba4e9d11ec92c7df4d2a532c8a" resId="bg2"/>
-      <captions>
-        <caption id="9b84dad04e9d11ec92c7df4d2a532c8a" index="2" inPoint="1.5" scaleX="766" scaleY="91" width="468" height="58" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>擅长掘金新兴经济行业</text>
-        </caption>
-        <caption id="9b84dad14e9d11ec92c7df4d2a532c8a" index="2" inPoint="2" scaleX="736" scaleY="211" width="208" height="58" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>业绩突出</text>
-        </caption>
-        <caption id="9b8501e04e9d11ec92c7df4d2a532c8a" index="2" inPoint="2.5" scaleX="706" scaleY="331" width="268" height="58" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>风险控制优秀</text>
-        </caption>
-        <caption id="9b8501e14e9d11ec92c7df4d2a532c8a" index="2" inPoint="3" scaleX="676" scaleY="451" width="418" height="58" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>以成长的视角选价值</text>
-        </caption>
-        <caption id="9b8501e24e9d11ec92c7df4d2a532c8a" index="2" inPoint="3.5" scaleX="646" scaleY="571" width="513" height="58" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="40" fontColor="#000000" animationIn="fadeInRight" animationInDuration="0.5">
-          <text>经验丰富的研究型“猎手”</text>
-        </caption>
-      </captions>
-      <textToSounds>
-        <textToSound id="9b8501e34e9d11ec92c7df4d2a532c8a" text="另外，其独具一格的”以成长的视角选价值、以绝对收益思路做相对收益“的投资理念以及“注重研究、长期持有“的风格颇受好评，是位经验丰富且难得的研究型优秀猎手。" voice="aishuo" volume="100" inPoint="0.5" speechRate="0" resId="f11095686dca11ecaa1fad033c46ef8f"/>
-      </textToSounds>
-      <transition id="9b8528f04e9d11ec92c7df4d2a532c8a" name="BowTieVertical" duration="0.5"/>
-    </board>
-    <board id="9b8528f14e9d11ec92c7df4d2a532c8a" duration="5" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover20.png">
-      <resources>
-        <resource id="9b8528f24e9d11ec92c7df4d2a532c8a" index="1" resId="bg14" inPoint="0.5" scaleX="259" scaleY="129" width="741" height="396" animationIn="fadeIn" animationInDuration="0.5"/>
-      </resources>
-      <bgimg id="9b8528f34e9d11ec92c7df4d2a532c8a" resId="bg1"/>
-      <captions>
-        <caption id="9b8528f44e9d11ec92c7df4d2a532c8a" index="2" inPoint="1" scaleX="556" scaleY="176" width="168" height="48" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="40" fontColor="#CC4400" animationIn="fadeIn" animationInDuration="0.5">
-          <text>风险提示</text>
-        </caption>
-        <caption id="9b8528f54e9d11ec92c7df4d2a532c8a" index="2" lineHeight="66" inPoint="1.5" scaleX="332" scaleY="257" width="616" height="206" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontColor="#000000" animationIn="fadeIn" animationInDuration="0.5">
-          <text>        本视频仅作为交流分享经验，
-不构成投资买卖建议，市场有风
-险，投资需谨慎！</text>
-        </caption>
-      </captions>
-    </board>
-  </storyBoards>
+<project id="8cf43e55-1345-4d65-ab42-54a8088b6b7c" name="主力资金" actuator="10000">
+    <projRes>
+        <resource id="bg_music" type="sound" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/bg_music.mp3" />
+        <resource id="bg" type="img" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/bg.png" />
+        <resource id="2d8d147043a811ecaa1fad033c46ef8f" type="voice" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/tts/2d8d147043a811ecaa1fad033c46ef8f.mp3" />
+        <resource id="logo" type="img" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/logo.png" />
+        <resource id="1007" type="sound" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/1007.mp3" />
+        <resource id="icon_blue" type="img" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/icon_blue.png" />
+        <resource id="blue_title" type="img" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/blue_title.png" />
+        <resource id="dy" type="img" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/dy.png" />
+        <resource id="icon_green" type="img" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/icon_green.png" />
+        <resource id="green_title" type="img" name="" resPath="/avesto/plat/tmplres/scenetmpl/zhuli_zj/green_title.png" />
+    </projRes>
+    <global duration="20" videoSize="9:16" videoWidth="720" videoHeight="1280" poster="/ave/upload/3/115/image/20220426/992c6ae43bad49ffa73ba319b7448a88.png" fps="30" videoBitrate="2097152" audioBitrate="131072">
+        <bgblock id="1v2m2U1SzthjznA8" inPoint="0" outPoint="0" fillColor="#000" />
+        <bgmusic id="a8632590439911ec9d3fb3bb6b814adf" inPoint="0" outPoint="0" resId="bg_music" duration="0" volume="0.6" muted="false" loop="true" />
+    </global>
+    <storyBoards>
+        <board id="a8634ca0439911ec9d3fb3bb6b814adf" duration="4" poster="/avesto/plat/tmplres/scenetmpl/zhuli_zj/01.png">
+            <bgblock id="1V2m2uTZCc36uP2G" inPoint="0" outPoint="0" fillColor="#000" />
+            <bgimg id="a8632591asdsa439911ec9d3fb3bb6b814adf" inPoint="0" outPoint="0" resId="bg" />
+            <resources>
+                <resource id="a8634ca1439911ec9d3fb3bb6b814adf" inPoint="0" outPoint="0" scaleX="80" scaleY="208" width="268" height="60" rotate="0" opacity="1" index="1" animationIn="fadeIn" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" resId="logo" />
+                <resource id="a8634ca1439911ec9d3fb3bb6b814adf" inPoint="3" outPoint="0" scaleX="0" scaleY="0" width="0" height="0" rotate="0" opacity="1" index="2" resId="1007" duration="0" volume="1" muted="false" loop="false" />
+            </resources>
+            <captions>
+                <caption id="a86373b0439911ec9d3fb3bb6b814adf" inPoint="0.5" outPoint="0" scaleX="70" scaleY="278" width="420" height="140" rotate="0" opacity="1" index="3" animationIn="fadeInUpBig" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" fontSize="100" fontColor="#000000" fillColor="" textAlign="left" lineHeight="120" fontFamily="HarmonyOS_Sans_SC_Bold" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>主力资金</text>
+                </caption>
+                <caption id="a8639ac0439911ec9d3fb3bb6b814adf" inPoint="0.7" outPoint="0" scaleX="73.2" scaleY="401.2" width="285.6" height="81.6" rotate="0" opacity="1" index="4" animationIn="fadeInUpBig" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" fontSize="68" fontColor="#000000" fillColor="" textAlign="left" lineHeight="81.6" fontFamily="HarmonyOS_Sans_SC_Bold" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>日内追踪</text>
+                </caption>
+                <caption id="a863c1d0439911ec9d3fb3bb6b814adf" inPoint="0.9" outPoint="0" scaleX="76" scaleY="492" width="321" height="48" rotate="0" opacity="1" index="5" animationIn="fadeInUpBig" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" fontSize="40" fontColor="#000000" fillColor="" textAlign="left" lineHeight="48" fontFamily="HarmonyOS_Sans_SC_Bold" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>2021年10月29日</text>
+                </caption>
+            </captions>
+            <textToSounds>
+                <textToSound id="784d52c3-1389-7d5d-75f9-0de7e366cd55" inPoint="0.5" outPoint="0" scaleX="0" scaleY="0" width="0" height="0" rotate="0" opacity="1" index="0" resId="2d8d147043a811ecaa1fad033c46ef8f" text="欢迎观看主力资金日内追踪" voice="aixia" duration="0" volume="1" muted="false" loop="false" speechRate="1" pitchRate="0" enableSubtitle="false" provider="aliyun">
+                    <ssml>&lt;speak provider=&quot;aliyun&quot;&gt;&lt;voice name=&quot;aixia&quot;&gt;&lt;prosody contenteditable=&quot;true&quot; rate=&quot;0&quot;&gt;&lt;p&gt;欢迎观看主力资金日内追踪&lt;/p&gt;&lt;/prosody&gt;&lt;/voice&gt;&lt;/speak&gt;</ssml>
+                </textToSound>
+            </textToSounds>
+            <transition id="a863c1d1439911ec9d3fb3bb6b814adf" name="BowTieVertical" duration="0.5" />
+        </board>
+        <board id="a863c1d2439911ec9d3fb3bb6b814adf" duration="6" poster="/avesto/plat/tmplres/scenetmpl/zhuli_zj/02.png">
+            <bgblock id="1V2m2UNIKmCB3L1h" inPoint="0" outPoint="0" fillColor="#000" />
+            <bgimg id="a863259143991zxcasda1ec9d3fb3bb6b814adf" inPoint="0" outPoint="0" resId="bg" />
+            <resources>
+                <resource id="a863c1d3439911ec9d3fb3bb6b814adf" inPoint="0.5" outPoint="0" scaleX="50" scaleY="76" width="36" height="28" rotate="0" opacity="1" index="0" animationIn="fadeIn" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" resId="icon_blue" />
+                <resource id="a863e8e0439911ec9d3fb3bb6b814adf" inPoint="0.5" outPoint="0" scaleX="96" scaleY="90" width="500" height="24" rotate="0" opacity="1" index="1" animationIn="fadeIn" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" resId="blue_title" />
+                <resource id="a863e8e1439911ec9d3fb3bb6b814adf" inPoint="1.5" outPoint="0" scaleX="50" scaleY="174" width="620" height="968" rotate="0" opacity="1" index="2" animationIn="fadeIn" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" resId="dy" />
+            </resources>
+            <captions>
+                <caption id="a863e8e2439911ec9d3fb3bb6b814adf" inPoint="1" outPoint="0" scaleX="92" scaleY="66" width="448" height="48" rotate="0" opacity="1" index="4" animationIn="fadeInDown" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" fontSize="40" fontColor="#000000" fillColor="" textAlign="left" lineHeight="48" fontFamily="HarmonyOS_Sans_SC_Bold" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>主力资金净流入个股一览</text>
+                </caption>
+                <caption id="a863e8e2439911ec9d3fb3bb6b814adf" inPoint="2" outPoint="0" scaleX="229.6" scaleY="1181.6" width="260.8" height="28.8" rotate="0" opacity="1" index="5" animationIn="fadeInUp" animationInDuration="0.5" fontSize="24" fontColor="#000000" fillColor="" textAlign="left" lineHeight="28.799999999999997" fontFamily="HarmonyOS_Sans_SC_Regular" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>—  2021年10月29日  —</text>
+                </caption>
+            </captions>
+            <dynDataCharts>
+                <dynDataChart id="a863e8e3439911ec9d3fb3bb6b814adf" inPoint="1.5" outPoint="0" scaleX="50" scaleY="174" width="620" height="968" rotate="0" opacity="1" index="3" chartId="sdthinkive_mainnorth_inflow_bar" optionsPath="/ave/upload/3/115/option-json/20220426/ab12cada56be4be89e52ace17c5ea134.json" dataPath="/avesto/plat/material/chartoptions/project/sdthinkive/mainfunding/sdthinkive_mainnorth_inflow_bar/ddcdata.json" poster="" />
+            </dynDataCharts>
+            <transition id="a863e8e4439911ec9d3fb3bb6b814adf" name="BowTieVertical" duration="0.5" />
+        </board>
+        <board id="a8640ff0439911ec9d3fb3bb6b814adf" duration="6" poster="/avesto/plat/tmplres/scenetmpl/zhuli_zj/03.png">
+            <bgblock id="1V2m2UF2aRCVUlmm" inPoint="0" outPoint="0" fillColor="#000" />
+            <bgimg id="a8632591asdzxcasd439911ec9d3fb3bb6b814adf" inPoint="0" outPoint="0" resId="bg" />
+            <resources>
+                <resource id="a8640ff1439911ec9d3fb3bb6b814adf" inPoint="0.5" outPoint="0" scaleX="50" scaleY="76" width="36" height="28" rotate="0" opacity="1" index="0" animationIn="fadeIn" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" resId="icon_green" />
+                <resource id="a8640ff2439911ec9d3fb3bb6b814adf" inPoint="0.5" outPoint="0" scaleX="96" scaleY="90" width="500" height="24" rotate="0" opacity="1" index="1" animationIn="fadeIn" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" resId="green_title" />
+                <resource id="a8640ff3439911ec9d3fb3bb6b814adf" inPoint="1.5" outPoint="0" scaleX="50" scaleY="174" width="620" height="968" rotate="0" opacity="1" index="2" animationIn="fadeIn" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" resId="dy" />
+            </resources>
+            <captions>
+                <caption id="a8640ff4439911ec9d3fb3bb6b814adf" inPoint="1" outPoint="0" scaleX="92" scaleY="66" width="448" height="48" rotate="0" opacity="1" index="4" animationIn="fadeInDown" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" fontSize="40" fontColor="#000000" fillColor="" textAlign="left" lineHeight="48" fontFamily="HarmonyOS_Sans_SC_Bold" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>主力资金净流出个股一览</text>
+                </caption>
+                <caption id="a863e8e2439911ec9d3fb3bb6b814adf" inPoint="2" outPoint="0" scaleX="229.6" scaleY="1181.6" width="260.8" height="28.8" rotate="0" opacity="1" index="5" animationIn="fadeInUp" animationInDuration="0.5" fontSize="24" fontColor="#000000" fillColor="" textAlign="left" lineHeight="28.799999999999997" fontFamily="HarmonyOS_Sans_SC_Regular" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>—  2021年10月29日  —</text>
+                </caption>
+            </captions>
+            <dynDataCharts>
+                <dynDataChart id="a8640ff5439911ec9d3fb3bb6b814adf" inPoint="1.5" outPoint="0" scaleX="50" scaleY="174" width="620" height="968" rotate="0" opacity="1" index="3" chartId="sdthinkive_mainnorth_outflow_bar" optionsPath="/ave/upload/3/115/option-json/20220426/36417f040f864f259011f6433db3c12c.json" dataPath="/avesto/plat/material/chartoptions/project/sdthinkive/mainfunding/sdthinkive_mainnorth_outflow_bar/ddcdata.json" poster="" />
+            </dynDataCharts>
+            <transition id="a8640ff6439911ec9d3fb3bb6b814adf" name="BowTieVertical" duration="0.5" />
+        </board>
+        <board id="a8640ff7439911ec9d3fb3bb6b814adf" duration="4" poster="/avesto/plat/tmplres/scenetmpl/zhuli_zj/04.png">
+            <bgblock id="1V2m2uEFzj6TLsnT" inPoint="0" outPoint="0" fillColor="#000" />
+            <bgimg id="a86325914dasdxzc39911ec9d3fb3bb6b814adf" inPoint="0" outPoint="0" resId="bg" />
+            <resources>
+                <resource id="a8640ff8439911ec9d3fb3bb6b814adf" inPoint="0" outPoint="0" scaleX="60" scaleY="220" width="268" height="60" rotate="0" opacity="1" index="0" animationIn="fadeIn" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" resId="logo" />
+            </resources>
+            <captions>
+                <caption id="a8640ff9439911ec9d3fb3bb6b814adf" inPoint="0.5" outPoint="0" scaleX="54" scaleY="324" width="556" height="72" rotate="0" opacity="1" index="1" animationIn="fadeInUpBig" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" fontSize="60" fontColor="#000000" fillColor="" textAlign="left" lineHeight="72" fontFamily="HarmonyOS_Sans_SC_Bold" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>更多专业理财资讯</text>
+                </caption>
+                <caption id="a8640ffa439911ec9d3fb3bb6b814adf" inPoint="0.7" outPoint="0" scaleX="52.6" scaleY="412.6" width="606.8" height="88.8" rotate="0" opacity="1" index="2" animationIn="fadeInUpBig" animationInDuration="0.5" animationOut="" animationOutDuration="0.5" fontSize="74" fontColor="#000000" fillColor="" textAlign="left" lineHeight="88.8" fontFamily="HarmonyOS_Sans_SC_Bold" wordSpacing="0" bold="400" italic="normal" effectWordDuration="800" effectWordInterval="100">
+                    <text>敬请关注思迪信息</text>
+                </caption>
+            </captions>
+            <transition id="a8643700439911ec9d3fb3bb6b814adf" name="BowTieVertical" duration="0.5" />
+        </board>
+    </storyBoards>
 </project>

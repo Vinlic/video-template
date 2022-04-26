@@ -69,7 +69,7 @@ export default {
   },
 
   millisecondsToSenconds(milliseconds: number, precision: number = 3): number {
-    return parseFloat(Math.floor(milliseconds / 1000).toFixed(precision));
+    return parseFloat((milliseconds / 1000).toFixed(precision));
   },
 
   arrayParse(value: string | string[]): string[] {
