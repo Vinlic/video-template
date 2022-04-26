@@ -112,6 +112,9 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
     const ms = milliseconds % 6e4 - seconds * 1e3;
     return `${hours > 9 ? hours : "0" + hours}:${minutes > 9 ? minutes : "0" + minutes}:${seconds > 9 ? seconds : "0" + seconds}.${ms}`;
   },
+  millisecondsToSenconds(milliseconds, precision = 3) {
+    return parseFloat(Math.floor(milliseconds / 1e3).toFixed(precision));
+  },
   arrayParse(value) {
     return this.isArray(value) ? value : [value];
   },
@@ -732,6 +735,8 @@ var Crop = class {
   width = 0;
   height = 0;
   style = "";
+  clipType;
+  clipStyle;
   constructor(options) {
     util_default.optionsInject(this, options, {
       x: (v) => Number(util_default.defaultTo(v, 0)),
@@ -743,7 +748,9 @@ var Crop = class {
       y: (v) => util_default.isFinite(v),
       width: (v) => util_default.isFinite(v),
       height: (v) => util_default.isFinite(v),
-      style: (v) => util_default.isString(v)
+      style: (v) => util_default.isString(v),
+      clipType: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      clipStyle: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
   }
   static isInstance(value) {
@@ -781,6 +788,15 @@ var _Image = class extends Element_default {
     image.att("mode", this.mode);
     image.att("dynamic", this.dynamic);
     image.att("loop", this.loop);
+    if (this.crop) {
+      image.att("crop-style", this.crop.style);
+      image.att("crop-x", this.crop.x);
+      image.att("crop-y", this.crop.y);
+      image.att("crop-width", this.crop.width);
+      image.att("crop-height", this.crop.height);
+      image.att("crop-clipType", this.crop.clipType);
+      image.att("crop-clipStyle", this.crop.clipStyle);
+    }
   }
   renderOldXML(parent, resources, global) {
     const image = super.renderOldXML(parent, resources, global);
@@ -788,6 +804,15 @@ var _Image = class extends Element_default {
     const resourceId = cacheResourceId || util_default.uniqid();
     image.att("loop", this.loop);
     image.att("resId", resourceId);
+    if (this.crop) {
+      image.att("cropStyle", this.crop.style);
+      image.att("cropX", this.crop.x);
+      image.att("cropY", this.crop.y);
+      image.att("cropWidth", this.crop.width);
+      image.att("cropHeight", this.crop.height);
+      image.att("clipType", this.crop.clipType);
+      image.att("clipStyle", this.crop.clipStyle);
+    }
     if (cacheResourceId || !resources)
       return image;
     resources.map[this.src] = resourceId;
@@ -859,6 +884,7 @@ var _Voice = class extends Media_default {
   sampleRate;
   speechRate;
   pitchRate;
+  enableSubtitle;
   constructor(options) {
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
@@ -1382,6 +1408,24 @@ var _Template = class {
     const storyBoards = project.ele("storyBoards");
     (_a = this.children) == null ? void 0 : _a.forEach((node) => node.renderOldXML(storyBoards, resources, global));
     return project.end({ pretty });
+  }
+  toOptions() {
+    let globalImage;
+    let globalVideo;
+    let globalAudio;
+    this.children.forEach((node) => {
+      switch (node.type) {
+        case "image":
+          node.isBackground && (globalImage = node);
+          break;
+        case "video":
+          node.isBackground && (globalVideo = node);
+          break;
+        case "audio":
+          node.isBackground && (globalAudio = node);
+          break;
+      }
+    });
   }
   static isId(value) {
     return util_default.isString(value) && /^[a-zA-Z0-9]{32}$/.test(value);

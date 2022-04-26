@@ -8,6 +8,7 @@ interface IVoiceOptions extends IMediaOptions {
   sampleRate?: string;
   speechRate?: number | string;
   pitchRate?: number | string;
+  enableSubtitle?: boolean | string;
 }
 
 export default IVoiceOptions;

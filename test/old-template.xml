@@ -109,7 +109,7 @@
     <board id="9b81cd954e9d11ec92c7df4d2a532c8a" duration="20" poster="/avesto/plat/tmplres/scenetmpl/focus_fundMan/cover04.png">
       <resources>
         <resource id="9b81cd964e9d11ec92c7df4d2a532c8a" index="1" resId="bg7" inPoint="0.5" scaleX="341" scaleY="0" width="939" height="720" animationIn="fadeIn" animationInDuration="0.5"/>
-        <resource id="9b81cd974e9d11ec92c7df4d2a532c8a" index="1" resId="bg6" inPoint="1" scaleX="128" scaleY="82" width="230" height="230" animationIn="fadeIn" animationInDuration="0.5"/>
+        <resource id="9b81cd974e9d11ec92c7df4d2a532c8a" index="1" resId="bg6" inPoint="1" scaleX="128" scaleY="82" width="230" height="230" animationIn="fadeIn" animationInDuration="0.5" cropStyle="rect" cropX="0" cropY="0" cropWidth="100" cropHeight="100"/>
         <resource id="9b81f4a04e9d11ec92c7df4d2a532c8a" index="2" resId="head" inPoint="1" scaleX="138" scaleY="92" width="200" height="200" animationIn="fadeIn" animationInDuration="0.5"/>
         <resource id="9b81f4a14e9d11ec92c7df4d2a532c8a" index="2" resId="bar6" inPoint="1.5" scaleX="488" scaleY="110" width="678" height="70" animationIn="fadeInRightBig" animationInDuration="0.5"/>
         <resource id="9b81f4a24e9d11ec92c7df4d2a532c8a" index="2" resId="bar6" inPoint="2" scaleX="449" scaleY="220" width="678" height="70" animationIn="fadeInRightBig" animationInDuration="0.5"/>

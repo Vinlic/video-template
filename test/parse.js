@@ -8,7 +8,6 @@ const { Template } = require("../dist");
     const compiledXMLPath = path.join(__dirname, "template.xml");
     const content = (await fs.promises.readFile(rawXMLPath)).toString();
     const template = await Template.parse(content);
-    console.log(template);
     fs.writeFileSync(compiledXMLPath, template.toXML(true));
 })()
 .catch(err => console.error(err));

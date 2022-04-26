@@ -181,6 +181,8 @@ interface ICropOptions {
     width?: number | string;
     height?: number | string;
     style?: string;
+    clipType?: string;
+    clipStyle?: string;
 }
 
 declare enum ImageModes {
@@ -205,6 +207,8 @@ declare class Crop {
     width: number;
     height: number;
     style: string;
+    clipType?: string;
+    clipStyle?: string;
     constructor(options: ICropOptions);
     static isInstance(value: any): boolean;
 }
@@ -253,6 +257,7 @@ interface IVoiceOptions extends IMediaOptions {
     sampleRate?: string;
     speechRate?: number | string;
     pitchRate?: number | string;
+    enableSubtitle?: boolean | string;
 }
 
 declare class Voice extends Media {
@@ -263,6 +268,7 @@ declare class Voice extends Media {
     sampleRate?: string;
     speechRate?: number;
     pitchRate?: number;
+    enableSubtitle?: boolean;
     constructor(options: IVoiceOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
@@ -455,14 +461,15 @@ declare class Template {
     updateTime: number;
     buildBy: string;
     compile: boolean;
-    children: (Scene | Element | ISceneOptions | IElementOptions)[];
+    children: (Scene | Element)[];
     constructor(options: ITemplateOptions, data?: {}, vars?: {});
     scenesSplice(start: number, end: number): void;
-    appendChild(node: Scene | Element): void;
+    appendChild(node: any): void;
     toBASE64(): string;
     toOldBASE64(): string;
     toXML(pretty?: boolean): string;
     toOldXML(pretty?: boolean): string;
+    toOptions(): void;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
     static parse(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any): Promise<Template>;
@@ -472,7 +479,7 @@ declare class Template {
     generateAllTrack(): any;
     get duration(): number;
     get fontFamilys(): string[];
-    get scenes(): (IElementOptions | Element | ISceneOptions | Scene)[];
+    get scenes(): (Element | Scene)[];
 }
 
 export { Scene, Template, index as elements };

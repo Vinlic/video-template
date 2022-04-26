@@ -15,6 +15,7 @@ class Voice extends Media {
   public sampleRate?: string; // 音频采样率
   public speechRate?: number; // 发音人语速
   public pitchRate?: number; // 发音人语调
+  public enableSubtitle?: boolean;  //是否开启字幕，即将废弃
 
   public constructor(options: IVoiceOptions) {
     if (!util.isObject(options)) throw new TypeError('options must be an Object');

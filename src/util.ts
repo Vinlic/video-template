@@ -68,6 +68,10 @@ export default {
     }.${ms}`;
   },
 
+  millisecondsToSenconds(milliseconds: number, precision: number = 3): number {
+    return parseFloat(Math.floor(milliseconds / 1000).toFixed(precision));
+  },
+
   arrayParse(value: string | string[]): string[] {
     return this.isArray(value) ? value as string[] : [value as string];
   },
