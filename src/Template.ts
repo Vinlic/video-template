@@ -265,6 +265,8 @@ class Template {
                     break;
             }
         });
+        const storyBoards: any[] = [];
+        this.children.forEach(node => Scene.isInstance(node) && storyBoards.push(node.toOptions()))
         return {
             id: this.id,
             name: this.name,
@@ -286,7 +288,7 @@ class Template {
             // 背景音乐
             bgMusic: globalAudio ? globalAudio.toOptions() : undefined,
             // 视频故事板列表
-            storyboards: this.children.map(node => node.toOptions())
+            storyboards: storyBoards
         };
     }
 

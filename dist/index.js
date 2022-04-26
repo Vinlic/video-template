@@ -396,7 +396,7 @@ var Effect = class {
   toOptions(startTime = 0) {
     return {
       name: this.type,
-      delay: startTime,
+      delay: util_default.millisecondsToSenconds(startTime),
       duration: util_default.millisecondsToSenconds(this.duration),
       path: this.path
     };
@@ -1637,6 +1637,8 @@ var _Template = class {
           break;
       }
     });
+    const storyBoards = [];
+    this.children.forEach((node) => Scene_default.isInstance(node) && storyBoards.push(node.toOptions()));
     return {
       id: this.id,
       name: this.name,
@@ -1653,7 +1655,7 @@ var _Template = class {
       bgImage: globalImage ? globalImage.toOptions() : void 0,
       bgVideo: globalVideo ? globalVideo.toOptions() : void 0,
       bgMusic: globalAudio ? globalAudio.toOptions() : void 0,
-      storyboards: this.children.map((node) => node.toOptions())
+      storyboards: storyBoards
     };
   }
   static isId(value) {
