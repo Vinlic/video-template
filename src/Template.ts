@@ -4,9 +4,10 @@ import { XMLParser } from 'fast-xml-parser';
 import ITemplateOptions from './interface/ITemplateOptions';
 
 import util from './util';
-import Compiler from './compiler';
 import Scene from './Scene';
 import ElementFactory from './ElementFactory';
+import { Parser, OldParser, OptionsParser } from './parsers';
+import Compiler from './Compiler';
 import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML } from './elements';
 
 const xmlParser = new XMLParser({
@@ -134,36 +135,28 @@ class Template {
      * 
      * @returns {String} BASE64
      */
-    toBASE64() {
-        return this.toBuffer().toString("base64");
-    }
+    toBASE64() { return this.toBuffer().toString("base64") }
 
     /**
      * 转换为旧BASE64字符串
      * 
      * @returns {String} BASE64
      */
-    toOldBASE64() {
-        return this.toOldBuffer().toString("base64");
-    }
+    toOldBASE64() { return this.toOldBuffer().toString("base64") }
 
     /**
      * 转换为缓冲区
      * 
      * @returns {Buffer} 缓冲区
      */
-    toBuffer() {
-        return Buffer.from(this.toXML());
-    }
+    toBuffer() { return Parser.toBuffer(this) }
 
     /**
      * 转换为旧缓冲区
      * 
      * @returns {Buffer} 缓冲区
      */
-    toOldBuffer() {
-        return Buffer.from(this.toOldXML());
-    }
+    toOldBuffer() { return OldParser.toBuffer(this) }
 
     /**
      * 转换模板模型为JSON文档
@@ -177,36 +170,7 @@ class Template {
      * @param {Boolean} pretty 是否格式化
      * @returns {String} XML文档内容
      */
-    public toXML(pretty = false) {
-        const template = xmlBuilder.create('template');
-        template.att('version', this.version);
-        template.att('id', this.id);
-        template.att('name', this.name);
-        template.att('mode', this.mode);
-        template.att('poster', this.poster);
-        template.att('actuator', this.actuator);
-        template.att('width', this.width);
-        template.att('height', this.height);
-        template.att('aspectRatio', this.aspectRatio);
-        template.att('fps', this.fps);
-        template.att('crf', this.crf);
-        template.att('videoCodec', this.videoCodec);
-        template.att('videoBitrate', this.videoBitrate);
-        template.att('pixelFormat', this.pixelFormat);
-        template.att('frameQuality', this.frameQuality);
-        template.att('duration', this.duration);
-        template.att('format', this.format);
-        template.att('volume', this.volume);
-        template.att('audioCodec', this.audioCodec);
-        template.att('sampleRate', this.sampleRate);
-        template.att('audioBitrate', this.audioBitrate);
-        template.att('backgroundColor', this.backgroundColor);
-        template.att('createTime', this.createTime);
-        template.att('updateTime', this.updateTime);
-        template.att('buildBy', this.buildBy);
-        this.children.forEach((node) => node.renderXML(template)); //子节点XML渲染
-        return template.end({ pretty });
-    }
+    public toXML(pretty = false) { return Parser.toXML(this, pretty) }
 
     /**
      * 转换模板模型为过时的XML文档
@@ -214,83 +178,12 @@ class Template {
      * @param {Boolean} pretty 是否格式化
      * @returns {String} XML文档内容
      */
-    public toOldXML(pretty = false) {
-        const project = xmlBuilder.create('project');
-        project.att('version', '1.0.0');
-        project.att('id', this.id);
-        project.att('name', this.name);
-        project.att('actuator', this.actuator);
-        const resources: { [map: string]: any } = project.ele('projRes');
-        resources.map = {};
-        const global = project.ele('global', {
-            videoSize: this.aspectRatio,
-            videoWidth: this.width,
-            videoHeight: this.height,
-            poster: this.poster,
-            fps: this.fps,
-            videoBitrate: 2097152,
-            audioBitrate: 131072,
-        });
-        if (this.backgroundColor) {
-            global.ele('bgblock', {
-                id: util.uniqid(),
-                inPoint: 0,
-                fillColor: this.backgroundColor,
-            });
-        }
-        const storyBoards = project.ele('storyBoards');
-        this.children.forEach((node) => node.renderOldXML(storyBoards, resources, global)); //子节点XML渲染
-        return project.end({ pretty });
-    }
+    public toOldXML(pretty = false) { return OldParser.toXML(this, pretty) }
 
     /**
      * 转换为前端支持的options
      */
-    public toOptions(): any {
-        let globalImage: Element | undefined;
-        let globalVideo: Element | undefined;
-        let globalAudio: Element | undefined;
-        this.children.forEach(node => {
-            if (!Element.isInstance(node)) return;
-            node = node as Element;
-            switch (node.type) {
-                case 'image':
-                    node.isBackground && (globalImage = node);
-                    break;
-                case 'video':
-                    node.isBackground && (globalVideo = node);
-                    break;
-                case 'audio':
-                    node.isBackground && (globalAudio = node);
-                    break;
-            }
-        });
-        const storyBoards: any[] = [];
-        this.children.forEach(node => Scene.isInstance(node) && storyBoards.push(node.toOptions()))
-        return {
-            id: this.id,
-            name: this.name,
-            actuator: this.actuator,
-            videoSize: this.aspectRatio,
-            videoWidth: this.width,
-            videoHeight: this.height,
-            poster: this.poster,
-            fps: this.fps,
-            duration: util.millisecondsToSenconds(this.duration),
-            videoBitrate: this.videoBitrate,
-            audioBitrate: this.audioBitrate,
-            // 全局背景颜色
-            bgColor: { id: util.uniqid(), fillColor: this.backgroundColor },
-            // 背景图片
-            bgImage: globalImage ? globalImage.toOptions() : undefined,
-            // 背景视频
-            bgVideo: globalVideo ? globalVideo.toOptions() : undefined,
-            // 背景音乐
-            bgMusic: globalAudio ? globalAudio.toOptions() : undefined,
-            // 视频故事板列表
-            storyboards: storyBoards
-        };
-    }
+    public toOptions() { return OptionsParser.toOptions(this) }
 
     /**
      * 是否为模板ID
@@ -318,7 +211,7 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-     public static parse(content: any, data?: object, vars?: object) {
+    public static parse(content: any, data?: object, vars?: object) {
         if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
         if (util.isBuffer(content)) content = content.toString();
         if (util.isObject(content)) return new Template(content);
@@ -328,78 +221,12 @@ class Template {
     }
 
     /**
-     * 解析JSON数据为模型
-     *
-     * @param {String} content
-     * @returns {Template}
-     */
-     public static parseJSON(content: any, data = {}, vars = {}) {
-        return new Template(util.isString(content) ? JSON.parse(content) : content, data, vars);
-    }
-
-    /**
-     * 解析XML文档为模型
-     *
-     * @param {String} content
-     * @returns {Template}
-     */
-    public static parseXML(content: string, data = {}, vars = {}) {
-        let xmlObject, varsObject, dataObject;
-        xmlParser.parse(content).forEach((o: any) => {
-            if (o.template) xmlObject = o;
-            if (o.vars) varsObject = o;
-            if (o.data) dataObject = o;
-        });
-        if (!xmlObject) throw new Error('template xml invalid');
-        function parse(obj: any, target: any = {}) {
-            const type = Object.keys(obj)[0];
-            target.type = type;
-            for (let key in obj[':@']) {
-                const value = obj[':@'][key];
-                let index;
-                if (key === 'for-index') key = 'forIndex';
-                else if (key === 'for-item') key = 'forItem';
-                else if ((index = key.indexOf('-')) != -1) {
-                    const pkey = key.substring(0, index);
-                    const ckey = key.substring(index + 1, key.length);
-                    if (!target[pkey]) target[pkey] = {};
-                    target[pkey][ckey] = value;
-                    continue;
-                }
-                target[key] = value;
-            }
-            target.children = [];
-            obj[type].forEach((v: any) => {
-                if (v['#text']) return (target.value = v['#text']);
-                const result = parse(v, {});
-                result && target.children.push(result);
-            });
-            return target;
-        }
-        const completeObject = parse(xmlObject);
-        const _vars = {};
-        const _data = {};
-        if (varsObject || dataObject) {
-            function processing(obj: any, target: any) {
-                obj.children.forEach((o: any) => {
-                    if (!target[o.type]) target[o.type] = {};
-                    if (o.value) target[o.type] = o.value;
-                    processing(o, target[o.type]);
-                });
-            }
-            varsObject && processing(parse(varsObject), _vars);
-            dataObject && processing(parse(dataObject), _data);
-        }
-        return new Template(completeObject, util.assign(_data, data), util.assign(_vars, vars));
-    }
-
-    /**
      * 解析入口同时处理数据
      *
      * @param {String} content
      * @returns {Template}
      */
-    public static async parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
+     public static async parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
         if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
         if (util.isBuffer(content)) content = content.toString();
         if (util.isObject(content)) return new Template(content);
@@ -414,18 +241,23 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-    public static async parseJSONPreProcessing(content: any, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
-        const object = util.isString(content) ? JSON.parse(content) : content;
-        if (util.isFunction(dataProcessor) && util.isString(object.dataSrc)) {
-            const result = await dataProcessor(object.dataSrc);
-            util.isObject(result) && util.assign(data, result);
-        }
-        if (util.isFunction(varsProcessor) && util.isString(object.varsSrc)) {
-            const result = await varsProcessor(object.varsSrc);
-            util.isObject(result) && util.assign(data, result);
-        }
-        return new Template(object, util.assign(object.data || {}, data), util.assign(object.vars || {}, vars));
-    }
+    public static parseJSON = Parser.parseJSON;
+
+    /**
+     * 解析JSON数据为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+     public static parseJSONPreProcessing = Parser.parseJSONPreProcessing;
+
+    /**
+     * 解析XML文档为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static parseXML = Parser.parseXML;
 
     /**
      * 解析XML文档为模型并预处理
@@ -433,69 +265,7 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-    public static async parseXMLPreProcessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
-        let xmlObject, varsObject, dataObject;
-        xmlParser.parse(content).forEach((o: any) => {
-            if (o.template) xmlObject = o;
-            if (o.vars) varsObject = o;
-            if (o.data) dataObject = o;
-        });
-        if (!xmlObject) throw new Error('template xml invalid');
-        function parse(obj: any, target: any = {}) {
-            const type = Object.keys(obj)[0];
-            target.type = type;
-            for (let key in obj[':@']) {
-                const value = obj[':@'][key];
-                let index;
-                if (key === 'for-index') key = 'forIndex';
-                else if (key === 'for-item') key = 'forItem';
-                else if ((index = key.indexOf('-')) != -1) {
-                    const pkey = key.substring(0, index);
-                    const ckey = key.substring(index + 1, key.length);
-                    if (!target[pkey]) target[pkey] = {};
-                    target[pkey][ckey] = value;
-                    continue;
-                }
-                target[key] = value;
-            }
-            target.children = [];
-            obj[type].forEach((v: any) => {
-                if (v['#text']) return (target.value = v['#text']);
-                const result = parse(v, {});
-                result && target.children.push(result);
-            });
-            return target;
-        }
-        const completeObject = parse(xmlObject);
-        const _vars = {};
-        const _data = {};
-        if (varsObject || dataObject) {
-            function processing(obj: any, target: any) {
-                obj.children.forEach((o: any) => {
-                    if (!target[o.type]) target[o.type] = {};
-                    if (o.value) target[o.type] = o.value;
-                    processing(o, target[o.type]);
-                });
-            }
-            varsObject && processing(parse(varsObject), _vars);
-            dataObject && processing(parse(dataObject), _data);
-        }
-        if (dataObject?.[':@']) {
-            const attrs = dataObject[':@'] as any;
-            if (util.isFunction(dataProcessor) && attrs.source) {
-                const result = await dataProcessor(attrs.source);
-                util.isObject(result) && util.assign(data, result);
-            }
-        }
-        if (varsObject?.[':@']) {
-            const attrs = varsObject[':@'] as any;
-            if (util.isFunction(varsProcessor) && attrs.source) {
-                const result = await dataProcessor(attrs.source);
-                util.isObject(result) && util.assign(vars, result);
-            }
-        }
-        return new Template(completeObject, util.assign(_data, data), util.assign(_vars, vars));
-    }
+    public static parseXMLPreProcessing = Parser.parseXMLPreProcessing;
 
     /**
      * 解析过时的XML文档为模型
@@ -505,318 +275,7 @@ class Template {
      * @param {Object} vars 变量对象
      * @returns {Template}
      */
-    public static parseOldXML(content: string, data = {}, vars = {}) {
-        const xmlObject = xmlParser.parse(content);
-        function merge(obj: any, target: any = {}) {
-            Object.assign(target, obj[':@']);
-            const key = Object.keys(obj).filter((k) => k != ':@')[0];
-            target.key = key;
-            if (key === '#text') return obj[key];
-            const items = obj[key];
-            target.children = items.map((v: any) => v && merge(v, {}));
-            return target;
-        }
-        const rawObject = merge(xmlObject[1] || xmlObject[0]);
-        const {
-            type,
-            name,
-            actuator,
-            children: [projRes, global, storyBoards],
-        } = rawObject;
-        const resourceMap: any = {};
-        projRes.children.forEach((resource: any) => (resourceMap[resource.id] = resource));
-        function buildBaseData(obj: any) {
-            return {
-                name: obj.name,
-                x: obj.scaleX,
-                y: obj.scaleY,
-                width: obj.width,
-                height: obj.height,
-                opacity: obj.opacity,
-                zIndex: obj.index,
-                enterEffect: obj.animationIn ? {
-                    type: obj.animationIn,
-                    duration: obj.animationInDuration * 1000
-                } : undefined,
-                exitEffect: obj.animationOut ? {
-                    type: obj.animationOut,
-                    duration: obj.animationOutDuration * 1000,
-                } : undefined,
-                backgroundColor: obj.fillColor,
-                startTime: obj.inPoint ? obj.inPoint * 1000 : undefined,
-                endTime: obj.outPoint ? obj.outPoint * 1000 : undefined,
-            };
-        }
-        const templateChildren: (Scene | Element)[] = [];
-        let templateBackgroundColor;
-        global.children.forEach((tag: any) => {
-            switch (tag.key) {
-                case 'bgblock':
-                    templateBackgroundColor = tag.fillColor;
-                    break;
-                case 'bgimg':
-                    templateChildren.push(
-                        new Image({
-                            ...buildBaseData(tag),
-                            x: 0,
-                            y: 0,
-                            width: global.videoWidth,
-                            height: global.videoHeight,
-                            isBackground: true,
-                            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : undefined,
-                        }),
-                    );
-                    break;
-                case 'bgmusic':
-                    templateChildren.push(
-                        new Audio({
-                            ...buildBaseData(tag),
-                            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : undefined,
-                            volume: tag.volume,
-                            seekStart: tag.seekStart ? tag.seekStart * 1000 : undefined,
-                            seekEnd: tag.seekEnd ? tag.seekEnd * 1000 : undefined,
-                            muted: tag.muted,
-                            loop: tag.loop,
-                            isBackground: true,
-                            fadeInDuration: tag.inPoint ? tag.inPoint * 1000 : undefined,
-                            fadeOutDuration: tag.outPoint ? tag.outPoint * 1000 : undefined,
-                        }),
-                    );
-                    break;
-                case 'bgvideo':
-                    templateChildren.push(
-                        new Video({
-                            ...buildBaseData(tag),
-                            x: 0,
-                            y: 0,
-                            width: global.videoWidth,
-                            height: global.videoHeight,
-                            poster: tag.poster,
-                            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : undefined,
-                            duration: tag.duration ? tag.duration * 1000 : undefined,
-                            volume: tag.volume,
-                            muted: tag.muted,
-                            loop: tag.loop,
-                            isBackground: true,
-                            seekStart: tag.seekStart ? tag.seekStart * 1000 : undefined,
-                            seekEnd: tag.seekEnd ? tag.seekEnd * 1000 : undefined,
-                        }),
-                    );
-                    break;
-            }
-        });
-        storyBoards.children.forEach((board: any) => {
-            const { poster, duration } = board;
-            const sceneChildren: Element[] = [];
-            let sceneBackgroundColor;
-            let transition;
-            board.children.forEach((data: any) => {
-                switch (data.key) {
-                    case 'bgblock':
-                        sceneBackgroundColor = data.fillColor;
-                        break;
-                    case 'bgimg':
-                        sceneChildren.push(
-                            new Image({
-                                ...buildBaseData(data),
-                                x: 0,
-                                y: 0,
-                                width: global.videoWidth,
-                                height: global.videoHeight,
-                                isBackground: true,
-                                src: resourceMap[data.resId] ? resourceMap[data.resId].resPath : undefined,
-                            }),
-                        );
-                        break;
-                    case 'bgvideo':
-                        sceneChildren.push(
-                            new Video({
-                                ...buildBaseData(data),
-                                x: 0,
-                                y: 0,
-                                width: global.videoWidth,
-                                height: global.videoHeight,
-                                poster: data.poster,
-                                src: resourceMap[data.resId] ? resourceMap[data.resId].resPath : undefined,
-                                duration: data.duration ? data.duration * 1000 : undefined,
-                                volume: data.volume,
-                                muted: data.muted,
-                                loop: data.loop,
-                                isBackground: true,
-                                seekStart: data.seekStart ? data.seekStart * 1000 : undefined,
-                                seekEnd: data.seekEnd ? data.seekEnd * 1000 : undefined,
-                            }),
-                        );
-                        break;
-                    case 'transition':
-                        transition = {
-                            type: data.name,
-                            duration: data.duration * 1000,
-                        };
-                        break;
-                    case 'captions':
-                        data.children.forEach((caption: any) =>
-                            sceneChildren.push(
-                                new Text({
-                                    ...buildBaseData(caption),
-                                    value: caption.children[0]?.children.join('\n'),
-                                    fontFamily: caption.fontFamily ? caption.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
-                                    fontSize: caption.fontSize,
-                                    fontColor: caption.fontColor,
-                                    lineHeight: parseFloat((Number(caption.lineHeight) / Number(caption.fontSize)).toFixed(3)),
-                                    wordSpacing: caption.wordSpacing,
-                                    textAlign: caption.textAlign,
-                                    effectType: caption.effectType,
-                                    effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1000 : undefined,
-                                    effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1000 : undefined,
-                                }),
-                            ),
-                        );
-                        break;
-                    case 'resources':
-                        data.children.forEach((tag: any) => {
-                            if (!resourceMap[tag.resId]) return;
-                            const { type, resPath } = resourceMap[tag.resId];
-                            let element;
-                            switch (type) {
-                                case 'img':
-                                case 'gif':
-                                    element = new Image({
-                                        ...buildBaseData(tag),
-                                        crop: tag.cropStyle
-                                            ? {
-                                                style: tag.cropStyle === 'circle' ? 'circle' : 'rect',
-                                                x: tag.cropX,
-                                                y: tag.cropY,
-                                                width: tag.cropWidth,
-                                                height: tag.cropHeight,
-                                            }
-                                            : undefined,
-                                        src: resPath,
-                                        loop: tag.loop,
-                                        dynamic: resPath.indexOf('.gif') !== -1 ? true : type === 'gif',
-                                    });
-                                    break;
-                                case 'video':
-                                    element = new Video({
-                                        ...buildBaseData(tag),
-                                        poster: data.poster,
-                                        src: resPath,
-                                        duration: data.duration ? data.duration * 1000 : undefined,
-                                        volume: data.volume,
-                                        muted: data.muted,
-                                        loop: data.loop,
-                                        seekStart: data.seekStart ? data.seekStart * 1000 : undefined,
-                                        seekEnd: data.seekEnd ? data.seekEnd * 1000 : undefined,
-                                    });
-                                    break;
-                                case 'sound':
-                                    element = new Audio({
-                                        ...buildBaseData(tag),
-                                        src: resPath,
-                                        duration: data.duration,
-                                        volume: data.volume,
-                                        muted: data.muted,
-                                        loop: data.loop,
-                                        seekStart: data.seekStart ? data.seekStart * 1000 : undefined,
-                                        seekEnd: data.seekEnd ? data.seekEnd * 1000 : undefined,
-                                        fadeInDuration: data.inPoint ? data.inPoint * 1000 : undefined,
-                                        fadeOutDuration: data.outPoint ? data.outPoint * 1000 : undefined,
-                                    });
-                            }
-                            element && sceneChildren.push(element);
-                        });
-                        break;
-                    case 'dynDataCharts':
-                        data.children.forEach((chart: any) => sceneChildren.push(
-                            new Chart({
-                                ...buildBaseData(chart),
-                                chartId: chart.chartId,
-                                poster: chart.poster,
-                                configSrc: chart.optionsPath,
-                                dataSrc: chart.dataPath,
-                            }))
-                        );
-                        break;
-                    case 'textToSounds':
-                        data.children.forEach((voice: any) =>
-                            sceneChildren.push(
-                                new Voice({
-                                    ...buildBaseData(voice),
-                                    src: resourceMap[voice.resId] ? resourceMap[voice.resId].resPath : undefined,
-                                    volume: voice.volume,
-                                    seekStart: voice.seekStart ? voice.seekStart * 1000 : undefined,
-                                    seekEnd: voice.seekEnd ? voice.seekEnd * 1000 : undefined,
-                                    loop: voice.loop,
-                                    muted: voice.muted,
-                                    provider: voice.provider,
-                                    children: voice.children[0]
-                                        ? [
-                                            new SSML({
-                                                value: voice.children[0]?.children[0],
-                                            }),
-                                        ]
-                                        : [],
-                                    text: voice.text,
-                                    declaimer: voice.voice,
-                                    speechRate: voice.speechRate ? voice.speechRate : undefined,
-                                    pitchRate: voice.pitchRate ? Number(voice.pitchRate) + 1 : undefined,
-                                }),
-                            ),
-                        );
-                        break;
-                    case 'vtubers':
-                        data.children.forEach((vtuber: any) =>
-                            sceneChildren.push(
-                                new Vtuber({
-                                    ...buildBaseData(vtuber),
-                                    poster: vtuber.poster,
-                                    src: resourceMap[vtuber.resId] ? resourceMap[vtuber.resId].resPath : undefined,
-                                    provider: vtuber.provider,
-                                    text: vtuber.text,
-                                    solution: vtuber.solution,
-                                    declaimer: vtuber.declaimer,
-                                    duration: vtuber.duration ? vtuber.duration * 1000 : undefined,
-                                    volume: vtuber.volume,
-                                    muted: vtuber.muted,
-                                    loop: vtuber.loop,
-                                    seekStart: vtuber.seekStart ? vtuber.seekStart * 1000 : undefined,
-                                    seekEnd: vtuber.seekEnd ? vtuber.seekEnd * 1000 : undefined,
-                                }),
-                            ),
-                        );
-                }
-            });
-            const scene = new Scene({
-                poster: poster,
-                width: global.videoWidth,
-                height: global.videoHeight,
-                aspectRatio: global.videoSize,
-                duration: duration * 1000,
-                backgroundColor: sceneBackgroundColor,
-                transition,
-                filter: undefined,
-                children: sceneChildren,
-            });
-            templateChildren.push(scene);
-        });
-        return new Template(
-            {
-                mode: type || 'scene',
-                name: name,
-                poster: global.poster,
-                actuator,
-                width: global.videoWidth,
-                height: global.videoHeight,
-                aspectRatio: global.videoSize,
-                backgroundColor: templateBackgroundColor,
-                fps: global.fps,
-                children: templateChildren,
-            },
-            data,
-            vars,
-        );
-    }
+    public static parseOldXML = OldParser.parseXML;
 
     /**
      * 解析前端options
@@ -824,27 +283,7 @@ class Template {
      * @param {Object} options options对象
      * @returns {Template}
      */
-     public static parseOptions(options: any) {
-        const templateChildren: any = [];
-        options.storyboards.forEach((storyboard: any) => {
-
-        });
-        options.bgImage && templateChildren.push(new Image({
-            
-        }));
-        return new Template({
-            id: options.id,
-            name: options.name,
-            fps: options.fps,
-            poster: options.poster,
-            width: options.videoWidth,
-            height: options.videoHeight,
-            aspectRatio: options.videoSize,
-            videoBitrate: options.videoBitrate,
-            backgroundColor: options.bgColor ? (options.bgColor.fillColor || undefined) : undefined,
-            children: templateChildren
-        });
-    }
+    public static parseOptions = OptionsParser.parseOptions;
 
     /**
      * 生成所有子元素的轨道

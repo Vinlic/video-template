@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
-<template version="2.0.0" id="23a71010c56611ecb8a9ef074eadc942" name="Test Video" mode="scene" poster="/files/cover.png" width="1080" height="1920" aspectRatio="9:16" fps="60" duration="15000" volume="1" createTime="1650980301" updateTime="1650980301" buildBy="system">
-  <audio id="1V2mryRFXfLqs90F" src="/files/audios/bgm.mp3" volume="0.2" loop="true" muted="false"/>
-  <scene id="1v2mRYEvWAInvaGq" width="1080" height="1920" aspectRatio="9:16" duration="5000" transition-type="wipeLeft" transition-duration="300">
-    <video id="1V2MryG7LjSAhbyO" x="0" y="0" width="1080" height="1920" isBackground="true" src="/files/videos/pt.mp4" volume="1" loop="false" muted="false"/>
-    <voice id="1v2MRySpXGJT4b9F" startTime="500" volume="100" loop="false" playbackRate="1" muted="false" provider="microsoft" text="Hello World" declaimer="xiaoxiao" speechRate="0"/>
-    <image id="1v2MRYZDdL8Ee2Is" x="270" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
-    <image id="1V2MryrFMAUVW4LA" x="740" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
-    <text id="1v2MrydshJch9Dlx" x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000" lineHeight="1" wordSpacing="0" lineWrap="false">Test 1</text>
-    <text id="1V2mRYLNs3OxqEZj" x="0" y="1640" width="1080" height="32" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="32" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="center" lineWrap="false">2022-03-02</text>
+<template version="2.0.0" id="76dea5f0c5dd11ec8e56c31b90321e5d" name="Test Video" mode="scene" poster="/files/cover.png" width="1080" height="1920" aspectRatio="9:16" fps="60" duration="15000" volume="1" createTime="1651031551" updateTime="1651031551" buildBy="system">
+  <audio id="1v3QbjN92yI9aV4b" src="/files/audios/bgm.mp3" volume="0.2" loop="true" muted="false"/>
+  <scene id="1V3qBJWj0UzM1DMx" width="1080" height="1920" aspectRatio="9:16" duration="5000" transition-type="wipeLeft" transition-duration="300">
+    <video id="1v3Qbj3Eznd1nI82" x="0" y="0" width="1080" height="1920" isBackground="true" src="/files/videos/pt.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1V3QbjRprg7GbLfv" startTime="500" volume="100" loop="false" playbackRate="1" muted="false" provider="microsoft" text="Hello World" declaimer="xiaoxiao" speechRate="0"/>
+    <image id="1v3qBjTJ4JmVsWMO" x="270" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
+    <image id="1v3QBjAXhDFDZYsE" x="740" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
+    <text id="1V3QbJnHRoA8ubhR" x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000" lineHeight="1" wordSpacing="0" lineWrap="false">Test 1</text>
+    <text id="1v3QbjOKiaUxuJhF" x="0" y="1640" width="1080" height="32" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="32" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="center" lineWrap="false">2022-03-02</text>
   </scene>
-  <scene id="1v2mrYlckijs3YqM" width="1080" height="1920" aspectRatio="9:16" duration="5000" transition-type="wipeLeft" transition-duration="300">
-    <video id="1v2MRYteDVdp7qXr" x="0" y="0" width="1080" height="1920" isBackground="true" src="/files/videos/pt.mp4" volume="1" loop="false" muted="false"/>
-    <voice id="1v2Mry0QSaEnYIUh" startTime="500" volume="100" loop="false" playbackRate="1" muted="false" provider="microsoft" text="Hello World" declaimer="xiaoxiao" speechRate="0"/>
-    <image id="1V2mRyPmqOJhNljv" x="275" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
-    <image id="1v2mrYBs9a7pUkzv" x="740" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
-    <text id="1V2mRyAdPlgP1usS" x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000" lineHeight="1" wordSpacing="0" lineWrap="false">Test 2</text>
-    <text id="1v2mRyyrNtVFsrhz" x="0" y="1640" width="1080" height="32" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="32" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="center" lineWrap="false">2022-03-02</text>
+  <scene id="1v3qbj2k9R5VUO2Y" width="1080" height="1920" aspectRatio="9:16" duration="5000" transition-type="wipeLeft" transition-duration="300">
+    <video id="1v3QbJHcZFfTHI7W" x="0" y="0" width="1080" height="1920" isBackground="true" src="/files/videos/pt.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1v3qBjx5veyidP8v" startTime="500" volume="100" loop="false" playbackRate="1" muted="false" provider="microsoft" text="Hello World" declaimer="xiaoxiao" speechRate="0"/>
+    <image id="1v3QbJWsZF2Zvb0p" x="275" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
+    <image id="1v3QBJsNZakhl0XA" x="740" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
+    <text id="1V3qbJNaasHS6qL6" x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000" lineHeight="1" wordSpacing="0" lineWrap="false">Test 2</text>
+    <text id="1V3qBjiZsnCpvZNW" x="0" y="1640" width="1080" height="32" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="32" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="center" lineWrap="false">2022-03-02</text>
   </scene>
-  <scene id="1v2MRy83fi6RnxkU" width="1080" height="1920" aspectRatio="9:16" duration="5000" transition-type="wipeLeft" transition-duration="300">
-    <video id="1v2MrYjvlJtMCqMp" x="0" y="0" width="1080" height="1920" isBackground="true" src="/files/videos/pt.mp4" volume="1" loop="false" muted="false"/>
-    <voice id="1V2mRYG24FHpN21N" startTime="500" volume="100" loop="false" playbackRate="1" muted="false" provider="microsoft" text="Hello World" declaimer="xiaoxiao" speechRate="0"/>
-    <image id="1v2mRYxegbU0mjJI" x="280" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
-    <image id="1v2mrYvJxVhLiayj" x="740" y="220" width="70" height="60" zIndex="2" src="/files/images/right_jt.png" mode="scaleToFill"/>
-    <text id="1V2MRyAdtyJKxMoy" x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000" lineHeight="1" wordSpacing="0" lineWrap="false">Test 3</text>
-    <text id="1v2mrYiRPTd88D86" x="0" y="1640" width="1080" height="32" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="32" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="center" lineWrap="false">2022-03-02</text>
+  <scene id="1V3QbjLofcqZKxep" width="1080" height="1920" aspectRatio="9:16" duration="5000" transition-type="wipeLeft" transition-duration="300">
+    <video id="1v3qBJKPDD2EjrBb" x="0" y="0" width="1080" height="1920" isBackground="true" src="/files/videos/pt.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1v3qbj62Ii98Q5Mo" startTime="500" volume="100" loop="false" playbackRate="1" muted="false" provider="microsoft" text="Hello World" declaimer="xiaoxiao" speechRate="0"/>
+    <image id="1v3QBjC4ykeP2Uua" x="280" y="220" width="70" height="60" zIndex="2" src="/files/images/left_jt.png" mode="scaleToFill"/>
+    <image id="1V3QbjPssrAL1bYI" x="740" y="220" width="70" height="60" zIndex="2" src="/files/images/right_jt.png" mode="scaleToFill"/>
+    <text id="1v3QbJzfBewrjEsJ" x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000" lineHeight="1" wordSpacing="0" lineWrap="false">Test 3</text>
+    <text id="1V3qbJLLRUeRWRzm" x="0" y="1640" width="1080" height="32" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="32" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="center" lineWrap="false">2022-03-02</text>
   </scene>
 </template>

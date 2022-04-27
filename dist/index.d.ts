@@ -6,6 +6,7 @@ interface IEffectOptions {
 
 declare enum ElementTypes {
     Element = "element",
+    Group = "group",
     Text = "text",
     Image = "image",
     Audio = "audio",
@@ -472,6 +473,26 @@ interface ITemplateOptions {
     children?: (Scene | Element | ISceneOptions | IElementOptions)[];
 }
 
+declare class Parser {
+    static toXML(_template: Template, pretty?: boolean): string;
+    static toBuffer(tempalte: Template): Buffer;
+    static parseJSON(content: any, data?: {}, vars?: {}): Template;
+    static parseJSONPreProcessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
+    static parseXML(content: string, data?: {}, vars?: {}): Template;
+    static parseXMLPreProcessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
+}
+
+declare class OldParser {
+    static toXML(template: Template, pretty?: boolean): string;
+    static toBuffer(template: Template): Buffer;
+    static parseXML(content: string, data?: {}, vars?: {}): Template;
+}
+
+declare class OptionsParser {
+    static toOptions(template: Template): any;
+    static parseOptions(options: any): Template;
+}
+
 declare class Template {
     static readonly type = "template";
     type: string;
@@ -514,12 +535,13 @@ declare class Template {
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
     static parse(content: any, data?: object, vars?: object): Template;
-    static parseJSON(content: any, data?: {}, vars?: {}): Template;
-    static parseXML(content: string, data?: {}, vars?: {}): Template;
     static parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any): Promise<Template>;
-    static parseJSONPreProcessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
-    static parseXMLPreProcessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
-    static parseOldXML(content: string, data?: {}, vars?: {}): Template;
+    static parseJSON: typeof Parser.parseJSON;
+    static parseJSONPreProcessing: typeof Parser.parseJSONPreProcessing;
+    static parseXML: typeof Parser.parseXML;
+    static parseXMLPreProcessing: typeof Parser.parseXMLPreProcessing;
+    static parseOldXML: typeof OldParser.parseXML;
+    static parseOptions: typeof OptionsParser.parseOptions;
     generateAllTrack(): any;
     get duration(): number;
     get sortedChilren(): (Element | Element[])[];

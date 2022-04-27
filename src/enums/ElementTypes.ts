@@ -1,5 +1,6 @@
 enum ElementTypes {
   Element = 'element',
+  Group = 'group',
   Text = 'text',
   Image = 'image',
   Audio = 'audio',

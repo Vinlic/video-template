@@ -49,8 +49,7 @@ var __privateMethod = (obj, member, method) => {
 };
 
 // src/Template.ts
-import xmlBuilder2 from "xmlbuilder";
-import { XMLParser } from "fast-xml-parser";
+import { XMLParser as XMLParser3 } from "fast-xml-parser";
 
 // src/util.ts
 import lodash from "lodash";
@@ -132,200 +131,13 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
   }
 });
 
-// src/compiler.ts
-var Compiler = class {
-  static compile(rawData, data = {}, valueMap = {}) {
-    const render = (value, data2 = {}, scope = {}) => {
-      if (util_default.isObject(value)) {
-        if (util_default.isArray(value)) {
-          const _scope = {};
-          let children = [];
-          value.forEach((v) => {
-            const result2 = render(util_default.cloneDeep(v), data2, _scope);
-            if (result2 === null)
-              return;
-            if (util_default.isArray(result2))
-              children = [...children, ...result2];
-            else
-              children.push(result2);
-          });
-          return children;
-        }
-        const attrs = value;
-        const { for: $for, forItem, forIndex, if: $if, elif, else: $else } = attrs;
-        if ($if) {
-          delete attrs.if;
-          const expressions = this.expressionsExtract($if);
-          if (!expressions) {
-            scope.ifFlag = false;
-            return null;
-          }
-          if (expressions.length) {
-            const { expression } = expressions[0];
-            let result2;
-            try {
-              result2 = this.eval(expression, data2, valueMap);
-            } catch {
-            }
-            if (!result2) {
-              scope.ifFlag = false;
-              return null;
-            }
-          }
-          scope.ifFlag = true;
-        } else if (elif) {
-          if (util_default.isUndefined(scope.ifFlag))
-            throw new Error("\u4F7F\u7528elif\u5C5E\u6027\u8282\u70B9\u5FC5\u987B\u5904\u4E8E\u5305\u542Bif\u5C5E\u6027\u8282\u70B9\u7684\u4E0B\u4E00\u4E2A\u8282\u70B9");
-          delete attrs.elif;
-          if (scope.ifFlag) {
-            scope.ifFlag = true;
-            return null;
-          }
-          const expressions = this.expressionsExtract(elif);
-          if (!expressions) {
-            scope.ifFlag = false;
-            return null;
-          }
-          if (!expressions.length) {
-            const { expression } = expressions[0];
-            let result2;
-            try {
-              result2 = this.eval(expression, data2, valueMap);
-            } catch {
-            }
-            if (!result2) {
-              scope.ifFlag = false;
-              return null;
-            }
-          }
-          scope.ifFlag = true;
-        } else if ($else) {
-          if (util_default.isUndefined(scope.ifFlag))
-            throw new Error("\u4F7F\u7528elif\u5C5E\u6027\u8282\u70B9\u5FC5\u987B\u5904\u4E8E\u5305\u542Bif\u5C5E\u6027\u8282\u70B9\u7684\u4E0B\u4E00\u4E2A\u8282\u70B9");
-          delete attrs.else;
-          if (scope.ifFlag) {
-            delete scope.ifFlag;
-            return null;
-          }
-        }
-        if ($for) {
-          delete attrs.for;
-          delete attrs.forIndex;
-          delete attrs.forItem;
-          const expressions = this.expressionsExtract($for);
-          if (!expressions || !expressions.length)
-            return null;
-          const { expression } = expressions[0];
-          let list = [];
-          try {
-            list = this.eval(expression, data2, valueMap);
-          } catch {
-          }
-          if (util_default.isNumber(list)) {
-            const items = [];
-            for (let i = 0; i < list; i++) {
-              items.push(render(value, __spreadProps(__spreadValues({}, data2), {
-                [forIndex || "index"]: i
-              })));
-            }
-            return items;
-          }
-          if (!util_default.isArray(list) || !list.length)
-            return null;
-          return list.map((v, i) => {
-            const item = util_default.cloneDeep(value);
-            return render(item, __spreadProps(__spreadValues({}, data2), {
-              [forIndex || "index"]: i,
-              [forItem || "item"]: v
-            }));
-          });
-        }
-        const result = {};
-        for (const key in value)
-          result[key] = render(attrs[key], data2);
-        return result;
-      } else if (util_default.isString(value)) {
-        const expressions = this.expressionsExtract(value);
-        if (!expressions || !expressions.length)
-          return value;
-        return expressions.reduce((result, expression) => {
-          switch (expression.expression) {
-            case "__UUID__":
-              result = expression.replace(result, util_default.uuid());
-              break;
-            case "__UNIQID__":
-              result = expression.replace(result, util_default.uniqid());
-              break;
-            default:
-              try {
-                result = expression.replace(result, this.eval(expression.expression, data2, valueMap));
-              } catch {
-                result = null;
-              }
-          }
-          return result;
-        }, value);
-      }
-      return value;
-    };
-    return render(rawData, data);
-  }
-  static eval(expression, data = {}, valueMap = {}) {
-    let result;
-    const _data = __spreadValues(__spreadValues({}, data), valueMap);
-    const scope = {
-      data: _data,
-      eval: Function(`const {${Object.keys(_data).join(",")}}=this.data;return ${expression}`)
-    };
-    try {
-      result = scope.eval();
-    } catch (err) {
-      result = "";
-    }
-    if (util_default.isString(result) && Object.keys(valueMap).length) {
-      const expressions = this.expressionsExtract(result);
-      if (!expressions || !expressions.length)
-        return result;
-      return expressions.reduce((_result, expression2) => {
-        try {
-          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap)));
-        } catch (err) {
-          _result = null;
-        }
-        return _result;
-      }, result);
-    }
-    return result;
-  }
-  static expressionsExtract(value) {
-    if (util_default.isUndefined(value) || value == null)
-      return null;
-    const match = value.toString().match(/(?<={{)[^}]*(?=}})/g);
-    if (!match)
-      return [];
-    const list = match;
-    return Array.from(new Set(list)).map((expression) => {
-      return {
-        expression,
-        replace: (oldValue, newValue) => {
-          if (util_default.isUndefined(newValue) || newValue == null)
-            return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), "") || null;
-          if (oldValue == null)
-            return newValue;
-          return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), newValue);
-        }
-      };
-    });
-  }
-};
-var compiler_default = Compiler;
-
 // src/Scene.ts
 import xmlBuilder from "xmlbuilder";
 
 // src/enums/ElementTypes.ts
 var ElementTypes = /* @__PURE__ */ ((ElementTypes2) => {
   ElementTypes2["Element"] = "element";
+  ElementTypes2["Group"] = "group";
   ElementTypes2["Text"] = "text";
   ElementTypes2["Image"] = "image";
   ElementTypes2["Audio"] = "audio";
@@ -1419,7 +1231,9 @@ createXMLRoot_fn = function(tagName = "scene", headless = true) {
 __publicField(Scene, "type", "scene");
 var Scene_default = Scene;
 
-// src/Template.ts
+// src/parsers/Parser.ts
+import xmlBuilder2 from "xmlbuilder";
+import { XMLParser } from "fast-xml-parser";
 var xmlParser = new XMLParser({
   allowBooleanAttributes: true,
   ignoreAttributes: false,
@@ -1428,242 +1242,54 @@ var xmlParser = new XMLParser({
   parseTagValue: false,
   stopNodes: ["template.scene.voice.ssml"]
 });
-var _Template = class {
-  type = "";
-  id = "";
-  mode = "";
-  version = "";
-  name;
-  poster;
-  actuator;
-  width = 0;
-  height = 0;
-  aspectRatio = "";
-  fps = 0;
-  crf;
-  videoCodec;
-  videoBitrate;
-  pixelFormat;
-  frameQuality;
-  format;
-  volume = 0;
-  audioCodec;
-  sampleRate;
-  audioBitrate;
-  backgroundColor;
-  createTime = 0;
-  updateTime = 0;
-  buildBy = "";
-  compile = false;
-  children = [];
-  constructor(options, data = {}, vars = {}) {
-    options.compile && (options = compiler_default.compile(options, data, vars));
-    util_default.optionsInject(this, options, {
-      type: () => "template",
-      id: (v) => util_default.defaultTo(_Template.isId(v) ? v : void 0, util_default.uuid(false)),
-      mode: (v) => util_default.defaultTo(v, "scene"),
-      version: (v) => util_default.defaultTo(v, "2.0.0"),
-      width: (v) => Number(v),
-      height: (v) => Number(v),
-      fps: (v) => Number(util_default.defaultTo(v, 60)),
-      crf: (v) => v && Number(v),
-      volume: (v) => Number(util_default.defaultTo(v, 1)),
-      frameQuality: (v) => v && Number(v),
-      createTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
-      updateTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
-      buildBy: (v) => util_default.defaultTo(v, "system"),
-      compile: (v) => util_default.booleanParse(util_default.defaultTo(v, false)),
-      children: (datas) => util_default.isArray(datas) ? datas.map((data2) => {
-        if (Scene_default.isInstance(data2) || Element_default.isInstance(data2))
-          return data2;
-        if (data2.type === "scene")
-          return new Scene_default(data2);
-        else
-          return ElementFactory_default.createElement(data2);
-      }) : []
-    }, {
-      type: (v) => v === "template",
-      id: (v) => _Template.isId(v),
-      mode: (v) => util_default.isString(v),
-      version: (v) => util_default.isString(v),
-      name: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      poster: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      actuator: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      width: (v) => util_default.isFinite(v),
-      height: (v) => util_default.isFinite(v),
-      aspectRatio: (v) => util_default.isString(v),
-      fps: (v) => util_default.isFinite(v),
-      crf: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
-      volume: (v) => util_default.isFinite(v),
-      videoCodec: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      videoBitrate: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      pixelFormat: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      frameQuality: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
-      backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      format: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      audioCodec: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      sampleRate: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      audioBitrate: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      createTime: (v) => util_default.isUnixTimestamp(v),
-      updateTime: (v) => util_default.isUnixTimestamp(v),
-      buildBy: (v) => util_default.isString(v),
-      compile: (v) => util_default.isBoolean(v),
-      children: (v) => util_default.isArray(v)
-    });
-  }
-  scenesSplice(start, end) {
-    let index = 0;
-    this.children = this.children.filter((node) => {
-      if (Scene_default.isInstance(node))
-        return true;
-      if (index < start) {
-        index++;
-        return false;
-      }
-      if (index >= end)
-        return false;
-      index++;
-      return true;
-    });
-  }
-  appendChild(node) {
-    if (!Scene_default.isInstance(node) && !Element_default.isInstance(node))
-      throw new TypeError("node must be an Scene instance or Element instance");
-    this.children.push(node);
-  }
-  toBASE64() {
-    return this.toBuffer().toString("base64");
-  }
-  toOldBASE64() {
-    return this.toOldBuffer().toString("base64");
-  }
-  toBuffer() {
-    return Buffer.from(this.toXML());
-  }
-  toOldBuffer() {
-    return Buffer.from(this.toOldXML());
-  }
-  toXML(pretty = false) {
+var Parser = class {
+  static toXML(_template, pretty = false) {
     const template = xmlBuilder2.create("template");
-    template.att("version", this.version);
-    template.att("id", this.id);
-    template.att("name", this.name);
-    template.att("mode", this.mode);
-    template.att("poster", this.poster);
-    template.att("actuator", this.actuator);
-    template.att("width", this.width);
-    template.att("height", this.height);
-    template.att("aspectRatio", this.aspectRatio);
-    template.att("fps", this.fps);
-    template.att("crf", this.crf);
-    template.att("videoCodec", this.videoCodec);
-    template.att("videoBitrate", this.videoBitrate);
-    template.att("pixelFormat", this.pixelFormat);
-    template.att("frameQuality", this.frameQuality);
-    template.att("duration", this.duration);
-    template.att("format", this.format);
-    template.att("volume", this.volume);
-    template.att("audioCodec", this.audioCodec);
-    template.att("sampleRate", this.sampleRate);
-    template.att("audioBitrate", this.audioBitrate);
-    template.att("backgroundColor", this.backgroundColor);
-    template.att("createTime", this.createTime);
-    template.att("updateTime", this.updateTime);
-    template.att("buildBy", this.buildBy);
-    this.children.forEach((node) => node.renderXML(template));
+    template.att("version", _template.version);
+    template.att("id", _template.id);
+    template.att("name", _template.name);
+    template.att("mode", _template.mode);
+    template.att("poster", _template.poster);
+    template.att("actuator", _template.actuator);
+    template.att("width", _template.width);
+    template.att("height", _template.height);
+    template.att("aspectRatio", _template.aspectRatio);
+    template.att("fps", _template.fps);
+    template.att("crf", _template.crf);
+    template.att("videoCodec", _template.videoCodec);
+    template.att("videoBitrate", _template.videoBitrate);
+    template.att("pixelFormat", _template.pixelFormat);
+    template.att("frameQuality", _template.frameQuality);
+    template.att("duration", _template.duration);
+    template.att("format", _template.format);
+    template.att("volume", _template.volume);
+    template.att("audioCodec", _template.audioCodec);
+    template.att("sampleRate", _template.sampleRate);
+    template.att("audioBitrate", _template.audioBitrate);
+    template.att("backgroundColor", _template.backgroundColor);
+    template.att("createTime", _template.createTime);
+    template.att("updateTime", _template.updateTime);
+    template.att("buildBy", _template.buildBy);
+    _template.children.forEach((node) => node.renderXML(template));
     return template.end({ pretty });
   }
-  toOldXML(pretty = false) {
-    const project = xmlBuilder2.create("project");
-    project.att("version", "1.0.0");
-    project.att("id", this.id);
-    project.att("name", this.name);
-    project.att("actuator", this.actuator);
-    const resources = project.ele("projRes");
-    resources.map = {};
-    const global = project.ele("global", {
-      videoSize: this.aspectRatio,
-      videoWidth: this.width,
-      videoHeight: this.height,
-      poster: this.poster,
-      fps: this.fps,
-      videoBitrate: 2097152,
-      audioBitrate: 131072
-    });
-    if (this.backgroundColor) {
-      global.ele("bgblock", {
-        id: util_default.uniqid(),
-        inPoint: 0,
-        fillColor: this.backgroundColor
-      });
-    }
-    const storyBoards = project.ele("storyBoards");
-    this.children.forEach((node) => node.renderOldXML(storyBoards, resources, global));
-    return project.end({ pretty });
-  }
-  toOptions() {
-    let globalImage;
-    let globalVideo;
-    let globalAudio;
-    this.children.forEach((node) => {
-      if (!Element_default.isInstance(node))
-        return;
-      node = node;
-      switch (node.type) {
-        case "image":
-          node.isBackground && (globalImage = node);
-          break;
-        case "video":
-          node.isBackground && (globalVideo = node);
-          break;
-        case "audio":
-          node.isBackground && (globalAudio = node);
-          break;
-      }
-    });
-    const storyBoards = [];
-    this.children.forEach((node) => Scene_default.isInstance(node) && storyBoards.push(node.toOptions()));
-    return {
-      id: this.id,
-      name: this.name,
-      actuator: this.actuator,
-      videoSize: this.aspectRatio,
-      videoWidth: this.width,
-      videoHeight: this.height,
-      poster: this.poster,
-      fps: this.fps,
-      duration: util_default.millisecondsToSenconds(this.duration),
-      videoBitrate: this.videoBitrate,
-      audioBitrate: this.audioBitrate,
-      bgColor: { id: util_default.uniqid(), fillColor: this.backgroundColor },
-      bgImage: globalImage ? globalImage.toOptions() : void 0,
-      bgVideo: globalVideo ? globalVideo.toOptions() : void 0,
-      bgMusic: globalAudio ? globalAudio.toOptions() : void 0,
-      storyboards: storyBoards
-    };
-  }
-  static isId(value) {
-    return util_default.isString(value) && /^[a-zA-Z0-9]{32}$/.test(value);
-  }
-  static isInstance(value) {
-    return value instanceof _Template;
-  }
-  static parse(content, data, vars) {
-    if (!util_default.isString(content) && !util_default.isObject(content))
-      throw new TypeError("content must be an string or object");
-    if (util_default.isBuffer(content))
-      content = content.toString();
-    if (util_default.isObject(content))
-      return new _Template(content);
-    if (/\<template/.test(content))
-      return _Template.parseXML(content, data, vars);
-    else if (/\<project/.test(content))
-      return _Template.parseOldXML(content, data, vars);
-    else
-      return _Template.parseJSON(content, data, vars);
+  static toBuffer(tempalte) {
+    return Buffer.from(tempalte.toXML());
   }
   static parseJSON(content, data = {}, vars = {}) {
-    return new _Template(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
+    return new Template_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
+  }
+  static async parseJSONPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+    const object = util_default.isString(content) ? JSON.parse(content) : content;
+    if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
+      const result = await dataProcessor(object.dataSrc);
+      util_default.isObject(result) && util_default.assign(data, result);
+    }
+    if (util_default.isFunction(varsProcessor) && util_default.isString(object.varsSrc)) {
+      const result = await varsProcessor(object.varsSrc);
+      util_default.isObject(result) && util_default.assign(data, result);
+    }
+    return new Template_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
   }
   static parseXML(content, data = {}, vars = {}) {
     let xmlObject, varsObject, dataObject;
@@ -1722,33 +1348,7 @@ var _Template = class {
       varsObject && processing(parse(varsObject), _vars);
       dataObject && processing(parse(dataObject), _data);
     }
-    return new _Template(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
-  }
-  static async parseAndProcessing(content, data, vars, dataProcessor, varsProcessor) {
-    if (!util_default.isString(content) && !util_default.isObject(content))
-      throw new TypeError("content must be an string or object");
-    if (util_default.isBuffer(content))
-      content = content.toString();
-    if (util_default.isObject(content))
-      return new _Template(content);
-    if (/\<template/.test(content))
-      return await _Template.parseXMLPreProcessing(content, data, vars, dataProcessor, varsProcessor);
-    else if (/\<project/.test(content))
-      return _Template.parseOldXML(content, data, vars);
-    else
-      return await _Template.parseJSONPreProcessing(content, data, vars, dataProcessor, varsProcessor);
-  }
-  static async parseJSONPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
-    const object = util_default.isString(content) ? JSON.parse(content) : content;
-    if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
-      const result = await dataProcessor(object.dataSrc);
-      util_default.isObject(result) && util_default.assign(data, result);
-    }
-    if (util_default.isFunction(varsProcessor) && util_default.isString(object.varsSrc)) {
-      const result = await varsProcessor(object.varsSrc);
-      util_default.isObject(result) && util_default.assign(data, result);
-    }
-    return new _Template(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
+    return new Template_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
   }
   static async parseXMLPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
     let xmlObject, varsObject, dataObject;
@@ -1821,10 +1421,56 @@ var _Template = class {
         util_default.isObject(result) && util_default.assign(vars, result);
       }
     }
-    return new _Template(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
+    return new Template_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
   }
-  static parseOldXML(content, data = {}, vars = {}) {
-    const xmlObject = xmlParser.parse(content);
+};
+var Parser_default = Parser;
+
+// src/parsers/OldParser.ts
+import xmlBuilder3 from "xmlbuilder";
+import { XMLParser as XMLParser2 } from "fast-xml-parser";
+var xmlParser2 = new XMLParser2({
+  allowBooleanAttributes: true,
+  ignoreAttributes: false,
+  attributeNamePrefix: "",
+  preserveOrder: true,
+  parseTagValue: false,
+  stopNodes: ["template.scene.voice.ssml"]
+});
+var OldParser = class {
+  static toXML(template, pretty = false) {
+    const project = xmlBuilder3.create("project");
+    project.att("version", "1.0.0");
+    project.att("id", template.id);
+    project.att("name", template.name);
+    project.att("actuator", template.actuator);
+    const resources = project.ele("projRes");
+    resources.map = {};
+    const global = project.ele("global", {
+      videoSize: template.aspectRatio,
+      videoWidth: template.width,
+      videoHeight: template.height,
+      poster: template.poster,
+      fps: template.fps,
+      videoBitrate: 2097152,
+      audioBitrate: 131072
+    });
+    if (template.backgroundColor) {
+      global.ele("bgblock", {
+        id: util_default.uniqid(),
+        inPoint: 0,
+        fillColor: template.backgroundColor
+      });
+    }
+    const storyBoards = project.ele("storyBoards");
+    template.children.forEach((node) => node.renderOldXML(storyBoards, resources, global));
+    return project.end({ pretty });
+  }
+  static toBuffer(template) {
+    return Buffer.from(this.toXML(template));
+  }
+  static parseXML(content, data = {}, vars = {}) {
+    const xmlObject = xmlParser2.parse(content);
     function merge(obj, target = {}) {
       Object.assign(target, obj[":@"]);
       const key = Object.keys(obj).filter((k) => k != ":@")[0];
@@ -1846,6 +1492,7 @@ var _Template = class {
     projRes.children.forEach((resource) => resourceMap[resource.id] = resource);
     function buildBaseData(obj) {
       return {
+        id: obj.id,
         name: obj.name,
         x: obj.scaleX,
         y: obj.scaleY,
@@ -1887,6 +1534,7 @@ var _Template = class {
           templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
             src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : void 0,
             volume: tag.volume,
+            duration: tag.duration ? tag.duration * 1e3 : void 0,
             seekStart: tag.seekStart ? tag.seekStart * 1e3 : void 0,
             seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0,
             muted: tag.muted,
@@ -1916,7 +1564,7 @@ var _Template = class {
       }
     });
     storyBoards.children.forEach((board) => {
-      const { poster, duration } = board;
+      const { id, poster, duration } = board;
       const sceneChildren = [];
       let sceneBackgroundColor;
       let transition;
@@ -2073,7 +1721,8 @@ var _Template = class {
             }))));
         }
       });
-      const scene = new Scene_default({
+      templateChildren.push(new Scene_default({
+        id,
         poster,
         width: global.videoWidth,
         height: global.videoHeight,
@@ -2083,10 +1732,9 @@ var _Template = class {
         transition,
         filter: void 0,
         children: sceneChildren
-      });
-      templateChildren.push(scene);
+      }));
     });
-    return new _Template({
+    return new Template_default({
       mode: type || "scene",
       name,
       poster: global.poster,
@@ -2098,6 +1746,501 @@ var _Template = class {
       fps: global.fps,
       children: templateChildren
     }, data, vars);
+  }
+};
+var OldParser_default = OldParser;
+
+// src/parsers/OptionsParser.ts
+var OptionsParser = class {
+  static toOptions(template) {
+    let globalImage;
+    let globalVideo;
+    let globalAudio;
+    template.children.forEach((node) => {
+      if (!Element_default.isInstance(node))
+        return;
+      node = node;
+      switch (node.type) {
+        case "image":
+          node.isBackground && (globalImage = node);
+          break;
+        case "video":
+          node.isBackground && (globalVideo = node);
+          break;
+        case "audio":
+          node.isBackground && (globalAudio = node);
+          break;
+      }
+    });
+    const storyBoards = [];
+    template.children.forEach((node) => Scene_default.isInstance(node) && storyBoards.push(node.toOptions()));
+    return {
+      id: template.id,
+      name: template.name,
+      actuator: template.actuator,
+      videoSize: template.aspectRatio,
+      videoWidth: template.width,
+      videoHeight: template.height,
+      poster: template.poster,
+      fps: template.fps,
+      duration: util_default.millisecondsToSenconds(template.duration),
+      videoBitrate: template.videoBitrate,
+      audioBitrate: template.audioBitrate,
+      bgColor: { id: util_default.uniqid(), fillColor: template.backgroundColor },
+      bgImage: globalImage ? globalImage.toOptions() : void 0,
+      bgVideo: globalVideo ? globalVideo.toOptions() : void 0,
+      bgMusic: globalAudio ? globalAudio.toOptions() : void 0,
+      storyboards: storyBoards
+    };
+  }
+  static parseOptions(options) {
+    const templateChildren = [];
+    function buildBaseData(obj) {
+      return {
+        id: obj.id,
+        name: obj.name,
+        x: obj.left,
+        y: obj.top,
+        width: obj.width,
+        height: obj.height,
+        opacity: obj.opacity,
+        zIndex: obj.index,
+        enterEffect: obj.animationIn ? {
+          type: obj.animationIn.name,
+          duration: obj.animationIn.duration * 1e3
+        } : void 0,
+        exitEffect: obj.animationOut ? {
+          type: obj.animationOut,
+          duration: obj.animationOutDuration * 1e3
+        } : void 0,
+        backgroundColor: obj.fillColor,
+        startTime: obj.animationIn ? obj.animationIn.delay * 1e3 : void 0,
+        endTime: obj.animationOut ? obj.animationOut.delay * 1e3 : void 0
+      };
+    }
+    options.storyboards.forEach((board) => {
+      const { id, poster, duration } = board;
+      const sceneChildren = [];
+      let sceneBackgroundColor;
+      let transition;
+      templateChildren.push(new Scene_default({
+        id,
+        poster,
+        width: options.videoWidth,
+        height: options.videoHeight,
+        aspectRatio: options.videoSize,
+        duration: duration * 1e3,
+        backgroundColor: sceneBackgroundColor,
+        transition,
+        filter: void 0,
+        children: sceneChildren
+      }));
+    });
+    options.bgImage && templateChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgImage)), {
+      x: 0,
+      y: 0,
+      width: options.videoWidth,
+      height: options.videoHeight,
+      isBackground: true,
+      src: options.src
+    })));
+    options.bgVideo && templateChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgVideo)), {
+      x: 0,
+      y: 0,
+      width: options.videoWidth,
+      height: options.videoHeight,
+      poster: options.bgVideo.poster,
+      src: options.bgVideo.src,
+      duration: options.bgVideo.duration ? options.bgVideo.duration * 1e3 : void 0,
+      volume: options.bgVideo.volume,
+      muted: options.bgVideo.muted,
+      loop: options.bgVideo.loop,
+      isBackground: true,
+      seekStart: options.bgVideo.seekStart ? options.bgVideo.seekStart * 1e3 : void 0,
+      seekEnd: options.bgVideo.seekEnd ? options.bgVideo.seekEnd * 1e3 : void 0
+    })));
+    options.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgMusic)), {
+      src: options.bgMusic.src,
+      volume: options.bgMusic.volume,
+      duration: options.bgMusic.duration ? options.bgMusic.duration * 1e3 : void 0,
+      seekStart: options.bgMusic.seekStart ? options.bgMusic.seekStart * 1e3 : void 0,
+      seekEnd: options.bgMusic.seekEnd ? options.bgMusic.seekEnd * 1e3 : void 0,
+      muted: options.bgMusic.muted,
+      loop: options.bgMusic.loop,
+      isBackground: true,
+      fadeInDuration: options.bgMusic.fadeInDuration ? options.bgMusic.fadeInDuration * 1e3 : void 0,
+      fadeOutDuration: options.bgMusic.fadeOutDuration ? options.bgMusic.fadeOutDuration * 1e3 : void 0
+    })));
+    return new Template_default({
+      id: options.id,
+      name: options.name,
+      fps: options.fps,
+      poster: options.poster,
+      width: options.videoWidth,
+      height: options.videoHeight,
+      aspectRatio: options.videoSize,
+      videoBitrate: options.videoBitrate,
+      backgroundColor: options.bgColor ? options.bgColor.fillColor || void 0 : void 0,
+      children: templateChildren
+    });
+  }
+};
+var OptionsParser_default = OptionsParser;
+
+// src/Compiler.ts
+var Compiler = class {
+  static compile(rawData, data = {}, valueMap = {}) {
+    const render = (value, data2 = {}, scope = {}) => {
+      if (util_default.isObject(value)) {
+        if (util_default.isArray(value)) {
+          const _scope = {};
+          let children = [];
+          value.forEach((v) => {
+            const result2 = render(util_default.cloneDeep(v), data2, _scope);
+            if (result2 === null)
+              return;
+            if (util_default.isArray(result2))
+              children = [...children, ...result2];
+            else
+              children.push(result2);
+          });
+          return children;
+        }
+        const attrs = value;
+        const { for: $for, forItem, forIndex, if: $if, elif, else: $else } = attrs;
+        if ($if) {
+          delete attrs.if;
+          const expressions = this.expressionsExtract($if);
+          if (!expressions) {
+            scope.ifFlag = false;
+            return null;
+          }
+          if (expressions.length) {
+            const { expression } = expressions[0];
+            let result2;
+            try {
+              result2 = this.eval(expression, data2, valueMap);
+            } catch {
+            }
+            if (!result2) {
+              scope.ifFlag = false;
+              return null;
+            }
+          }
+          scope.ifFlag = true;
+        } else if (elif) {
+          if (util_default.isUndefined(scope.ifFlag))
+            throw new Error("\u4F7F\u7528elif\u5C5E\u6027\u8282\u70B9\u5FC5\u987B\u5904\u4E8E\u5305\u542Bif\u5C5E\u6027\u8282\u70B9\u7684\u4E0B\u4E00\u4E2A\u8282\u70B9");
+          delete attrs.elif;
+          if (scope.ifFlag) {
+            scope.ifFlag = true;
+            return null;
+          }
+          const expressions = this.expressionsExtract(elif);
+          if (!expressions) {
+            scope.ifFlag = false;
+            return null;
+          }
+          if (!expressions.length) {
+            const { expression } = expressions[0];
+            let result2;
+            try {
+              result2 = this.eval(expression, data2, valueMap);
+            } catch {
+            }
+            if (!result2) {
+              scope.ifFlag = false;
+              return null;
+            }
+          }
+          scope.ifFlag = true;
+        } else if ($else) {
+          if (util_default.isUndefined(scope.ifFlag))
+            throw new Error("\u4F7F\u7528elif\u5C5E\u6027\u8282\u70B9\u5FC5\u987B\u5904\u4E8E\u5305\u542Bif\u5C5E\u6027\u8282\u70B9\u7684\u4E0B\u4E00\u4E2A\u8282\u70B9");
+          delete attrs.else;
+          if (scope.ifFlag) {
+            delete scope.ifFlag;
+            return null;
+          }
+        }
+        if ($for) {
+          delete attrs.for;
+          delete attrs.forIndex;
+          delete attrs.forItem;
+          const expressions = this.expressionsExtract($for);
+          if (!expressions || !expressions.length)
+            return null;
+          const { expression } = expressions[0];
+          let list = [];
+          try {
+            list = this.eval(expression, data2, valueMap);
+          } catch {
+          }
+          if (util_default.isNumber(list)) {
+            const items = [];
+            for (let i = 0; i < list; i++) {
+              items.push(render(value, __spreadProps(__spreadValues({}, data2), {
+                [forIndex || "index"]: i
+              })));
+            }
+            return items;
+          }
+          if (!util_default.isArray(list) || !list.length)
+            return null;
+          return list.map((v, i) => {
+            const item = util_default.cloneDeep(value);
+            return render(item, __spreadProps(__spreadValues({}, data2), {
+              [forIndex || "index"]: i,
+              [forItem || "item"]: v
+            }));
+          });
+        }
+        const result = {};
+        for (const key in value)
+          result[key] = render(attrs[key], data2);
+        return result;
+      } else if (util_default.isString(value)) {
+        const expressions = this.expressionsExtract(value);
+        if (!expressions || !expressions.length)
+          return value;
+        return expressions.reduce((result, expression) => {
+          switch (expression.expression) {
+            case "__UUID__":
+              result = expression.replace(result, util_default.uuid());
+              break;
+            case "__UNIQID__":
+              result = expression.replace(result, util_default.uniqid());
+              break;
+            default:
+              try {
+                result = expression.replace(result, this.eval(expression.expression, data2, valueMap));
+              } catch {
+                result = null;
+              }
+          }
+          return result;
+        }, value);
+      }
+      return value;
+    };
+    return render(rawData, data);
+  }
+  static eval(expression, data = {}, valueMap = {}) {
+    let result;
+    const _data = __spreadValues(__spreadValues({}, data), valueMap);
+    const scope = {
+      data: _data,
+      eval: Function(`const {${Object.keys(_data).join(",")}}=this.data;return ${expression}`)
+    };
+    try {
+      result = scope.eval();
+    } catch (err) {
+      result = "";
+    }
+    if (util_default.isString(result) && Object.keys(valueMap).length) {
+      const expressions = this.expressionsExtract(result);
+      if (!expressions || !expressions.length)
+        return result;
+      return expressions.reduce((_result, expression2) => {
+        try {
+          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap)));
+        } catch (err) {
+          _result = null;
+        }
+        return _result;
+      }, result);
+    }
+    return result;
+  }
+  static expressionsExtract(value) {
+    if (util_default.isUndefined(value) || value == null)
+      return null;
+    const match = value.toString().match(/(?<={{)[^}]*(?=}})/g);
+    if (!match)
+      return [];
+    const list = match;
+    return Array.from(new Set(list)).map((expression) => {
+      return {
+        expression,
+        replace: (oldValue, newValue) => {
+          if (util_default.isUndefined(newValue) || newValue == null)
+            return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), "") || null;
+          if (oldValue == null)
+            return newValue;
+          return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), newValue);
+        }
+      };
+    });
+  }
+};
+var Compiler_default = Compiler;
+
+// src/Template.ts
+var xmlParser3 = new XMLParser3({
+  allowBooleanAttributes: true,
+  ignoreAttributes: false,
+  attributeNamePrefix: "",
+  preserveOrder: true,
+  parseTagValue: false,
+  stopNodes: ["template.scene.voice.ssml"]
+});
+var _Template = class {
+  type = "";
+  id = "";
+  mode = "";
+  version = "";
+  name;
+  poster;
+  actuator;
+  width = 0;
+  height = 0;
+  aspectRatio = "";
+  fps = 0;
+  crf;
+  videoCodec;
+  videoBitrate;
+  pixelFormat;
+  frameQuality;
+  format;
+  volume = 0;
+  audioCodec;
+  sampleRate;
+  audioBitrate;
+  backgroundColor;
+  createTime = 0;
+  updateTime = 0;
+  buildBy = "";
+  compile = false;
+  children = [];
+  constructor(options, data = {}, vars = {}) {
+    options.compile && (options = Compiler_default.compile(options, data, vars));
+    util_default.optionsInject(this, options, {
+      type: () => "template",
+      id: (v) => util_default.defaultTo(_Template.isId(v) ? v : void 0, util_default.uuid(false)),
+      mode: (v) => util_default.defaultTo(v, "scene"),
+      version: (v) => util_default.defaultTo(v, "2.0.0"),
+      width: (v) => Number(v),
+      height: (v) => Number(v),
+      fps: (v) => Number(util_default.defaultTo(v, 60)),
+      crf: (v) => v && Number(v),
+      volume: (v) => Number(util_default.defaultTo(v, 1)),
+      frameQuality: (v) => v && Number(v),
+      createTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
+      updateTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
+      buildBy: (v) => util_default.defaultTo(v, "system"),
+      compile: (v) => util_default.booleanParse(util_default.defaultTo(v, false)),
+      children: (datas) => util_default.isArray(datas) ? datas.map((data2) => {
+        if (Scene_default.isInstance(data2) || Element_default.isInstance(data2))
+          return data2;
+        if (data2.type === "scene")
+          return new Scene_default(data2);
+        else
+          return ElementFactory_default.createElement(data2);
+      }) : []
+    }, {
+      type: (v) => v === "template",
+      id: (v) => _Template.isId(v),
+      mode: (v) => util_default.isString(v),
+      version: (v) => util_default.isString(v),
+      name: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      poster: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      actuator: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      width: (v) => util_default.isFinite(v),
+      height: (v) => util_default.isFinite(v),
+      aspectRatio: (v) => util_default.isString(v),
+      fps: (v) => util_default.isFinite(v),
+      crf: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      volume: (v) => util_default.isFinite(v),
+      videoCodec: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      videoBitrate: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      pixelFormat: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      frameQuality: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      format: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      audioCodec: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      sampleRate: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      audioBitrate: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      createTime: (v) => util_default.isUnixTimestamp(v),
+      updateTime: (v) => util_default.isUnixTimestamp(v),
+      buildBy: (v) => util_default.isString(v),
+      compile: (v) => util_default.isBoolean(v),
+      children: (v) => util_default.isArray(v)
+    });
+  }
+  scenesSplice(start, end) {
+    let index = 0;
+    this.children = this.children.filter((node) => {
+      if (Scene_default.isInstance(node))
+        return true;
+      if (index < start) {
+        index++;
+        return false;
+      }
+      if (index >= end)
+        return false;
+      index++;
+      return true;
+    });
+  }
+  appendChild(node) {
+    if (!Scene_default.isInstance(node) && !Element_default.isInstance(node))
+      throw new TypeError("node must be an Scene instance or Element instance");
+    this.children.push(node);
+  }
+  toBASE64() {
+    return this.toBuffer().toString("base64");
+  }
+  toOldBASE64() {
+    return this.toOldBuffer().toString("base64");
+  }
+  toBuffer() {
+    return Parser_default.toBuffer(this);
+  }
+  toOldBuffer() {
+    return OldParser_default.toBuffer(this);
+  }
+  toXML(pretty = false) {
+    return Parser_default.toXML(this, pretty);
+  }
+  toOldXML(pretty = false) {
+    return OldParser_default.toXML(this, pretty);
+  }
+  toOptions() {
+    return OptionsParser_default.toOptions(this);
+  }
+  static isId(value) {
+    return util_default.isString(value) && /^[a-zA-Z0-9]{32}$/.test(value);
+  }
+  static isInstance(value) {
+    return value instanceof _Template;
+  }
+  static parse(content, data, vars) {
+    if (!util_default.isString(content) && !util_default.isObject(content))
+      throw new TypeError("content must be an string or object");
+    if (util_default.isBuffer(content))
+      content = content.toString();
+    if (util_default.isObject(content))
+      return new _Template(content);
+    if (/\<template/.test(content))
+      return _Template.parseXML(content, data, vars);
+    else if (/\<project/.test(content))
+      return _Template.parseOldXML(content, data, vars);
+    else
+      return _Template.parseJSON(content, data, vars);
+  }
+  static async parseAndProcessing(content, data, vars, dataProcessor, varsProcessor) {
+    if (!util_default.isString(content) && !util_default.isObject(content))
+      throw new TypeError("content must be an string or object");
+    if (util_default.isBuffer(content))
+      content = content.toString();
+    if (util_default.isObject(content))
+      return new _Template(content);
+    if (/\<template/.test(content))
+      return await _Template.parseXMLPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+    else if (/\<project/.test(content))
+      return _Template.parseOldXML(content, data, vars);
+    else
+      return await _Template.parseJSONPreProcessing(content, data, vars, dataProcessor, varsProcessor);
   }
   generateAllTrack() {
     let track = [];
@@ -2148,6 +2291,12 @@ var _Template = class {
 };
 var Template = _Template;
 __publicField(Template, "type", "template");
+__publicField(Template, "parseJSON", Parser_default.parseJSON);
+__publicField(Template, "parseJSONPreProcessing", Parser_default.parseJSONPreProcessing);
+__publicField(Template, "parseXML", Parser_default.parseXML);
+__publicField(Template, "parseXMLPreProcessing", Parser_default.parseXMLPreProcessing);
+__publicField(Template, "parseOldXML", OldParser_default.parseXML);
+__publicField(Template, "parseOptions", OptionsParser_default.parseOptions);
 var Template_default = Template;
 export {
   Scene_default as Scene,
