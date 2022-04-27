@@ -1,6 +1,6 @@
 {
   "name": "video-template",
-  "version": "1.0.9",
+  "version": "1.0.91",
   "description": "Template model describing video structure",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
