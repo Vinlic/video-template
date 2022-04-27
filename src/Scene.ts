@@ -133,21 +133,26 @@ class Scene {
      * 转换为前端支持的options
      */
     public toOptions(): any {
+        const children: Element[] = [];
         let backgroundImage: Element | undefined;
         let backgroundVideo: Element | undefined;
         let backgroundAudio: Element | undefined;
         this.children.forEach(node => {
-            switch (node.type) {
-                case 'image':
-                    node.isBackground && (backgroundImage = node);
-                    break;
-                case 'video':
-                    node.isBackground && (backgroundVideo = node);
-                    break;
-                case 'audio':
-                    node.isBackground && (backgroundAudio = node);
-                    break;
+            if(node.isBackground) {
+                switch (node.type) {
+                    case 'image':
+                        backgroundImage = node;
+                        break;
+                    case 'video':
+                        backgroundVideo = node;
+                        break;
+                    case 'audio':
+                        backgroundAudio = node;
+                        break;
+                }
             }
+            else
+                children.push(node);
         });
         return {
             id: this.id,
@@ -164,7 +169,7 @@ class Scene {
                 name: this.transition.type,
                 duration: util.millisecondsToSenconds(this.transition.duration)
             } : undefined,
-            elements: this.children.map(node => node.toOptions()).sort((a: any, b: any) => a.index - b.index)
+            elements: children.map(node => node.toOptions()).sort((a: any, b: any) => a.index - b.index)
         };
     }
 

@@ -1111,21 +1111,25 @@ var _Scene = class {
     return board.end({ pretty });
   }
   toOptions() {
+    const children = [];
     let backgroundImage;
     let backgroundVideo;
     let backgroundAudio;
     this.children.forEach((node) => {
-      switch (node.type) {
-        case "image":
-          node.isBackground && (backgroundImage = node);
-          break;
-        case "video":
-          node.isBackground && (backgroundVideo = node);
-          break;
-        case "audio":
-          node.isBackground && (backgroundAudio = node);
-          break;
-      }
+      if (node.isBackground) {
+        switch (node.type) {
+          case "image":
+            backgroundImage = node;
+            break;
+          case "video":
+            backgroundVideo = node;
+            break;
+          case "audio":
+            backgroundAudio = node;
+            break;
+        }
+      } else
+        children.push(node);
     });
     return {
       id: this.id,
@@ -1142,7 +1146,7 @@ var _Scene = class {
         name: this.transition.type,
         duration: util_default.millisecondsToSenconds(this.transition.duration)
       } : void 0,
-      elements: this.children.map((node) => node.toOptions()).sort((a, b) => a.index - b.index)
+      elements: children.map((node) => node.toOptions()).sort((a, b) => a.index - b.index)
     };
   }
   renderXML(parent) {
@@ -1760,24 +1764,28 @@ var OptionsParser = class {
     let globalImage;
     let globalVideo;
     let globalAudio;
+    const children = [];
     template.children.forEach((node) => {
-      if (!Element_default.isInstance(node))
-        return;
-      node = node;
-      switch (node.type) {
-        case "image":
-          node.isBackground && (globalImage = node);
-          break;
-        case "video":
-          node.isBackground && (globalVideo = node);
-          break;
-        case "audio":
-          node.isBackground && (globalAudio = node);
-          break;
-      }
+      if (Element_default.isInstance(node)) {
+        node = node;
+        if (node.isBackground) {
+          switch (node.type) {
+            case "image":
+              globalImage = node;
+              break;
+            case "video":
+              globalVideo = node;
+              break;
+            case "audio":
+              globalAudio = node;
+              break;
+          }
+        }
+      } else
+        children.push(node);
     });
     const storyBoards = [];
-    template.children.forEach((node) => Scene_default.isInstance(node) && storyBoards.push(node.toOptions()));
+    children.forEach((node) => storyBoards.push(node.toOptions()));
     return {
       id: template.id,
       name: template.name,

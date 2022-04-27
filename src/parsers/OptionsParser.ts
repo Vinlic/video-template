@@ -9,23 +9,29 @@ class OptionsParser {
         let globalImage: Element | undefined;
         let globalVideo: Element | undefined;
         let globalAudio: Element | undefined;
+        const children: Scene[] = [];
         template.children.forEach(node => {
-            if (!Element.isInstance(node)) return;
-            node = node as Element;
-            switch (node.type) {
-                case 'image':
-                    node.isBackground && (globalImage = node);
-                    break;
-                case 'video':
-                    node.isBackground && (globalVideo = node);
-                    break;
-                case 'audio':
-                    node.isBackground && (globalAudio = node);
-                    break;
+            if (Element.isInstance(node)) {
+                node = node as Element;
+                if(node.isBackground) {
+                    switch (node.type) {
+                        case 'image':
+                            globalImage = node;
+                            break;
+                        case 'video':
+                            globalVideo = node;
+                            break;
+                        case 'audio':
+                            globalAudio = node;
+                            break;
+                    }
+                }
             }
+            else
+                children.push(node as Scene);
         });
         const storyBoards: any[] = [];
-        template.children.forEach(node => Scene.isInstance(node) && storyBoards.push(node.toOptions()))
+        children.forEach(node => storyBoards.push(node.toOptions()))
         return {
             id: template.id,
             name: template.name,
