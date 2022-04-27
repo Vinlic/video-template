@@ -248,8 +248,8 @@ class Element {
             rotate: this.rotate,
             opacity: this.opacity,
             index: this.zIndex || 0,
-            animationIn: this.startTime ? (this.enterEffect?.toOptions(this.startTime) || { delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
-            animationOut: this.endTime ? (this.exitEffect?.toOptions(this.endTime) || { delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
+            animationIn: util.isNumber(this.startTime) ? (this.enterEffect?.toOptions(this.startTime) || { delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
+            animationOut: util.isNumber(this.endTime) ? (this.exitEffect?.toOptions(this.endTime) || { delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
             fillColor: this.backgroundColor
         };
     }

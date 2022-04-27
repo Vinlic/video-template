@@ -53,7 +53,7 @@ class OptionsParser {
 
     public static parseOptions(options: any) {
         const templateChildren: (Scene | Element)[] = [];
-        function buildBaseData(obj: any) {
+        function buildBaseData(obj: any, parentDuration?: number) {
             return {
                 id: obj.id,
                 name: obj.name,
@@ -63,24 +63,25 @@ class OptionsParser {
                 height: obj.height,
                 opacity: obj.opacity,
                 zIndex: obj.index,
-                enterEffect: obj.animationIn ? {
+                enterEffect: obj.animationIn && obj.animationIn.name !== "none" ? {
                     type: obj.animationIn.name,
                     duration: obj.animationIn.duration * 1000
                 } : undefined,
-                exitEffect: obj.animationOut ? {
-                    type: obj.animationOut,
-                    duration: obj.animationOutDuration * 1000,
+                exitEffect: obj.animationOut && obj.animationOut.name !== "none" ? {
+                    type: obj.animationOut.name,
+                    duration: obj.animationOut.duration * 1000,
                 } : undefined,
                 backgroundColor: obj.fillColor,
-                startTime: obj.animationIn ? obj.animationIn.delay * 1000 : undefined,
-                endTime: obj.animationOut ? obj.animationOut.delay * 1000 : undefined,
+                startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1000 : 0,
+                endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1000 : 
+                (parentDuration ? (parentDuration - (obj?.animationOut?.duration || 0)) * 1000 : undefined)
             };
         }
         options?.storyboards.forEach((board: any) => {
             const { id, poster, duration } = board;
             const sceneChildren: Element[] = [];
             board.bgImage && sceneChildren.push(new Image({
-                ...buildBaseData(board.bgImage),
+                ...buildBaseData(board.bgImage, duration),
                 x: 0,
                 y: 0,
                 width: options.videoWidth,
@@ -89,7 +90,7 @@ class OptionsParser {
                 src: board.bgImage.src
             }));
             board.bgVideo && sceneChildren.push(new Video({
-                ...buildBaseData(board.bgVideo),
+                ...buildBaseData(board.bgVideo, duration),
                 x: 0,
                 y: 0,
                 width: options.videoWidth,
@@ -105,7 +106,7 @@ class OptionsParser {
                 seekEnd: board.bgVideo.seekEnd ? board.bgVideo.seekEnd * 1000 : undefined
             }));
             board.bgMusic && templateChildren.push(new Audio({
-                ...buildBaseData(board.bgMusic),
+                ...buildBaseData(board.bgMusic, duration),
                 src: board.bgMusic.src,
                 volume: board.bgMusic.volume,
                 duration: board.bgMusic.duration ? board.bgMusic.duration * 1000 : undefined,
@@ -121,7 +122,7 @@ class OptionsParser {
                 switch (element.elementType) {
                     case "image":
                         sceneChildren.push(new Image({
-                            ...buildBaseData(element),
+                            ...buildBaseData(element, duration),
                             crop: element.crop ? {
                                 style: element.crop.style,
                                 x: element.crop.left,
@@ -138,7 +139,7 @@ class OptionsParser {
                         break;
                     case "text":
                         sceneChildren.push(new Text({
-                            ...buildBaseData(element),
+                            ...buildBaseData(element, duration),
                             value: element.content,
                             fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
                             fontSize: element.fontSize,
@@ -155,9 +156,9 @@ class OptionsParser {
                         break;
                     case "audio":
                         sceneChildren.push(new Audio({
-                            ...buildBaseData(element),
+                            ...buildBaseData(element, duration),
                             src: element.src,
-                            duration: element.duration,
+                            duration: element.duration ? element.duration * 1000 : undefined,
                             volume: element.volume,
                             muted: element.muted,
                             loop: element.loop,
@@ -169,8 +170,9 @@ class OptionsParser {
                         break;
                     case "voice":
                         sceneChildren.push(new Voice({
-                            ...buildBaseData(element),
+                            ...buildBaseData(element, duration),
                             src: element.src,
+                            duration: element.duration ? element.duration * 1000 : undefined,
                             volume: element.volume,
                             seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
                             seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
@@ -190,7 +192,7 @@ class OptionsParser {
                         break;
                     case "video":
                         sceneChildren.push(new Video({
-                            ...buildBaseData(element),
+                            ...buildBaseData(element, duration),
                             poster: element.poster,
                             src: element.src,
                             duration: element.duration ? element.duration * 1000 : undefined,
@@ -203,7 +205,7 @@ class OptionsParser {
                         break;
                     case "chart":
                         sceneChildren.push(new Chart({
-                            ...buildBaseData(element),
+                            ...buildBaseData(element, duration),
                             chartId: element.chartId,
                             poster: element.poster,
                             configSrc: element.optionsPath,
@@ -212,7 +214,7 @@ class OptionsParser {
                         break;
                     case "vtuber":
                         sceneChildren.push(new Vtuber({
-                            ...buildBaseData(element),
+                            ...buildBaseData(element, duration),
                             poster: element.poster,
                             src: element.src,
                             provider: element.provider,
@@ -239,7 +241,7 @@ class OptionsParser {
                 backgroundColor: board.bgColor ? board.bgColor.fillColor : undefined,
                 transition: board.transition ? {
                     type: board.transition.name,
-                    duration: board.transition.duration
+                    duration: board.transition.duration * 1000
                 } : undefined,
                 filter: undefined,
                 children: sceneChildren,
@@ -291,8 +293,10 @@ class OptionsParser {
             width: options.videoWidth,
             height: options.videoHeight,
             aspectRatio: options.videoSize,
-            videoBitrate: options.videoBitrate,
+            videoBitrate: `${options.videoBitrate}`,
+            audioBitrate: `${options.audioBitrate}`,
             backgroundColor: options.bgColor ? (options.bgColor.fillColor || undefined) : undefined,
+            compile: options.compile,
             children: templateChildren
         });
     }

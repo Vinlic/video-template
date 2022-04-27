@@ -386,8 +386,8 @@ var _Element = class {
       rotate: this.rotate,
       opacity: this.opacity,
       index: this.zIndex || 0,
-      animationIn: this.startTime ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,
-      animationOut: this.endTime ? ((_b = this.exitEffect) == null ? void 0 : _b.toOptions(this.endTime)) || { delay: util_default.millisecondsToSenconds(this.endTime) } : void 0,
+      animationIn: util_default.isNumber(this.startTime) ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,
+      animationOut: util_default.isNumber(this.endTime) ? ((_b = this.exitEffect) == null ? void 0 : _b.toOptions(this.endTime)) || { delay: util_default.millisecondsToSenconds(this.endTime) } : void 0,
       fillColor: this.backgroundColor
     };
   }
@@ -1506,11 +1506,12 @@ var OldParser = class {
       type,
       name,
       actuator,
+      compile,
       children: [projRes, global, storyBoards]
     } = rawObject;
     const resourceMap = {};
     projRes.children.forEach((resource) => resourceMap[resource.id] = resource);
-    function buildBaseData(obj) {
+    function buildBaseData(obj, parentDuration) {
       return {
         id: obj.id,
         name: obj.name,
@@ -1529,8 +1530,8 @@ var OldParser = class {
           duration: obj.animationOutDuration * 1e3
         } : void 0,
         backgroundColor: obj.fillColor,
-        startTime: obj.inPoint ? obj.inPoint * 1e3 : void 0,
-        endTime: obj.outPoint ? obj.outPoint * 1e3 : void 0
+        startTime: obj.inPoint ? obj.inPoint * 1e3 : 0,
+        endTime: obj.outPoint ? obj.outPoint * 1e3 : parentDuration
       };
     }
     const templateChildren = [];
@@ -1594,7 +1595,7 @@ var OldParser = class {
             sceneBackgroundColor = data2.fillColor;
             break;
           case "bgimg":
-            sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(data2)), {
+            sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(data2, duration)), {
               x: 0,
               y: 0,
               width: global.videoWidth,
@@ -1604,7 +1605,7 @@ var OldParser = class {
             })));
             break;
           case "bgvideo":
-            sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(data2)), {
+            sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(data2, duration)), {
               x: 0,
               y: 0,
               width: global.videoWidth,
@@ -1629,7 +1630,7 @@ var OldParser = class {
           case "captions":
             data2.children.forEach((caption) => {
               var _a;
-              return sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(caption)), {
+              return sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(caption, duration)), {
                 value: (_a = caption.children[0]) == null ? void 0 : _a.children.join("\n"),
                 fontFamily: caption.fontFamily ? caption.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
                 fontSize: caption.fontSize,
@@ -1654,7 +1655,7 @@ var OldParser = class {
               switch (type2) {
                 case "img":
                 case "gif":
-                  element = new Image_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
+                  element = new Image_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
                     crop: tag.cropStyle ? {
                       style: tag.cropStyle === "circle" ? "circle" : "rect",
                       x: tag.cropX,
@@ -1668,7 +1669,7 @@ var OldParser = class {
                   }));
                   break;
                 case "video":
-                  element = new Video_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
+                  element = new Video_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
                     poster: data2.poster,
                     src: resPath,
                     duration: data2.duration ? data2.duration * 1e3 : void 0,
@@ -1680,7 +1681,7 @@ var OldParser = class {
                   }));
                   break;
                 case "sound":
-                  element = new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
+                  element = new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
                     src: resPath,
                     duration: data2.duration,
                     volume: data2.volume,
@@ -1696,7 +1697,7 @@ var OldParser = class {
             });
             break;
           case "dynDataCharts":
-            data2.children.forEach((chart) => sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(chart)), {
+            data2.children.forEach((chart) => sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(chart, duration)), {
               chartId: chart.chartId,
               poster: chart.poster,
               configSrc: chart.optionsPath,
@@ -1706,7 +1707,7 @@ var OldParser = class {
           case "textToSounds":
             data2.children.forEach((voice) => {
               var _a;
-              return sceneChildren.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(voice)), {
+              return sceneChildren.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(voice, duration)), {
                 src: resourceMap[voice.resId] ? resourceMap[voice.resId].resPath : void 0,
                 volume: voice.volume,
                 seekStart: voice.seekStart ? voice.seekStart * 1e3 : void 0,
@@ -1727,7 +1728,7 @@ var OldParser = class {
             });
             break;
           case "vtubers":
-            data2.children.forEach((vtuber) => sceneChildren.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(vtuber)), {
+            data2.children.forEach((vtuber) => sceneChildren.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(vtuber, duration)), {
               poster: vtuber.poster,
               src: resourceMap[vtuber.resId] ? resourceMap[vtuber.resId].resPath : void 0,
               provider: vtuber.provider,
@@ -1766,6 +1767,7 @@ var OldParser = class {
       aspectRatio: global.videoSize,
       backgroundColor: templateBackgroundColor,
       fps: global.fps,
+      compile,
       children: templateChildren
     }, data, vars);
   }
@@ -1817,7 +1819,8 @@ var OptionsParser = class {
   }
   static parseOptions(options) {
     const templateChildren = [];
-    function buildBaseData(obj) {
+    function buildBaseData(obj, parentDuration) {
+      var _a;
       return {
         id: obj.id,
         name: obj.name,
@@ -1827,23 +1830,23 @@ var OptionsParser = class {
         height: obj.height,
         opacity: obj.opacity,
         zIndex: obj.index,
-        enterEffect: obj.animationIn ? {
+        enterEffect: obj.animationIn && obj.animationIn.name !== "none" ? {
           type: obj.animationIn.name,
           duration: obj.animationIn.duration * 1e3
         } : void 0,
-        exitEffect: obj.animationOut ? {
-          type: obj.animationOut,
-          duration: obj.animationOutDuration * 1e3
+        exitEffect: obj.animationOut && obj.animationOut.name !== "none" ? {
+          type: obj.animationOut.name,
+          duration: obj.animationOut.duration * 1e3
         } : void 0,
         backgroundColor: obj.fillColor,
-        startTime: obj.animationIn ? obj.animationIn.delay * 1e3 : void 0,
-        endTime: obj.animationOut ? obj.animationOut.delay * 1e3 : void 0
+        startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1e3 : 0,
+        endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration ? (parentDuration - (((_a = obj == null ? void 0 : obj.animationOut) == null ? void 0 : _a.duration) || 0)) * 1e3 : void 0
       };
     }
     options == null ? void 0 : options.storyboards.forEach((board) => {
       const { id, poster, duration } = board;
       const sceneChildren = [];
-      board.bgImage && sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgImage)), {
+      board.bgImage && sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgImage, duration)), {
         x: 0,
         y: 0,
         width: options.videoWidth,
@@ -1851,7 +1854,7 @@ var OptionsParser = class {
         isBackground: true,
         src: board.bgImage.src
       })));
-      board.bgVideo && sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgVideo)), {
+      board.bgVideo && sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgVideo, duration)), {
         x: 0,
         y: 0,
         width: options.videoWidth,
@@ -1866,7 +1869,7 @@ var OptionsParser = class {
         seekStart: board.bgVideo.seekStart ? board.bgVideo.seekStart * 1e3 : void 0,
         seekEnd: board.bgVideo.seekEnd ? board.bgVideo.seekEnd * 1e3 : void 0
       })));
-      board.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgMusic)), {
+      board.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgMusic, duration)), {
         src: board.bgMusic.src,
         volume: board.bgMusic.volume,
         duration: board.bgMusic.duration ? board.bgMusic.duration * 1e3 : void 0,
@@ -1881,7 +1884,7 @@ var OptionsParser = class {
       board == null ? void 0 : board.elements.forEach((element) => {
         switch (element.elementType) {
           case "image":
-            sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+            sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               crop: element.crop ? {
                 style: element.crop.style,
                 x: element.crop.left,
@@ -1897,7 +1900,7 @@ var OptionsParser = class {
             })));
             break;
           case "text":
-            sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+            sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               value: element.content,
               fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
               fontSize: element.fontSize,
@@ -1913,9 +1916,9 @@ var OptionsParser = class {
             })));
             break;
           case "audio":
-            sceneChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+            sceneChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               src: element.src,
-              duration: element.duration,
+              duration: element.duration ? element.duration * 1e3 : void 0,
               volume: element.volume,
               muted: element.muted,
               loop: element.loop,
@@ -1926,8 +1929,9 @@ var OptionsParser = class {
             })));
             break;
           case "voice":
-            sceneChildren.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+            sceneChildren.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               src: element.src,
+              duration: element.duration ? element.duration * 1e3 : void 0,
               volume: element.volume,
               seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
               seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
@@ -1946,7 +1950,7 @@ var OptionsParser = class {
             })));
             break;
           case "video":
-            sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+            sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               poster: element.poster,
               src: element.src,
               duration: element.duration ? element.duration * 1e3 : void 0,
@@ -1958,7 +1962,7 @@ var OptionsParser = class {
             })));
             break;
           case "chart":
-            sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+            sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               chartId: element.chartId,
               poster: element.poster,
               configSrc: element.optionsPath,
@@ -1966,7 +1970,7 @@ var OptionsParser = class {
             })));
             break;
           case "vtuber":
-            sceneChildren.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+            sceneChildren.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               poster: element.poster,
               src: element.src,
               provider: element.provider,
@@ -1993,7 +1997,7 @@ var OptionsParser = class {
         backgroundColor: board.bgColor ? board.bgColor.fillColor : void 0,
         transition: board.transition ? {
           type: board.transition.name,
-          duration: board.transition.duration
+          duration: board.transition.duration * 1e3
         } : void 0,
         filter: void 0,
         children: sceneChildren
@@ -2042,8 +2046,10 @@ var OptionsParser = class {
       width: options.videoWidth,
       height: options.videoHeight,
       aspectRatio: options.videoSize,
-      videoBitrate: options.videoBitrate,
+      videoBitrate: `${options.videoBitrate}`,
+      audioBitrate: `${options.audioBitrate}`,
       backgroundColor: options.bgColor ? options.bgColor.fillColor || void 0 : void 0,
+      compile: options.compile,
       children: templateChildren
     });
   }

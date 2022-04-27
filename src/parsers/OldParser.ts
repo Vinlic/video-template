@@ -71,11 +71,12 @@ class OldParser {
             type,
             name,
             actuator,
+            compile,
             children: [projRes, global, storyBoards],
         } = rawObject;
         const resourceMap: any = {};
         projRes.children.forEach((resource: any) => (resourceMap[resource.id] = resource));
-        function buildBaseData(obj: any) {
+        function buildBaseData(obj: any, parentDuration?: number) {
             return {
                 id: obj.id,
                 name: obj.name,
@@ -94,8 +95,8 @@ class OldParser {
                     duration: obj.animationOutDuration * 1000,
                 } : undefined,
                 backgroundColor: obj.fillColor,
-                startTime: obj.inPoint ? obj.inPoint * 1000 : undefined,
-                endTime: obj.outPoint ? obj.outPoint * 1000 : undefined,
+                startTime: obj.inPoint ? obj.inPoint * 1000 : 0,
+                endTime: obj.outPoint ? obj.outPoint * 1000 : parentDuration,
             };
         }
         const templateChildren: (Scene | Element)[] = [];
@@ -170,7 +171,7 @@ class OldParser {
                     case 'bgimg':
                         sceneChildren.push(
                             new Image({
-                                ...buildBaseData(data),
+                                ...buildBaseData(data, duration),
                                 x: 0,
                                 y: 0,
                                 width: global.videoWidth,
@@ -183,7 +184,7 @@ class OldParser {
                     case 'bgvideo':
                         sceneChildren.push(
                             new Video({
-                                ...buildBaseData(data),
+                                ...buildBaseData(data, duration),
                                 x: 0,
                                 y: 0,
                                 width: global.videoWidth,
@@ -208,7 +209,7 @@ class OldParser {
                         break;
                     case 'captions':
                         data.children.forEach((caption: any) => sceneChildren.push(new Text({
-                            ...buildBaseData(caption),
+                            ...buildBaseData(caption, duration),
                             value: caption.children[0]?.children.join('\n'),
                             fontFamily: caption.fontFamily ? caption.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
                             fontSize: caption.fontSize,
@@ -232,7 +233,7 @@ class OldParser {
                                 case 'img':
                                 case 'gif':
                                     element = new Image({
-                                        ...buildBaseData(tag),
+                                        ...buildBaseData(tag, duration),
                                         crop: tag.cropStyle
                                             ? {
                                                 style: tag.cropStyle === 'circle' ? 'circle' : 'rect',
@@ -249,7 +250,7 @@ class OldParser {
                                     break;
                                 case 'video':
                                     element = new Video({
-                                        ...buildBaseData(tag),
+                                        ...buildBaseData(tag, duration),
                                         poster: data.poster,
                                         src: resPath,
                                         duration: data.duration ? data.duration * 1000 : undefined,
@@ -262,7 +263,7 @@ class OldParser {
                                     break;
                                 case 'sound':
                                     element = new Audio({
-                                        ...buildBaseData(tag),
+                                        ...buildBaseData(tag, duration),
                                         src: resPath,
                                         duration: data.duration,
                                         volume: data.volume,
@@ -280,7 +281,7 @@ class OldParser {
                     case 'dynDataCharts':
                         data.children.forEach((chart: any) => sceneChildren.push(
                             new Chart({
-                                ...buildBaseData(chart),
+                                ...buildBaseData(chart, duration),
                                 chartId: chart.chartId,
                                 poster: chart.poster,
                                 configSrc: chart.optionsPath,
@@ -290,7 +291,7 @@ class OldParser {
                         break;
                     case 'textToSounds':
                         data.children.forEach((voice: any) => sceneChildren.push(new Voice({
-                            ...buildBaseData(voice),
+                            ...buildBaseData(voice, duration),
                             src: resourceMap[voice.resId] ? resourceMap[voice.resId].resPath : undefined,
                             volume: voice.volume,
                             seekStart: voice.seekStart ? voice.seekStart * 1000 : undefined,
@@ -314,7 +315,7 @@ class OldParser {
                     case 'vtubers':
                         data.children.forEach((vtuber: any) => sceneChildren.push(
                             new Vtuber({
-                                ...buildBaseData(vtuber),
+                                ...buildBaseData(vtuber, duration),
                                 poster: vtuber.poster,
                                 src: resourceMap[vtuber.resId] ? resourceMap[vtuber.resId].resPath : undefined,
                                 provider: vtuber.provider,
@@ -354,6 +355,7 @@ class OldParser {
             aspectRatio: global.videoSize,
             backgroundColor: templateBackgroundColor,
             fps: global.fps,
+            compile,
             children: templateChildren,
         }, data, vars);
     }
