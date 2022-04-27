@@ -1,4 +1,4 @@
-import xmlBuilder from 'xmlbuilder';
+import { create } from 'xmlbuilder2';
 import { XMLParser } from 'fast-xml-parser';
 
 import util from '../util';
@@ -18,11 +18,13 @@ const xmlParser = new XMLParser({
 class OldParser {
 
     public static toXML(template: Template, pretty = false) {
-        const project = xmlBuilder.create('project');
-        project.att('version', '1.0.0');
-        project.att('id', template.id);
-        project.att('name', template.name);
-        project.att('actuator', template.actuator);
+        const root = create('project');
+        const project = root.ele("project", {
+            version: "1.0.0",
+            id: template.id,
+            name: template.name,
+            actuator: template.actuator
+        });
         const resources: { [map: string]: any } = project.ele('projRes');
         resources.map = {};
         const global = project.ele('global', {
@@ -43,7 +45,7 @@ class OldParser {
         }
         const storyBoards = project.ele('storyBoards');
         template.children.forEach((node) => node.renderOldXML(storyBoards, resources, global)); //子节点XML渲染
-        return project.end({ pretty });
+        return project.end({ prettyPrint: pretty });
     }
 
     /**

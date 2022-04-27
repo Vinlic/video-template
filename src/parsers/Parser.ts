@@ -1,10 +1,8 @@
-import xmlBuilder from 'xmlbuilder';
+import { create } from 'xmlbuilder2';
 import { XMLParser } from 'fast-xml-parser';
 
 import util from '../util';
 import Template from '../Template';
-import Scene from '../Scene';
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML } from '../elements';
 
 const xmlParser = new XMLParser({
     allowBooleanAttributes: true, //需要解析布尔值属性
@@ -18,34 +16,36 @@ const xmlParser = new XMLParser({
 class Parser {
 
     public static toXML(_template: Template, pretty = false) {
-        const template = xmlBuilder.create('template');
-        template.att('version', _template.version);
-        template.att('id', _template.id);
-        template.att('name', _template.name);
-        template.att('mode', _template.mode);
-        template.att('poster', _template.poster);
-        template.att('actuator', _template.actuator);
-        template.att('width', _template.width);
-        template.att('height', _template.height);
-        template.att('aspectRatio', _template.aspectRatio);
-        template.att('fps', _template.fps);
-        template.att('crf', _template.crf);
-        template.att('videoCodec', _template.videoCodec);
-        template.att('videoBitrate', _template.videoBitrate);
-        template.att('pixelFormat', _template.pixelFormat);
-        template.att('frameQuality', _template.frameQuality);
-        template.att('duration', _template.duration);
-        template.att('format', _template.format);
-        template.att('volume', _template.volume);
-        template.att('audioCodec', _template.audioCodec);
-        template.att('sampleRate', _template.sampleRate);
-        template.att('audioBitrate', _template.audioBitrate);
-        template.att('backgroundColor', _template.backgroundColor);
-        template.att('createTime', _template.createTime);
-        template.att('updateTime', _template.updateTime);
-        template.att('buildBy', _template.buildBy);
+        const root = create({ version: "1.0.0" });
+        const template = root.ele("template", {
+            version: _template.version,
+            id: _template.id,
+            name: _template.name,
+            mode: _template.mode,
+            poster: _template.poster,
+            actuator: _template.actuator,
+            width: _template.width,
+            height: _template.height,
+            aspectRatio: _template.aspectRatio,
+            fps: _template.fps,
+            crf: _template.crf,
+            videoCodec: _template.videoCodec,
+            videoBitrate: _template.videoBitrate,
+            pixelFormat: _template.pixelFormat,
+            frameQuality: _template.frameQuality,
+            duration: _template.duration,
+            format: _template.format,
+            volume: _template.volume,
+            audioCodec: _template.audioCodec,
+            sampleRate: _template.sampleRate,
+            audioBitrate: _template.audioBitrate,
+            backgroundColor: _template.backgroundColor,
+            createTime: _template.createTime,
+            updateTime: _template.updateTime,
+            buildBy: _template.buildBy
+        });
         _template.children.forEach((node) => node.renderXML(template)); //子节点XML渲染
-        return template.end({ pretty });
+        return template.end({ prettyPrint: pretty });
     }
 
     public static toBuffer(tempalte: Template) {

@@ -1,4 +1,4 @@
-import xmlBuilder from 'xmlbuilder';
+import { create } from 'xmlbuilder2';
 
 import ISceneOptions from './interface/ISceneOptions';
 import ITransitionOptions from './interface/ITransitionOptions';
@@ -115,7 +115,7 @@ class Scene {
      */
     public toXML(pretty = false) {
         const scene = this.renderXML();
-        return scene.end({ pretty });
+        return scene.end({ prettyPrint: pretty });
     }
 
     /**
@@ -126,7 +126,7 @@ class Scene {
      */
     public toOldXML(pretty = false) {
         const board = this.renderOldXML();
-        return board.end({ pretty });
+        return board.end({ prettyPrint: pretty });
     }
 
     /**
@@ -230,15 +230,17 @@ class Scene {
      * 创建XML根节点
      */
     #createXMLRoot(tagName = 'scene', headless = true) {
-        const scene = xmlBuilder.create(tagName, { headless });
-        scene.att('id', this.id);
-        scene.att('name', this.name);
-        scene.att('poster', this.poster);
-        scene.att('width', this.width);
-        scene.att('height', this.height);
-        scene.att('aspectRatio', this.aspectRatio);
-        scene.att('duration', this.duration);
-        scene.att('backgroundColor', this.backgroundColor);
+        const root = headless ? create() : create({ version: "1.0" });
+        const scene = root.ele(tagName, {
+            id: this.id,
+            name: this.name,
+            poster: this.poster,
+            width: this.width,
+            height: this.height,
+            aspectRatio: this.aspectRatio,
+            duration: this.duration,
+            backgroundColor: this.backgroundColor
+        });
         return scene;
     }
 

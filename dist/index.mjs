@@ -129,7 +129,7 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
 });
 
 // src/Scene.ts
-import xmlBuilder from "xmlbuilder";
+import { create } from "xmlbuilder2";
 
 // src/enums/ElementTypes.ts
 var ElementTypes = /* @__PURE__ */ ((ElementTypes2) => {
@@ -1104,11 +1104,11 @@ var _Scene = class {
   }
   toXML(pretty = false) {
     const scene = this.renderXML();
-    return scene.end({ pretty });
+    return scene.end({ prettyPrint: pretty });
   }
   toOldXML(pretty = false) {
     const board = this.renderOldXML();
-    return board.end({ pretty });
+    return board.end({ prettyPrint: pretty });
   }
   toOptions() {
     const children = [];
@@ -1221,22 +1221,24 @@ var _Scene = class {
 var Scene = _Scene;
 _createXMLRoot = new WeakSet();
 createXMLRoot_fn = function(tagName = "scene", headless = true) {
-  const scene = xmlBuilder.create(tagName, { headless });
-  scene.att("id", this.id);
-  scene.att("name", this.name);
-  scene.att("poster", this.poster);
-  scene.att("width", this.width);
-  scene.att("height", this.height);
-  scene.att("aspectRatio", this.aspectRatio);
-  scene.att("duration", this.duration);
-  scene.att("backgroundColor", this.backgroundColor);
+  const root = headless ? create() : create({ version: "1.0" });
+  const scene = root.ele(tagName, {
+    id: this.id,
+    name: this.name,
+    poster: this.poster,
+    width: this.width,
+    height: this.height,
+    aspectRatio: this.aspectRatio,
+    duration: this.duration,
+    backgroundColor: this.backgroundColor
+  });
   return scene;
 };
 __publicField(Scene, "type", "scene");
 var Scene_default = Scene;
 
 // src/parsers/Parser.ts
-import xmlBuilder2 from "xmlbuilder";
+import { create as create2 } from "xmlbuilder2";
 import { XMLParser } from "fast-xml-parser";
 var xmlParser = new XMLParser({
   allowBooleanAttributes: true,
@@ -1248,34 +1250,36 @@ var xmlParser = new XMLParser({
 });
 var Parser = class {
   static toXML(_template, pretty = false) {
-    const template = xmlBuilder2.create("template");
-    template.att("version", _template.version);
-    template.att("id", _template.id);
-    template.att("name", _template.name);
-    template.att("mode", _template.mode);
-    template.att("poster", _template.poster);
-    template.att("actuator", _template.actuator);
-    template.att("width", _template.width);
-    template.att("height", _template.height);
-    template.att("aspectRatio", _template.aspectRatio);
-    template.att("fps", _template.fps);
-    template.att("crf", _template.crf);
-    template.att("videoCodec", _template.videoCodec);
-    template.att("videoBitrate", _template.videoBitrate);
-    template.att("pixelFormat", _template.pixelFormat);
-    template.att("frameQuality", _template.frameQuality);
-    template.att("duration", _template.duration);
-    template.att("format", _template.format);
-    template.att("volume", _template.volume);
-    template.att("audioCodec", _template.audioCodec);
-    template.att("sampleRate", _template.sampleRate);
-    template.att("audioBitrate", _template.audioBitrate);
-    template.att("backgroundColor", _template.backgroundColor);
-    template.att("createTime", _template.createTime);
-    template.att("updateTime", _template.updateTime);
-    template.att("buildBy", _template.buildBy);
+    const root = create2({ version: "1.0.0" });
+    const template = root.ele("template", {
+      version: _template.version,
+      id: _template.id,
+      name: _template.name,
+      mode: _template.mode,
+      poster: _template.poster,
+      actuator: _template.actuator,
+      width: _template.width,
+      height: _template.height,
+      aspectRatio: _template.aspectRatio,
+      fps: _template.fps,
+      crf: _template.crf,
+      videoCodec: _template.videoCodec,
+      videoBitrate: _template.videoBitrate,
+      pixelFormat: _template.pixelFormat,
+      frameQuality: _template.frameQuality,
+      duration: _template.duration,
+      format: _template.format,
+      volume: _template.volume,
+      audioCodec: _template.audioCodec,
+      sampleRate: _template.sampleRate,
+      audioBitrate: _template.audioBitrate,
+      backgroundColor: _template.backgroundColor,
+      createTime: _template.createTime,
+      updateTime: _template.updateTime,
+      buildBy: _template.buildBy
+    });
     _template.children.forEach((node) => node.renderXML(template));
-    return template.end({ pretty });
+    return template.end({ prettyPrint: pretty });
   }
   static toBuffer(tempalte) {
     return Buffer.from(tempalte.toXML());
@@ -1431,7 +1435,7 @@ var Parser = class {
 var Parser_default = Parser;
 
 // src/parsers/OldParser.ts
-import xmlBuilder3 from "xmlbuilder";
+import { create as create3 } from "xmlbuilder2";
 import { XMLParser as XMLParser2 } from "fast-xml-parser";
 var xmlParser2 = new XMLParser2({
   allowBooleanAttributes: true,
@@ -1443,11 +1447,13 @@ var xmlParser2 = new XMLParser2({
 });
 var OldParser = class {
   static toXML(template, pretty = false) {
-    const project = xmlBuilder3.create("project");
-    project.att("version", "1.0.0");
-    project.att("id", template.id);
-    project.att("name", template.name);
-    project.att("actuator", template.actuator);
+    const root = create3("project");
+    const project = root.ele("project", {
+      version: "1.0.0",
+      id: template.id,
+      name: template.name,
+      actuator: template.actuator
+    });
     const resources = project.ele("projRes");
     resources.map = {};
     const global = project.ele("global", {
@@ -1468,7 +1474,7 @@ var OldParser = class {
     }
     const storyBoards = project.ele("storyBoards");
     template.children.forEach((node) => node.renderOldXML(storyBoards, resources, global));
-    return project.end({ pretty });
+    return project.end({ prettyPrint: pretty });
   }
   static toBuffer(template) {
     return Buffer.from(this.toXML(template));
