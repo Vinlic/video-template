@@ -48,9 +48,6 @@ var __privateMethod = (obj, member, method) => {
   return method;
 };
 
-// src/Template.ts
-import { XMLParser as XMLParser3 } from "fast-xml-parser";
-
 // src/util.ts
 import lodash from "lodash";
 import { v1 as uuid } from "uuid";
@@ -2076,14 +2073,6 @@ var Compiler = class {
 var Compiler_default = Compiler;
 
 // src/Template.ts
-var xmlParser3 = new XMLParser3({
-  allowBooleanAttributes: true,
-  ignoreAttributes: false,
-  attributeNamePrefix: "",
-  preserveOrder: true,
-  parseTagValue: false,
-  stopNodes: ["template.scene.voice.ssml"]
-});
 var _Template = class {
   type = "";
   id = "";

@@ -71,9 +71,6 @@ __export(src_exports, {
 });
 module.exports = __toCommonJS(src_exports);
 
-// src/Template.ts
-var import_fast_xml_parser3 = require("fast-xml-parser");
-
 // src/util.ts
 var import_lodash = __toESM(require("lodash"));
 var import_uuid = require("uuid");
@@ -2099,14 +2096,6 @@ var Compiler = class {
 var Compiler_default = Compiler;
 
 // src/Template.ts
-var xmlParser3 = new import_fast_xml_parser3.XMLParser({
-  allowBooleanAttributes: true,
-  ignoreAttributes: false,
-  attributeNamePrefix: "",
-  preserveOrder: true,
-  parseTagValue: false,
-  stopNodes: ["template.scene.voice.ssml"]
-});
 var _Template = class {
   type = "";
   id = "";

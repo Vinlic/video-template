@@ -1,23 +1,11 @@
-import xmlBuilder from 'xmlbuilder';
-import { XMLParser } from 'fast-xml-parser';
-
 import ITemplateOptions from './interface/ITemplateOptions';
 
 import util from './util';
 import Scene from './Scene';
+import Element from './elements/Element';
 import ElementFactory from './ElementFactory';
 import { Parser, OldParser, OptionsParser } from './parsers';
 import Compiler from './Compiler';
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML } from './elements';
-
-const xmlParser = new XMLParser({
-    allowBooleanAttributes: true, //需要解析布尔值属性
-    ignoreAttributes: false, //不要忽略属性
-    attributeNamePrefix: '', //属性名称不拼接前缀
-    preserveOrder: true, //保持原始文档标签顺序
-    parseTagValue: false, //不解析标签内值
-    stopNodes: ['template.scene.voice.ssml'], //解析到ssml标签为止不要继续往下解析
-});
 
 class Template {
     public static readonly type = 'template'; // type标识
