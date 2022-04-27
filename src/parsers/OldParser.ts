@@ -207,23 +207,21 @@ class OldParser {
                         };
                         break;
                     case 'captions':
-                        data.children.forEach((caption: any) =>
-                            sceneChildren.push(
-                                new Text({
-                                    ...buildBaseData(caption),
-                                    value: caption.children[0]?.children.join('\n'),
-                                    fontFamily: caption.fontFamily ? caption.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
-                                    fontSize: caption.fontSize,
-                                    fontColor: caption.fontColor,
-                                    lineHeight: parseFloat((Number(caption.lineHeight) / Number(caption.fontSize)).toFixed(3)),
-                                    wordSpacing: caption.wordSpacing,
-                                    textAlign: caption.textAlign,
-                                    effectType: caption.effectType,
-                                    effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1000 : undefined,
-                                    effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1000 : undefined,
-                                }),
-                            ),
-                        );
+                        data.children.forEach((caption: any) => sceneChildren.push(new Text({
+                            ...buildBaseData(caption),
+                            value: caption.children[0]?.children.join('\n'),
+                            fontFamily: caption.fontFamily ? caption.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
+                            fontSize: caption.fontSize,
+                            fontColor: caption.fontColor,
+                            fontWeight: caption.bold ? 700 : undefined,
+                            fontStyle: caption.italic ? "italic" : undefined,
+                            lineHeight: parseFloat((Number(caption.lineHeight) / Number(caption.fontSize)).toFixed(3)),
+                            wordSpacing: caption.wordSpacing,
+                            textAlign: caption.textAlign,
+                            effectType: caption.effectType,
+                            effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1000 : undefined,
+                            effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1000 : undefined,
+                        })));
                         break;
                     case 'resources':
                         data.children.forEach((tag: any) => {
@@ -291,52 +289,46 @@ class OldParser {
                         );
                         break;
                     case 'textToSounds':
-                        data.children.forEach((voice: any) =>
-                            sceneChildren.push(
-                                new Voice({
-                                    ...buildBaseData(voice),
-                                    src: resourceMap[voice.resId] ? resourceMap[voice.resId].resPath : undefined,
-                                    volume: voice.volume,
-                                    seekStart: voice.seekStart ? voice.seekStart * 1000 : undefined,
-                                    seekEnd: voice.seekEnd ? voice.seekEnd * 1000 : undefined,
-                                    loop: voice.loop,
-                                    muted: voice.muted,
-                                    provider: voice.provider,
-                                    children: voice.children[0]
-                                        ? [
-                                            new SSML({
-                                                value: voice.children[0]?.children[0],
-                                            }),
-                                        ]
-                                        : [],
-                                    text: voice.text,
-                                    declaimer: voice.voice,
-                                    speechRate: voice.speechRate ? voice.speechRate : undefined,
-                                    pitchRate: voice.pitchRate ? Number(voice.pitchRate) + 1 : undefined,
-                                }),
-                            ),
-                        );
+                        data.children.forEach((voice: any) => sceneChildren.push(new Voice({
+                            ...buildBaseData(voice),
+                            src: resourceMap[voice.resId] ? resourceMap[voice.resId].resPath : undefined,
+                            volume: voice.volume,
+                            seekStart: voice.seekStart ? voice.seekStart * 1000 : undefined,
+                            seekEnd: voice.seekEnd ? voice.seekEnd * 1000 : undefined,
+                            loop: voice.loop,
+                            muted: voice.muted,
+                            provider: voice.provider,
+                            children: voice.children[0]
+                                ? [
+                                    new SSML({
+                                        value: voice.children[0]?.children[0],
+                                    }),
+                                ]
+                                : [],
+                            text: voice.text,
+                            declaimer: voice.voice,
+                            speechRate: voice.speechRate ? voice.speechRate : undefined,
+                            pitchRate: voice.pitchRate ? Number(voice.pitchRate) + 1 : undefined,
+                        })));
                         break;
                     case 'vtubers':
-                        data.children.forEach((vtuber: any) =>
-                            sceneChildren.push(
-                                new Vtuber({
-                                    ...buildBaseData(vtuber),
-                                    poster: vtuber.poster,
-                                    src: resourceMap[vtuber.resId] ? resourceMap[vtuber.resId].resPath : undefined,
-                                    provider: vtuber.provider,
-                                    text: vtuber.text,
-                                    solution: vtuber.solution,
-                                    declaimer: vtuber.declaimer,
-                                    duration: vtuber.duration ? vtuber.duration * 1000 : undefined,
-                                    volume: vtuber.volume,
-                                    muted: vtuber.muted,
-                                    loop: vtuber.loop,
-                                    seekStart: vtuber.seekStart ? vtuber.seekStart * 1000 : undefined,
-                                    seekEnd: vtuber.seekEnd ? vtuber.seekEnd * 1000 : undefined,
-                                }),
-                            ),
-                        );
+                        data.children.forEach((vtuber: any) => sceneChildren.push(
+                            new Vtuber({
+                                ...buildBaseData(vtuber),
+                                poster: vtuber.poster,
+                                src: resourceMap[vtuber.resId] ? resourceMap[vtuber.resId].resPath : undefined,
+                                provider: vtuber.provider,
+                                text: vtuber.text,
+                                solution: vtuber.solution,
+                                declaimer: vtuber.declaimer,
+                                duration: vtuber.duration ? vtuber.duration * 1000 : undefined,
+                                volume: vtuber.volume,
+                                muted: vtuber.muted,
+                                loop: vtuber.loop,
+                                seekStart: vtuber.seekStart ? vtuber.seekStart * 1000 : undefined,
+                                seekEnd: vtuber.seekEnd ? vtuber.seekEnd * 1000 : undefined,
+                            })
+                        ));
                 }
             });
             templateChildren.push(new Scene({

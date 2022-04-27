@@ -1611,6 +1611,8 @@ var OldParser = class {
                 fontFamily: caption.fontFamily ? caption.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
                 fontSize: caption.fontSize,
                 fontColor: caption.fontColor,
+                fontWeight: caption.bold ? 700 : void 0,
+                fontStyle: caption.italic ? "italic" : void 0,
                 lineHeight: parseFloat((Number(caption.lineHeight) / Number(caption.fontSize)).toFixed(3)),
                 wordSpacing: caption.wordSpacing,
                 textAlign: caption.textAlign,
@@ -1815,11 +1817,149 @@ var OptionsParser = class {
         endTime: obj.animationOut ? obj.animationOut.delay * 1e3 : void 0
       };
     }
-    options.storyboards.forEach((board) => {
+    options == null ? void 0 : options.storyboards.forEach((board) => {
       const { id, poster, duration } = board;
       const sceneChildren = [];
-      let sceneBackgroundColor;
-      let transition;
+      board.bgImage && sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgImage)), {
+        x: 0,
+        y: 0,
+        width: options.videoWidth,
+        height: options.videoHeight,
+        isBackground: true,
+        src: board.bgImage.src
+      })));
+      board.bgVideo && sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgVideo)), {
+        x: 0,
+        y: 0,
+        width: options.videoWidth,
+        height: options.videoHeight,
+        poster: board.bgVideo.poster,
+        src: board.bgVideo.src,
+        duration: board.bgVideo.duration ? board.bgVideo.duration * 1e3 : void 0,
+        volume: board.bgVideo.volume,
+        muted: board.bgVideo.muted,
+        loop: board.bgVideo.loop,
+        isBackground: true,
+        seekStart: board.bgVideo.seekStart ? board.bgVideo.seekStart * 1e3 : void 0,
+        seekEnd: board.bgVideo.seekEnd ? board.bgVideo.seekEnd * 1e3 : void 0
+      })));
+      board.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgMusic)), {
+        src: board.bgMusic.src,
+        volume: board.bgMusic.volume,
+        duration: board.bgMusic.duration ? board.bgMusic.duration * 1e3 : void 0,
+        seekStart: board.bgMusic.seekStart ? board.bgMusic.seekStart * 1e3 : void 0,
+        seekEnd: board.bgMusic.seekEnd ? board.bgMusic.seekEnd * 1e3 : void 0,
+        muted: board.bgMusic.muted,
+        loop: board.bgMusic.loop,
+        isBackground: true,
+        fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1e3 : void 0,
+        fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1e3 : void 0
+      })));
+      board == null ? void 0 : board.elements.forEach((element) => {
+        switch (element.elementType) {
+          case "image":
+            sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+              crop: element.crop ? {
+                style: element.crop.style,
+                x: element.crop.left,
+                y: element.crop.top,
+                width: element.crop.width,
+                height: element.crop.height,
+                clipType: element.crop.clipType,
+                clipStyle: element.crop.clipStyle
+              } : void 0,
+              src: element.src,
+              loop: element.loop,
+              dynamic: element.src.indexOf(".gif") !== -1
+            })));
+            break;
+          case "text":
+            sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+              value: element.content,
+              fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
+              fontSize: element.fontSize,
+              fontColor: element.fontColor,
+              fontWeight: element.bold ? 700 : void 0,
+              fontStyle: element.italic ? "italic" : void 0,
+              lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
+              wordSpacing: element.wordSpacing,
+              textAlign: element.textAlign,
+              effectType: element.effectType,
+              effectWordDuration: element.effectWordDuration ? element.effectWordDuration * 1e3 : void 0,
+              effectWordInterval: element.effectWordInterval ? element.effectWordInterval * 1e3 : void 0
+            })));
+            break;
+          case "audio":
+            sceneChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+              src: element.src,
+              duration: element.duration,
+              volume: element.volume,
+              muted: element.muted,
+              loop: element.loop,
+              seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
+              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
+              fadeInDuration: element.fadeInDuration ? element.fadeInDuration * 1e3 : void 0,
+              fadeOutDuration: element.fadeOutDuration ? element.fadeOutDuration * 1e3 : void 0
+            })));
+            break;
+          case "voice":
+            sceneChildren.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+              src: element.src,
+              volume: element.volume,
+              seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
+              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
+              loop: element.loop,
+              muted: element.muted,
+              provider: element.provider,
+              children: element.ssml ? [
+                new SSML_default({
+                  value: element.ssml
+                })
+              ] : [],
+              text: element.text,
+              declaimer: element.voice,
+              speechRate: element.playbackRate ? element.playbackRate : void 0,
+              pitchRate: element.pitchRate ? Number(element.pitchRate) + 1 : void 0
+            })));
+            break;
+          case "video":
+            sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+              poster: element.poster,
+              src: element.src,
+              duration: element.duration ? element.duration * 1e3 : void 0,
+              volume: element.volume,
+              muted: element.muted,
+              loop: element.loop,
+              seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
+              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0
+            })));
+            break;
+          case "chart":
+            sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+              chartId: element.chartId,
+              poster: element.poster,
+              configSrc: element.optionsPath,
+              dataSrc: element.dataPath
+            })));
+            break;
+          case "vtuber":
+            sceneChildren.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(element)), {
+              poster: element.poster,
+              src: element.src,
+              provider: element.provider,
+              text: element.text,
+              solution: element.solution,
+              declaimer: element.declaimer,
+              duration: element.duration ? element.duration * 1e3 : void 0,
+              volume: element.volume,
+              muted: element.muted,
+              loop: element.loop,
+              seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
+              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0
+            })));
+            break;
+        }
+      });
       templateChildren.push(new Scene_default({
         id,
         poster,
@@ -1827,8 +1967,11 @@ var OptionsParser = class {
         height: options.videoHeight,
         aspectRatio: options.videoSize,
         duration: duration * 1e3,
-        backgroundColor: sceneBackgroundColor,
-        transition,
+        backgroundColor: board.bgColor ? board.bgColor.fillColor : void 0,
+        transition: board.transition ? {
+          type: board.transition.name,
+          duration: board.transition.duration
+        } : void 0,
         filter: void 0,
         children: sceneChildren
       }));
@@ -1839,7 +1982,7 @@ var OptionsParser = class {
       width: options.videoWidth,
       height: options.videoHeight,
       isBackground: true,
-      src: options.src
+      src: options.bgImage.src
     })));
     options.bgVideo && templateChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgVideo)), {
       x: 0,
