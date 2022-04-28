@@ -16,7 +16,7 @@ class SSML extends Element {
    */
   public renderXML(parent: any) {
     const ssml = super.renderXML(parent);
-    this.value && ssml.raw(this.value);
+    this.value && ssml.ele(this.value);
   }
 
   public renderOldXML(parent: any, resources: any, global: any) {

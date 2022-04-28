@@ -992,7 +992,7 @@ var SSML = class extends Element_default {
   }
   renderXML(parent) {
     const ssml = super.renderXML(parent);
-    this.value && ssml.raw(this.value);
+    this.value && ssml.ele(this.value);
   }
   renderOldXML(parent, resources, global) {
     const ssml = super.renderOldXML(parent, resources, global);
