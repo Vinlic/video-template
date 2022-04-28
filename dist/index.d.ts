@@ -232,6 +232,7 @@ declare class Crop {
     };
     static isInstance(value: any): boolean;
 }
+
 declare class Image extends Element {
     static Mode: typeof ImageModes;
     src: string;
@@ -299,10 +300,16 @@ declare class Voice extends Media {
     static isInstance(value: any): boolean;
 }
 
-declare type IVideoOptions = IMediaOptions;
+interface IVideoOptions extends IMediaOptions {
+    crop?: ICropOptions;
+}
 
 declare class Video extends Media {
+    crop?: Crop;
     constructor(options: IVideoOptions);
+    renderXML(parent: any): void;
+    renderOldXML(parent: any, resources: any, global: any): void;
+    toOptions(): any;
     static isInstance(value: any): boolean;
 }
 

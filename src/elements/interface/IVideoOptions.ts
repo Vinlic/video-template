@@ -1,5 +1,8 @@
+import ICropOptions from './ICropOptions';
 import IMediaOptions from './IMediaOptions';
 
-type IVideoOptions = IMediaOptions;
+interface IVideoOptions extends IMediaOptions {
+    crop?: ICropOptions
+};
 
 export default IVideoOptions;

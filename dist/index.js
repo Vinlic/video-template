@@ -506,8 +506,8 @@ var Media = class extends Element_default {
       duration: this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0,
       volume: this.volume,
       loop: this.loop,
-      seekStart: this.seekStart,
-      seekEnd: this.seekEnd,
+      seekStart: util_default.isNumber(this.seekStart) ? util_default.millisecondsToSenconds(this.seekStart) : void 0,
+      seekEnd: util_default.isNumber(this.seekEnd) ? util_default.millisecondsToSenconds(this.seekEnd) : void 0,
       playbackRate: this.playbackRate,
       muted: this.muted,
       filter: this.filter
@@ -579,8 +579,8 @@ var Text = class extends Element_default {
     const caption = super.renderOldXML(parent, resources, global);
     caption.att("fontFamily", this.fontFamily);
     caption.att("fontSize", this.fontSize);
-    caption.att("fontWeight", this.fontWeight);
-    caption.att("fontStyle", this.fontStyle);
+    caption.att("bold", this.fontWeight > 400);
+    caption.att("italic", this.fontStyle === "italic");
     caption.att("fontColor", this.fontColor);
     caption.att("lineHeight", (this.lineHeight || 1) * this.fontSize);
     caption.att("wordSpacing", this.wordSpacing);
@@ -602,8 +602,8 @@ var Text = class extends Element_default {
       fontFamily: this.fontFamily,
       lineHeight: (this.lineHeight || 1) * this.fontSize,
       wordSpacing: this.wordSpacing,
-      bold: this.fontWeight ? this.fontWeight > 400 : void 0,
-      italic: this.fontStyle === "italic",
+      bold: this.fontWeight,
+      italic: this.fontStyle === "italic" ? "italic" : void 0,
       effectType: this.effectType,
       effectWordDuration: util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0,
       effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0
@@ -624,7 +624,7 @@ var ImageModes = /* @__PURE__ */ ((ImageModes2) => {
 })(ImageModes || {});
 var ImageModes_default = ImageModes;
 
-// src/elements/Image.ts
+// src/elements/Crop.ts
 var Crop = class {
   x = 0;
   y = 0;
@@ -664,6 +664,9 @@ var Crop = class {
     return value instanceof Crop;
   }
 };
+var Crop_default = Crop;
+
+// src/elements/Image.ts
 var _Image = class extends Element_default {
   src = "";
   path;
@@ -676,14 +679,14 @@ var _Image = class extends Element_default {
     super(options, ElementTypes_default.Image);
     util_default.optionsInject(this, options, {
       mode: (v) => util_default.defaultTo(v, ImageModes_default.ScaleToFill),
-      crop: (v) => v && new Crop(v),
+      crop: (v) => v && new Crop_default(v),
       loop: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       dynamic: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0
     }, {
       src: (v) => util_default.isString(v),
       path: (v) => util_default.isUndefined(v) || util_default.isString(v),
       mode: (v) => util_default.isString(v),
-      crop: (v) => util_default.isUndefined(v) || Crop.isInstance(v),
+      crop: (v) => util_default.isUndefined(v) || Crop_default.isInstance(v),
       loop: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       dynamic: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       filter: (v) => util_default.isUndefined(v) || util_default.isObject(v)
@@ -872,8 +875,44 @@ var Voice_default = Voice;
 
 // src/elements/Video.ts
 var Video = class extends Media_default {
+  crop;
   constructor(options) {
     super(options, ElementTypes_default.Video);
+    util_default.optionsInject(this, options, {
+      crop: (v) => v && new Crop_default(v)
+    }, {
+      crop: (v) => util_default.isUndefined(v) || Crop_default.isInstance(v)
+    });
+  }
+  renderXML(parent) {
+    const video = super.renderXML(parent);
+    if (this.crop) {
+      video.att("crop-style", this.crop.style);
+      video.att("crop-x", this.crop.x);
+      video.att("crop-y", this.crop.y);
+      video.att("crop-width", this.crop.width);
+      video.att("crop-height", this.crop.height);
+      video.att("crop-clipType", this.crop.clipType);
+      video.att("crop-clipStyle", this.crop.clipStyle);
+    }
+  }
+  renderOldXML(parent, resources, global) {
+    const video = super.renderOldXML(parent, resources, global);
+    if (this.crop) {
+      video.att("cropStyle", this.crop.style);
+      video.att("cropX", this.crop.x);
+      video.att("cropY", this.crop.y);
+      video.att("cropWidth", this.crop.width);
+      video.att("cropHeight", this.crop.height);
+      video.att("clipType", this.crop.clipType);
+      video.att("clipStyle", this.crop.clipStyle);
+    }
+  }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      crop: this.crop ? this.crop.toOptions() : void 0
+    });
   }
   static isInstance(value) {
     return value instanceof Video;
@@ -1683,6 +1722,13 @@ var OldParser = class {
                   element = new Video_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
                     poster: data2.poster,
                     src: resPath,
+                    crop: tag.cropStyle ? {
+                      style: tag.cropStyle === "circle" ? "circle" : "rect",
+                      x: tag.cropX,
+                      y: tag.cropY,
+                      width: tag.cropWidth,
+                      height: tag.cropHeight
+                    } : void 0,
                     duration: data2.duration ? data2.duration * 1e3 : void 0,
                     volume: data2.volume,
                     muted: data2.muted,
@@ -1860,6 +1906,7 @@ var OptionsParser = class {
         width: obj.width,
         height: obj.height,
         opacity: obj.opacity,
+        rotate: obj.rotate,
         zIndex: obj.index,
         enterEffect: obj.animationIn && obj.animationIn.name !== "none" ? {
           type: obj.animationIn.name,
@@ -1932,12 +1979,14 @@ var OptionsParser = class {
             break;
           case "text":
             sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
+              width: element.width || element.renderWidth || 0,
+              height: element.height || element.renderHeight || 0,
               value: element.content,
               fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
               fontSize: element.fontSize,
               fontColor: element.fontColor,
-              fontWeight: element.bold ? 700 : void 0,
-              fontStyle: element.italic ? "italic" : void 0,
+              fontWeight: element.bold,
+              fontStyle: element.italic,
               lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
               wordSpacing: element.wordSpacing,
               textAlign: element.textAlign,
@@ -1984,6 +2033,15 @@ var OptionsParser = class {
             sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               poster: element.poster,
               src: element.src,
+              crop: element.crop ? {
+                style: element.crop.style,
+                x: element.crop.left,
+                y: element.crop.top,
+                width: element.crop.width,
+                height: element.crop.height,
+                clipType: element.crop.clipType,
+                clipStyle: element.crop.clipStyle
+              } : void 0,
               duration: element.duration ? element.duration * 1e3 : void 0,
               volume: element.volume,
               muted: element.muted,

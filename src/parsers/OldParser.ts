@@ -236,15 +236,13 @@ class OldParser {
                                 case 'gif':
                                     element = new Image({
                                         ...buildBaseData(tag, duration),
-                                        crop: tag.cropStyle
-                                            ? {
-                                                style: tag.cropStyle === 'circle' ? 'circle' : 'rect',
-                                                x: tag.cropX,
-                                                y: tag.cropY,
-                                                width: tag.cropWidth,
-                                                height: tag.cropHeight,
-                                            }
-                                            : undefined,
+                                        crop: tag.cropStyle ? {
+                                            style: tag.cropStyle === 'circle' ? 'circle' : 'rect',
+                                            x: tag.cropX,
+                                            y: tag.cropY,
+                                            width: tag.cropWidth,
+                                            height: tag.cropHeight,
+                                        } : undefined,
                                         src: resPath,
                                         loop: tag.loop,
                                         dynamic: resPath.indexOf('.gif') !== -1 ? true : type === 'gif',
@@ -255,6 +253,13 @@ class OldParser {
                                         ...buildBaseData(tag, duration),
                                         poster: data.poster,
                                         src: resPath,
+                                        crop: tag.cropStyle ? {
+                                            style: tag.cropStyle === 'circle' ? 'circle' : 'rect',
+                                            x: tag.cropX,
+                                            y: tag.cropY,
+                                            width: tag.cropWidth,
+                                            height: tag.cropHeight,
+                                        } : undefined,
                                         duration: data.duration ? data.duration * 1000 : undefined,
                                         volume: data.volume,
                                         muted: data.muted,

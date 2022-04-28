@@ -113,8 +113,8 @@ class Media extends Element {
             duration: this.duration ? util.millisecondsToSenconds(this.duration) : undefined,
             volume: this.volume,
             loop: this.loop,
-            seekStart: this.seekStart,
-            seekEnd: this.seekEnd,
+            seekStart: util.isNumber(this.seekStart) ? util.millisecondsToSenconds(this.seekStart) : undefined,
+            seekEnd: util.isNumber(this.seekEnd) ? util.millisecondsToSenconds(this.seekEnd) : undefined,
             playbackRate: this.playbackRate,
             muted: this.muted,
             filter: this.filter

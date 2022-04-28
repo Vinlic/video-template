@@ -68,6 +68,7 @@ class OptionsParser {
                 width: obj.width,
                 height: obj.height,
                 opacity: obj.opacity,
+                rotate: obj.rotate,
                 zIndex: obj.index,
                 enterEffect: obj.animationIn && obj.animationIn.name !== "none" ? {
                     type: obj.animationIn.name,
@@ -146,12 +147,14 @@ class OptionsParser {
                     case "text":
                         sceneChildren.push(new Text({
                             ...buildBaseData(element, duration),
+                            width: element.width || element.renderWidth || 0,
+                            height: element.height || element.renderHeight || 0,
                             value: element.content,
                             fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
                             fontSize: element.fontSize,
                             fontColor: element.fontColor,
-                            fontWeight: element.bold ? 700 : undefined,
-                            fontStyle: element.italic ? "italic" : undefined,
+                            fontWeight: element.bold,
+                            fontStyle: element.italic,
                             lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
                             wordSpacing: element.wordSpacing,
                             textAlign: element.textAlign,
@@ -201,6 +204,15 @@ class OptionsParser {
                             ...buildBaseData(element, duration),
                             poster: element.poster,
                             src: element.src,
+                            crop: element.crop ? {
+                                style: element.crop.style,
+                                x: element.crop.left,
+                                y: element.crop.top,
+                                width: element.crop.width,
+                                height: element.crop.height,
+                                clipType: element.crop.clipType,
+                                clipStyle: element.crop.clipStyle
+                            } : undefined,
                             duration: element.duration ? element.duration * 1000 : undefined,
                             volume: element.volume,
                             muted: element.muted,

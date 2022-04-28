@@ -45,6 +45,7 @@
         </caption>
       </captions>
       <resources>
+        <resource id="3999028167a011ec9081454c29b4e58d" resId="pt1" cropStyle="rect" cropX="0" cropY="0" cropWidth="123" cropHeight="555" scaleX="217" scaleY="446" width="287" height="65" inPoint="1.5"/>
         <resource id="0f5ab91b-2063-4c5b-bd77-ccasdasd9719ef6dec" index="2" resId="logo_club1" scaleX="217" scaleY="446" width="287" height="65" inPoint="1.5" animationIn="fadeInDown" animationInDuration="0.5"/>
       </resources>
       <textToSounds>
@@ -153,7 +154,7 @@
         <resource id="399b9a9367a011ec9081454c29b4e58d" index="2" resId="toumingdi3" inPoint="1.1" extendScene="false" outPoint="18.6" scaleX="40" scaleY="440" width="640" height="640" animationIn="fadeInRight" animationInDuration="0.5" animationOut="fadeOutLeft" animationOutDuration="0.5"/>
         <resource id="0f5ab91b-2063-4c5b-sadbd77-cc9719efascas6dec" index="2" resId="logo_sidi" scaleX="217" scaleY="1172" width="286" height="57"/>
       </resources>
-      <bgvideo id="399b9a9467a011ec9081454c29b4e58d" resId="bg44"/>
+      <bgvideo id="399b9a9467a011ec9081454c29b4e58d" cropX="0" cropY="0" cropWidth="123" cropHeight="555" resId="bg44"/>
       <captions>
         <caption id="399b9a9567a011ec9081454c29b4e58d" index="3" inPoint="0.5" scaleX="35.2" scaleY="47.2" width="289.6" height="57.6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="48" fontColor="#FFFFFF" animationIn="fadeInDown" animationInDuration="0.5">
           <text>COMEX黄金</text>
@@ -196,7 +197,7 @@
     <board id="399be8b667a011ec9081454c29b4e58d" duration="6" poster="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/cover08.png">
       <bgvideo id="1123asdaaa" resId="pw1"/>
       <captions>
-        <caption id="g-caption1" index="3" inPoint="1" scaleX="267" scaleY="597" width="186" height="36" fontFamily="HarmonyOS_Sans_SC_Medium.ttf" fontSize="30" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="1">
+        <caption id="g-caption1" index="3" inPoint="1" scaleX="267" scaleY="597" width="186" height="36" fontFamily="HarmonyOS_Sans_SC_Medium.ttf" fontSize="30" fontColor="#FFFFFF" bold="800" animationIn="fadeIn" animationInDuration="1">
           <text>关注思迪信息</text>
         </caption>
         <caption id="g-caption1" index="3" inPoint="1" scaleX="267" scaleY="637" width="186" height="36" fontFamily="HarmonyOS_Sans_SC_Medium.ttf" fontSize="30" fontColor="#FFFFFF" animationIn="fadeIn" animationInDuration="1">
