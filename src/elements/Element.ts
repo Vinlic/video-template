@@ -195,33 +195,26 @@ class Element {
                 attributes,
             );
         } else {
-            element = (
-                util.isFunction(parent)
-                    ? parent([
-                        {
-                            [ElementTypes.Text]: 'captions',
-                            [ElementTypes.Image]: 'resources',
-                            [ElementTypes.Audio]: 'resources',
-                            [ElementTypes.Video]: 'resources',
-                            [ElementTypes.Voice]: 'textToSounds',
-                            [ElementTypes.Chart]: 'dynDataCharts',
-                            [ElementTypes.Vtuber]: 'vtubers',
-                        }[this.type as string],
-                    ])
-                    : parent
-            ).ele(
-                {
-                    [ElementTypes.Text]: 'caption',
-                    [ElementTypes.Image]: 'resource',
-                    [ElementTypes.Audio]: 'resource',
-                    [ElementTypes.Video]: 'resource',
-                    [ElementTypes.Voice]: 'textToSound',
-                    [ElementTypes.SSML]: 'ssml',
-                    [ElementTypes.Chart]: 'dynDataChart',
-                    [ElementTypes.Vtuber]: 'vtuber',
-                }[this.type as string],
-                attributes,
-            );
+            element = (util.isFunction(parent) ? parent({
+                [ElementTypes.Text]: 'captions',
+                [ElementTypes.Image]: 'resources',
+                [ElementTypes.Audio]: 'resources',
+                [ElementTypes.Video]: 'resources',
+                [ElementTypes.Voice]: 'textToSounds',
+                [ElementTypes.Chart]: 'dynDataCharts',
+                [ElementTypes.Vtuber]: 'vtubers',
+            }[this.type as string]) : parent)
+            .ele({
+                [ElementTypes.Text]: 'caption',
+                [ElementTypes.Image]: 'resource',
+                [ElementTypes.Audio]: 'resource',
+                [ElementTypes.Video]: 'resource',
+                [ElementTypes.Voice]: 'textToSound',
+                [ElementTypes.SSML]: 'ssml',
+                [ElementTypes.Chart]: 'dynDataChart',
+                [ElementTypes.Vtuber]: 'vtuber',
+            }[this.type as string],
+            attributes);
         }
         this.children?.forEach((node) => Element.isInstance(node) && node.renderOldXML(element, resources, global));
         return element;

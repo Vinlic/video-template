@@ -96,9 +96,9 @@ class OldParser {
                     type: obj.animationOut,
                     duration: obj.animationOutDuration * 1000,
                 } : undefined,
-                backgroundColor: obj.fillColor,
-                startTime: obj.inPoint ? obj.inPoint * 1000 : 0,
-                endTime: obj.outPoint ? obj.outPoint * 1000 : parentDuration,
+                backgroundColor: obj.fillColor || undefined,
+                startTime: Number(obj.inPoint) ? Number(obj.inPoint) * 1000 : 0,
+                endTime: Number(obj.outPoint) ? Number(obj.outPoint) * 1000 : (parentDuration ? (parentDuration - (Number(obj.outPoint) || 0)) * 1000 : undefined),
             };
         }
         const templateChildren: (Scene | Element)[] = [];

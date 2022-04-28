@@ -343,17 +343,15 @@ var _Element = class {
         [ElementTypes_default.Video]: "bgvideo"
       }[this.type], attributes);
     } else {
-      element = (util_default.isFunction(parent) ? parent([
-        {
-          [ElementTypes_default.Text]: "captions",
-          [ElementTypes_default.Image]: "resources",
-          [ElementTypes_default.Audio]: "resources",
-          [ElementTypes_default.Video]: "resources",
-          [ElementTypes_default.Voice]: "textToSounds",
-          [ElementTypes_default.Chart]: "dynDataCharts",
-          [ElementTypes_default.Vtuber]: "vtubers"
-        }[this.type]
-      ]) : parent).ele({
+      element = (util_default.isFunction(parent) ? parent({
+        [ElementTypes_default.Text]: "captions",
+        [ElementTypes_default.Image]: "resources",
+        [ElementTypes_default.Audio]: "resources",
+        [ElementTypes_default.Video]: "resources",
+        [ElementTypes_default.Voice]: "textToSounds",
+        [ElementTypes_default.Chart]: "dynDataCharts",
+        [ElementTypes_default.Vtuber]: "vtubers"
+      }[this.type]) : parent).ele({
         [ElementTypes_default.Text]: "caption",
         [ElementTypes_default.Image]: "resource",
         [ElementTypes_default.Audio]: "resource",
@@ -1542,9 +1540,9 @@ var OldParser = class {
           type: obj.animationOut,
           duration: obj.animationOutDuration * 1e3
         } : void 0,
-        backgroundColor: obj.fillColor,
-        startTime: obj.inPoint ? obj.inPoint * 1e3 : 0,
-        endTime: obj.outPoint ? obj.outPoint * 1e3 : parentDuration
+        backgroundColor: obj.fillColor || void 0,
+        startTime: Number(obj.inPoint) ? Number(obj.inPoint) * 1e3 : 0,
+        endTime: Number(obj.outPoint) ? Number(obj.outPoint) * 1e3 : parentDuration ? (parentDuration - (Number(obj.outPoint) || 0)) * 1e3 : void 0
       };
     }
     const templateChildren = [];
