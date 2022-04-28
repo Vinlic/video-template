@@ -340,9 +340,10 @@ declare class Vtuber extends Media {
 }
 
 interface ICanvasOptions extends IElementOptions {
+    poster?: string;
+    duration?: number | string;
     configSrc?: string;
     dataSrc?: string;
-    poster?: string;
 }
 
 interface IChartOptions extends ICanvasOptions {
@@ -352,6 +353,7 @@ interface IChartOptions extends ICanvasOptions {
 declare class Canvas extends Element {
     configSrc: string;
     dataSrc: string;
+    duration?: number;
     poster?: string;
     constructor(options: ICanvasOptions, type?: ElementTypes);
     renderXML(parent: any): any;
@@ -473,7 +475,7 @@ interface ITemplateOptions {
     sampleRate?: string;
     audioBitrate?: string;
     backgroundColor?: string;
-    captureTime?: number;
+    captureTime?: number | string;
     createTime?: number;
     updateTime?: number;
     buildBy?: string;

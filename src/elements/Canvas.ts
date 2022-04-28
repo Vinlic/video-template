@@ -7,20 +7,19 @@ import util from '../util';
 class Canvas extends Element {
     public configSrc = ''; //画布配置路径
     public dataSrc = ''; //画布数据路径
+    public duration?: number; //画布播放时长
     public poster?: string;  //画布封面图
 
     public constructor(options: ICanvasOptions, type: ElementTypes = ElementTypes.Canvas) {
         super(options, type);
-        util.optionsInject(
-            this,
-            options,
-            {},
-            {
-                configSrc: (v: any) => util.isString(v),
-                dataSrc: (v: any) => util.isString(v),
-                poster: (v: any) => util.isUndefined(v) || util.isString(v)
-            },
-        );
+        util.optionsInject(this, options, {
+            duration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
+        }, {
+            configSrc: (v: any) => util.isString(v),
+            dataSrc: (v: any) => util.isString(v),
+            duration: (v: any) => util.isUndefined(v) || util.isNumber(v),
+            poster: (v: any) => util.isUndefined(v) || util.isString(v)
+        });
     }
 
     /**
@@ -31,6 +30,7 @@ class Canvas extends Element {
     public renderXML(parent: any) {
         const canvas = super.renderXML(parent);
         canvas.att('poster', this.poster);
+        canvas.att('duration', this.duration);
         canvas.att('configSrc', this.configSrc);
         canvas.att('dataSrc', this.dataSrc);
         return canvas;
@@ -39,6 +39,7 @@ class Canvas extends Element {
     public renderOldXML(parent: any, resources: any, global: any) {
         const canvas = super.renderOldXML(parent, resources, global);
         canvas.att('poster', this.poster);
+        canvas.att('duration', this.duration ? util.millisecondsToSenconds(this.duration) : undefined);
         canvas.att('optionsPath', this.configSrc);
         canvas.att('dataPath', this.dataSrc);
         return canvas;
@@ -49,6 +50,7 @@ class Canvas extends Element {
         return {
             ...parentOptions,
             poster: this.poster,
+            duration: this.duration ? util.millisecondsToSenconds(this.duration) : undefined,
             optionsPath: this.configSrc,
             dataPath: this.dataSrc
         };

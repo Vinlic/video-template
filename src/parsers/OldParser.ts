@@ -18,7 +18,7 @@ const xmlParser = new XMLParser({
 class OldParser {
 
     public static toXML(template: Template, pretty = false) {
-        const root = create({ version: "1.0.0" });
+        const root = create({ version: "1.0" });
         const project = root.ele("project", {
             version: "1.0.0",
             id: template.id,
@@ -292,6 +292,7 @@ class OldParser {
                                 ...buildBaseData(chart, duration),
                                 chartId: chart.chartId,
                                 poster: chart.poster,
+                                duration: !util.isUndefined(chart.duration) ? chart.duration * 1000 : undefined,
                                 configSrc: chart.optionsPath,
                                 dataSrc: chart.dataPath,
                             }))

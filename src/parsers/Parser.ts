@@ -16,7 +16,7 @@ const xmlParser = new XMLParser({
 class Parser {
 
     public static toXML(_template: Template, pretty = false) {
-        const root = create({ version: "1.0.0" });
+        const root = create({ version: "1.0" });
         const template = root.ele("template", {
             version: _template.version,
             id: _template.id,

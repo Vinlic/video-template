@@ -227,6 +227,7 @@ class OptionsParser {
                             ...buildBaseData(element, duration),
                             chartId: element.chartId,
                             poster: element.poster,
+                            duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
                             configSrc: element.optionsPath,
                             dataSrc: element.dataPath,
                         }));

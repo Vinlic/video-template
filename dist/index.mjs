@@ -956,18 +956,23 @@ var Vtuber_default = Vtuber;
 var Canvas = class extends Element_default {
   configSrc = "";
   dataSrc = "";
+  duration;
   poster;
   constructor(options, type = ElementTypes_default.Canvas) {
     super(options, type);
-    util_default.optionsInject(this, options, {}, {
+    util_default.optionsInject(this, options, {
+      duration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
+    }, {
       configSrc: (v) => util_default.isString(v),
       dataSrc: (v) => util_default.isString(v),
+      duration: (v) => util_default.isUndefined(v) || util_default.isNumber(v),
       poster: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
   }
   renderXML(parent) {
     const canvas = super.renderXML(parent);
     canvas.att("poster", this.poster);
+    canvas.att("duration", this.duration);
     canvas.att("configSrc", this.configSrc);
     canvas.att("dataSrc", this.dataSrc);
     return canvas;
@@ -975,6 +980,7 @@ var Canvas = class extends Element_default {
   renderOldXML(parent, resources, global) {
     const canvas = super.renderOldXML(parent, resources, global);
     canvas.att("poster", this.poster);
+    canvas.att("duration", this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0);
     canvas.att("optionsPath", this.configSrc);
     canvas.att("dataPath", this.dataSrc);
     return canvas;
@@ -983,6 +989,7 @@ var Canvas = class extends Element_default {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
       poster: this.poster,
+      duration: this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0,
       optionsPath: this.configSrc,
       dataPath: this.dataSrc
     });
@@ -1289,7 +1296,7 @@ var xmlParser = new XMLParser({
 });
 var Parser = class {
   static toXML(_template, pretty = false) {
-    const root = create2({ version: "1.0.0" });
+    const root = create2({ version: "1.0" });
     const template = root.ele("template", {
       version: _template.version,
       id: _template.id,
@@ -1487,7 +1494,7 @@ var xmlParser2 = new XMLParser2({
 });
 var OldParser = class {
   static toXML(template, pretty = false) {
-    const root = create3({ version: "1.0.0" });
+    const root = create3({ version: "1.0" });
     const project = root.ele("project", {
       version: "1.0.0",
       id: template.id,
@@ -1738,6 +1745,7 @@ var OldParser = class {
             data2.children.forEach((chart) => sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(chart, duration)), {
               chartId: chart.chartId,
               poster: chart.poster,
+              duration: !util_default.isUndefined(chart.duration) ? chart.duration * 1e3 : void 0,
               configSrc: chart.optionsPath,
               dataSrc: chart.dataPath
             }))));
@@ -2037,6 +2045,7 @@ var OptionsParser = class {
             sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               chartId: element.chartId,
               poster: element.poster,
+              duration: !util_default.isUndefined(element.duration) ? element.duration * 1e3 : void 0,
               configSrc: element.optionsPath,
               dataSrc: element.dataPath
             })));
