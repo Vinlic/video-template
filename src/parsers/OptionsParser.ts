@@ -62,7 +62,7 @@ class OptionsParser {
         function buildBaseData(obj: any, parentDuration?: number) {
             return {
                 id: obj.id,
-                name: obj.name,
+                name: obj.name || undefined,
                 x: obj.left,
                 y: obj.top,
                 width: obj.width,
@@ -294,6 +294,7 @@ class OptionsParser {
         return new Template({
             id: options.id,
             name: options.name,
+            actuator: options.actuator || undefined,
             fps: options.fps,
             poster: options.poster,
             width: options.videoWidth,

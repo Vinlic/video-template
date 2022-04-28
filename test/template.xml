@@ -1,455 +1,148 @@
-<?xml version="1.0.0"?>
-<project version="1.0.0" id="46d5d000c69f11ecbee5235ab4595009" name="新股日历" actuator="10000">
-  <projRes>
-    <resource id="1v5iJtyMIgDz0rWn" type="sound" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/bg_audio.mp3"/>
-    <resource id="1V5IjtHt0xzdW8dd" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/bg.png"/>
-    <resource id="1v5IJtgHbAhWQWnf" type="voice" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/tts/a084e1704d9d11ecaa1fad033c46ef8f.mp3"/>
-    <resource id="1v5IJtO8Ibqw8MNO" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/logo.png"/>
-    <resource id="1v5iJtFAhZA9IrSF" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/cow.png"/>
-    <resource id="1V5IjtHoq7BN3FHp" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/title.png"/>
-    <resource id="1v5ijTvgLAILndTC" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/yz.png"/>
-    <resource id="1V5ijT65UQW8wvZb" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/layer.png"/>
-    <resource id="1v5Ijtlpnw2oTFgH" type="voice" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/tts/a084e1714d9d11ecaa1fad033c46ef8f.mp3"/>
-    <resource id="1v5IJt1peMWxV1vn" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/bg2.png"/>
-    <resource id="1V5ijt9KX4VDDVGs" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/header_bg.png"/>
-    <resource id="1v5IjTf5iCwLdcMh" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/dot.png"/>
-    <resource id="1v5iJT8N88WWDf31" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/label.png"/>
-    <resource id="1V5ijThrP90FX8OV" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/label2.png"/>
-    <resource id="1v5IJtO8upF5u6Zk" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/label3.png"/>
-    <resource id="1v5IJt4IlDKcugKt" type="voice" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/tts/a084e1724d9d11ecaa1fad033c46ef8f.mp3"/>
-    <resource id="1V5iJtlHmzEnpWNB" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/header_bg1.png"/>
-    <resource id="1v5ijTpeKJXDusml" type="voice" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/tts/a084e1734d9d11ecaa1fad033c46ef8f.mp3"/>
-    <resource id="1v5ijtPhCZPId2Mm" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/header_bg2.png"/>
-    <resource id="1V5ijt8Wfwbr9EVk" type="voice" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/tts/a08508804d9d11ecaa1fad033c46ef8f.mp3"/>
-    <resource id="1v5iJTtTb9pUvw0c" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/header_bg3.png"/>
-    <resource id="1V5iJTSUBZ22liNp" type="voice" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/tts/a08508814d9d11ecaa1fad033c46ef8f.mp3"/>
-    <resource id="1V5iJt4UQM405z6C" type="img" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/header_bg4.png"/>
-    <resource id="1V5iJtbIHUML2M5v" type="voice" resPath="/avesto/plat/tmplres/scenetmpl/xgrl/tts/a08508824d9d11ecaa1fad033c46ef8f.mp3"/>
-  </projRes>
-  <global videoSize="3:4" videoWidth="720" videoHeight="960" poster="/ave/upload/3/4/image/20220331/a0becbd67fb34e1fb8c8d6f1f16d888c.png" fps="30" videoBitrate="2097152" audioBitrate="131072">
-    <bgblock id="1V5iJTOQ1GzKp8YL" inPoint="0" fillColor="#000"/>
-    <bgmusic id="1v5IjTdQJ6AzFE2H" inPoint="0" volume="0.2" resId="1v5iJtyMIgDz0rWn" duration="0" loop="true" muted="false" fadeIn="0" fadeOut="0"/>
-  </global>
-  <storyBoards>
-    <board id="1v5IJt94f2ZnBKdb" poster="/avesto/plat/tmplres/scenetmpl/xgrl/cover01.png" duration="5">
-      <bgblock id="1v5IjtXZiLoOg6Xa" inPoint="0" fillColor="#000"/>
-      <resources>
-        <resource id="1V5IjtxFpmY6Vzfe" scaleX="0" scaleY="0" width="720" height="960" inPoint="0" outPoint="5" resId="1V5IjtHt0xzdW8dd"/>
-        <resource id="1V5Ijttl5GVD77Gk" scaleX="270" scaleY="76.97" width="181" height="36.03" index="1" animationIn="fadeInDown" animationInDuration="0.5" inPoint="0.5" outPoint="5" resId="1v5IJtO8Ibqw8MNO"/>
-        <resource id="1v5IjTqB5eKjFnPZ" scaleX="56" scaleY="132" width="608" height="447" index="2" animationIn="zoomIn" animationInDuration="0.5" inPoint="1" outPoint="5" resId="1v5iJtFAhZA9IrSF"/>
-        <resource id="1v5iJt8dOv6JVWhP" scaleX="102" scaleY="595" width="515" height="166" index="3" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="1.5" outPoint="5" resId="1V5IjtHoq7BN3FHp"/>
-        <resource id="1V5iJtUEqs297Ki1" scaleX="611" scaleY="611" width="45" height="65" index="4" animationIn="fadeInRight" animationInDuration="0.5" inPoint="2" outPoint="5" resId="1v5ijTvgLAILndTC"/>
-      </resources>
-      <textToSounds>
-        <textToSound id="1v5ijTuwdQWc7YuI" scaleX="0" scaleY="0" width="0" height="0" index="0" inPoint="0.5" outPoint="5" volume="1" resId="1v5IJtgHbAhWQWnf" loop="false" muted="false" provider="aliyun" text="欢迎查看本周新股日历" declaimer="aixia" speechRate="1" pitchRate="1">
-          <ssml id="1V5ijtc8hyD1yb4S">&lt;speak provider="aliyun"&gt;&lt;voice name="aixia"&gt;&lt;prosody contenteditable="true" rate="0"&gt;&lt;p&gt;欢迎查看本周新股日历&lt;/p&gt;&lt;/prosody&gt;&lt;/voice&gt;&lt;/speak&gt;</ssml>
-        </textToSound>
-      </textToSounds>
-      <captions>
-        <caption id="1v5iJtycW5gdzz6N" scaleX="214" scaleY="835" width="292" height="48" index="5" animationIn="fadeIn" animationInDuration="0.5" inPoint="2.5" outPoint="5" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="30" fontWeight="400" fontColor="#FF5200" lineHeight="36" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>2021/11/22 - 11/26</text>
-        </caption>
-      </captions>
-      <transition name="InvertedPageCurl" duration="0.8"/>
-    </board>
-    <board id="1v5iJTcjTFVIhE2H" poster="/avesto/plat/tmplres/scenetmpl/xgrl/cover02.png" duration="10">
-      <bgblock id="1v5iJTk8Typ7swH1" inPoint="0" fillColor="#000"/>
-      <resources>
-        <resource id="1v5ijTQNq3c6mLxW" scaleX="0" scaleY="0" width="720" height="960" inPoint="0" outPoint="10" resId="1V5ijT65UQW8wvZb"/>
-        <resource id="1V5iJtMe5MZe9wCs" scaleX="40" scaleY="34" width="68" height="50" index="1" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="10" resId="1v5iJtFAhZA9IrSF"/>
-        <resource id="1v5IJtOHh2hPmaxe" scaleX="118" scaleY="35" width="160" height="48" index="2" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="10" resId="1V5IjtHoq7BN3FHp"/>
-        <resource id="1v5iJTg50ErWzrtZ" scaleX="499" scaleY="39" width="181" height="40" index="3" animationIn="fadeInRight" animationInDuration="0.5" inPoint="0.5" outPoint="10" resId="1v5IJtO8Ibqw8MNO"/>
-        <resource id="1V5ijt5EdObT7qQ5" scaleX="20" scaleY="136" width="680" height="800" index="4" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="10" resId="1v5IJt1peMWxV1vn"/>
-        <resource id="1v5IjTJkl28lOpwp" scaleX="40" scaleY="140" width="640" height="140" index="5" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="10" resId="1V5ijt9KX4VDDVGs"/>
-        <resource id="1v5iJtkeUFw2D3ut" scaleX="50" scaleY="304" width="620" height="6" index="6" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="10" resId="1v5IjTf5iCwLdcMh"/>
-        <resource id="1v5IjT14YQjKmjxb" scaleX="70" scaleY="335" width="150" height="87" index="7" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="10" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5iJtcDOuTiv1cm" scaleX="70" scaleY="442" width="150" height="87" index="8" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="10" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IjT6Zwt9uTCJh" scaleX="70" scaleY="549" width="150" height="87" index="9" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="10" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IjTNoItBBXCZQ" scaleX="70" scaleY="656" width="150" height="87" index="10" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="10" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5IjtCmXb9xCepH" scaleX="70" scaleY="763" width="150" height="87" index="11" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="10" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IJtLqweAWL53i" scaleX="140" scaleY="348" width="510" height="74" index="27" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="10" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1v5iJTwRhR6GliKC" scaleX="140" scaleY="455" width="510" height="74" index="28" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="10" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1V5Ijt0spoJoJ9UN" scaleX="140" scaleY="562" width="510" height="74" index="29" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="10" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1V5IjTDubULqSOSS" scaleX="140" scaleY="669" width="510" height="74" index="30" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="10" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1v5IjtB0ML9OciFh" scaleX="140" scaleY="776" width="510" height="74" index="31" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="10" resId="1V5ijThrP90FX8OV"/>
-      </resources>
-      <textToSounds>
-        <textToSound id="1v5ijTwP5tQQJ70w" scaleX="0" scaleY="0" width="0" height="0" index="0" inPoint="0.5" outPoint="10" volume="1" resId="1v5Ijtlpnw2oTFgH" loop="false" muted="false" provider="aliyun" text="本周共计有7只新股可申购，无新股上市。其中，周一鼎阳科技、芯导科技可申购，三羊马和炬芯科技中签缴款。" declaimer="aixia" speechRate="1" pitchRate="1">
-          <ssml id="1V5IjtoAWirhKk6D">&lt;speak provider="aliyun"&gt;&lt;voice name="aixia"&gt;&lt;prosody contenteditable="true" rate="0"&gt;&lt;p&gt;本周共计有7只新股可申购，无新股上市。其中，周一鼎阳科技、芯导科技可申购，三羊马和炬芯科技中签缴款。&lt;/p&gt;&lt;/prosody&gt;&lt;/voice&gt;&lt;/speak&gt;</ssml>
-        </textToSound>
-      </textToSounds>
-      <captions>
-        <caption id="1V5ijT0yC8lVBMIG" scaleX="77" scaleY="215" width="92" height="48" index="12" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="30" fontWeight="400" fontColor="#ffffff" lineHeight="36" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>11/22</text>
-        </caption>
-        <caption id="1v5ijTJJo9CpitNg" scaleX="454" scaleY="194" width="192" height="72" index="13" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="60" fontWeight="400" fontColor="#ffffff" lineHeight="72" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>星期一</text>
-        </caption>
-        <caption id="1V5IJt6MDiw7N3uE" scaleX="105.4" scaleY="357.4" width="79.2" height="43.2" index="14" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>申购</text>
-        </caption>
-        <caption id="1v5iJtw76ndBBCgr" scaleX="262.4" scaleY="363.4" width="151.2" height="43.2" index="15" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>鼎阳科技</text>
-        </caption>
-        <caption id="1v5iJtzJRHMeGdZR" scaleX="456.4" scaleY="363.4" width="151.2" height="43.2" index="16" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>芯导科技</text>
-        </caption>
-        <caption id="1V5iJtipbMP6INt1" scaleX="105.4" scaleY="464.4" width="79.2" height="43.2" index="17" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>上市</text>
-        </caption>
-        <caption id="1v5ijTQXaE9d2OAn" scaleX="262.4" scaleY="470.4" width="43.2" height="43.2" index="18" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1v5iJtOpZKFDwVdZ" scaleX="87.4" scaleY="571.4" width="157.2" height="94.2" index="19" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签号</text>
-        </caption>
-        <caption id="1v5IjtPTDe8Yubwu" scaleX="262.4" scaleY="577.4" width="115.2" height="43.2" index="20" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>三羊马</text>
-        </caption>
-        <caption id="1V5ijt5laSvWQewX" scaleX="456.4" scaleY="577.4" width="151.2" height="43.2" index="21" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>芯导科技</text>
-        </caption>
-        <caption id="1V5ijTiUkphCmF3H" scaleX="87.4" scaleY="678.4" width="115.2" height="43.2" index="22" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签率</text>
-        </caption>
-        <caption id="1V5IJtYEzCwl5lWK" scaleX="262.4" scaleY="685.4" width="43.2" height="43.2" index="23" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1v5ijTrP4bNyht82" scaleX="87.4" scaleY="785.4" width="115.2" height="43.2" index="24" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>缴款日</text>
-        </caption>
-        <caption id="1v5iJTBeHBw7qqG8" scaleX="262.4" scaleY="791.4" width="115.2" height="43.2" index="25" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>三羊马</text>
-        </caption>
-        <caption id="1v5iJTE2C5LBF7Ea" scaleX="456.4" scaleY="791.4" width="151.2" height="43.2" index="26" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="10" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>芯导科技</text>
-        </caption>
-      </captions>
-      <transition name="InvertedPageCurl" duration="0.8"/>
-    </board>
-    <board id="1v5ijT6JOzdSbgsT" poster="/avesto/plat/tmplres/scenetmpl/xgrl/cover03.png" duration="6">
-      <bgblock id="1V5iJtNu2iF7v2Ok" inPoint="0" fillColor="#000"/>
-      <resources>
-        <resource id="1v5IjtsbVQN0ymL2" scaleX="0" scaleY="0" width="720" height="960" inPoint="0" outPoint="6" resId="1V5ijT65UQW8wvZb"/>
-        <resource id="1v5IJtYr8qYoIck5" scaleX="40" scaleY="34" width="68" height="50" index="1" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1v5iJtFAhZA9IrSF"/>
-        <resource id="1v5ijtqv4H9xJ9Jc" scaleX="118" scaleY="35" width="160" height="48" index="2" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1V5IjtHoq7BN3FHp"/>
-        <resource id="1V5IjtqhC0IJ0Ji9" scaleX="499" scaleY="39" width="181" height="40" index="3" animationIn="fadeInRight" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1v5IJtO8Ibqw8MNO"/>
-        <resource id="1V5iJTDRCsDbNB1D" scaleX="20" scaleY="136" width="680" height="800" index="4" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1v5IJt1peMWxV1vn"/>
-        <resource id="1V5iJTgzRjNXFSyN" scaleX="40" scaleY="140" width="640" height="140" index="5" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1V5iJtlHmzEnpWNB"/>
-        <resource id="1V5ijTrlz27QWQ9g" scaleX="50" scaleY="304" width="620" height="6" index="6" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1v5IjTf5iCwLdcMh"/>
-        <resource id="1v5IjtcIEWqQCaxV" scaleX="70" scaleY="335" width="150" height="87" index="7" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5Ijttm2HOel4W6" scaleX="70" scaleY="442" width="150" height="87" index="8" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5ijT9rI72vKRDG" scaleX="70" scaleY="549" width="150" height="87" index="9" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IjtwTRvfPnO0T" scaleX="70" scaleY="656" width="150" height="87" index="10" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5ijto9VFuhH8nY" scaleX="140" scaleY="348" width="510" height="74" index="24" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1v5IjTTMhsXI73EN" scaleX="140" scaleY="455" width="510" height="74" index="25" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1v5IjtcEfqjGKiPB" scaleX="140" scaleY="562" width="510" height="74" index="26" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1V5ijtsUizzsDMxP" scaleX="140" scaleY="669" width="510" height="74" index="27" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1V5Ijt0qyB5v1HFD" scaleX="70" scaleY="763" width="150" height="87" index="28" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5ijtdMOyxtqiVW" scaleX="140" scaleY="776" width="510" height="74" index="29" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" resId="1v5IJtO8upF5u6Zk"/>
-      </resources>
-      <textToSounds>
-        <textToSound id="1V5IjtDwESMvbeNF" scaleX="0" scaleY="0" width="0" height="0" index="0" inPoint="0.5" outPoint="6" volume="1" resId="1v5IJt4IlDKcugKt" loop="false" muted="false" provider="aliyun" text="周二，洁雅股份、喜悦智行可申购。" declaimer="aixia" speechRate="1" pitchRate="1">
-          <ssml id="1v5IjTclIVhisV2q">&lt;speak provider="aliyun"&gt;&lt;voice name="aixia"&gt;&lt;prosody contenteditable="true" rate="0"&gt;&lt;p&gt;周二，洁雅股份、喜悦智行可申购。&lt;/p&gt;&lt;/prosody&gt;&lt;/voice&gt;&lt;/speak&gt;</ssml>
-        </textToSound>
-      </textToSounds>
-      <captions>
-        <caption id="1V5IjTAf7JTaTDyi" scaleX="77" scaleY="215" width="92" height="48" index="11" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="30" fontWeight="400" fontColor="#ffffff" lineHeight="36" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>11/23</text>
-        </caption>
-        <caption id="1V5IjTAXhLrWoZNz" scaleX="454" scaleY="194" width="192" height="72" index="12" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="60" fontWeight="400" fontColor="#ffffff" lineHeight="72" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>星期二</text>
-        </caption>
-        <caption id="1v5IjtuhyBNK9lQR" scaleX="105.4" scaleY="357.4" width="79.2" height="43.2" index="13" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>申购</text>
-        </caption>
-        <caption id="1v5ijT4iiHz1wJjc" scaleX="262.4" scaleY="363.4" width="151.2" height="43.2" index="14" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>洁雅股份</text>
-        </caption>
-        <caption id="1V5ijtpwLqainFC2" scaleX="456.4" scaleY="363.4" width="151.2" height="43.2" index="15" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>喜悦智行</text>
-        </caption>
-        <caption id="1V5IjtW0CL9nB1eP" scaleX="105.4" scaleY="464.4" width="79.7" height="43.2" index="16" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>上市</text>
-        </caption>
-        <caption id="1V5ijt88Xl4kZLI0" scaleX="262.4" scaleY="470.4" width="43.2" height="43.2" index="17" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1v5iJtp2eWv1HcsX" scaleX="87.4" scaleY="571.4" width="115.2" height="43.2" index="18" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签号</text>
-        </caption>
-        <caption id="1V5IJthLYMFDFSDR" scaleX="262.4" scaleY="577.4" width="43.2" height="43.2" index="19" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1v5ijTvsQb8Zqcpb" scaleX="87.4" scaleY="678.4" width="115.2" height="43.2" index="20" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签率</text>
-        </caption>
-        <caption id="1v5iJTFFVBh3ETqa" scaleX="262.4" scaleY="684.4" width="151.2" height="43.2" index="21" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>鼎阳科技</text>
-        </caption>
-        <caption id="1v5iJT6CycAGCne7" scaleX="456.4" scaleY="684.4" width="151.2" height="43.2" index="22" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>芯导科技</text>
-        </caption>
-        <caption id="1V5iJtxJbDZIApUQ" scaleX="262.4" scaleY="791.4" width="43.2" height="43.2" index="23" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1v5iJtbVOahlK4Hg" scaleX="87.4" scaleY="785.4" width="115.2" height="43.2" index="30" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>缴款日</text>
-        </caption>
-      </captions>
-      <transition name="InvertedPageCurl" duration="0.8"/>
-    </board>
-    <board id="1V5iJtTjCdwGaAyl" poster="/avesto/plat/tmplres/scenetmpl/xgrl/cover04.png" duration="7">
-      <bgblock id="1v5ijT58ahZOB5IL" inPoint="0" fillColor="#000"/>
-      <resources>
-        <resource id="1v5ijtQFr6yWvSmc" scaleX="0" scaleY="0" width="720" height="960" inPoint="0" outPoint="7" resId="1V5ijT65UQW8wvZb"/>
-        <resource id="1v5iJt2rkjQKA1kW" scaleX="40" scaleY="34" width="68" height="50" index="1" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="7" resId="1v5iJtFAhZA9IrSF"/>
-        <resource id="1v5IjtIE9cLNzywj" scaleX="118" scaleY="35" width="160" height="48" index="2" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="7" resId="1V5IjtHoq7BN3FHp"/>
-        <resource id="1V5IjtaCKBPHF9Pc" scaleX="499" scaleY="39" width="181" height="40" index="3" animationIn="fadeInRight" animationInDuration="0.5" inPoint="0.5" outPoint="7" resId="1v5IJtO8Ibqw8MNO"/>
-        <resource id="1V5ijt6QN8qPFier" scaleX="20" scaleY="136" width="680" height="800" index="4" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="7" resId="1v5IJt1peMWxV1vn"/>
-        <resource id="1v5ijtTIwyUSSJoo" scaleX="40" scaleY="140" width="640" height="140" index="5" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="7" resId="1v5ijtPhCZPId2Mm"/>
-        <resource id="1v5IjTdD7Sr0IdVI" scaleX="50" scaleY="304" width="620" height="6" index="6" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="7" resId="1v5IjTf5iCwLdcMh"/>
-        <resource id="1V5IjtX7Zo8xc6OX" scaleX="70" scaleY="335" width="150" height="87" index="7" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="7" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5Ijt5IQbCMWf5T" scaleX="70" scaleY="442" width="150" height="87" index="8" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="7" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IJTg9CV2Qmh0n" scaleX="70" scaleY="549" width="150" height="87" index="9" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="7" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5iJtLOIJXG0lUY" scaleX="70" scaleY="656" width="150" height="87" index="10" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="7" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IjtQk42xhfhGb" scaleX="70" scaleY="763" width="150" height="87" index="11" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="7" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5iJtytD5QPIuPh" scaleX="140" scaleY="348" width="510" height="74" index="27" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="7" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1V5ijtjMWUhcHDmL" scaleX="140" scaleY="455" width="510" height="74" index="28" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="7" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1V5ijTougRvO8h1Z" scaleX="140" scaleY="562" width="510" height="74" index="29" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="7" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1V5IJtBRTlESB2Vw" scaleX="140" scaleY="669" width="510" height="74" index="30" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="7" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1V5iJtug9NJAqRuu" scaleX="140" scaleY="776" width="510" height="74" index="31" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="7" resId="1V5ijThrP90FX8OV"/>
-      </resources>
-      <textToSounds>
-        <textToSound id="1V5ijTvTi1hklWsg" scaleX="0" scaleY="0" width="0" height="0" index="0" inPoint="0.5" outPoint="7" volume="1" resId="1v5ijTpeKJXDusml" loop="false" muted="false" provider="aliyun" text="周三，长江材料、内蒙新华可申购，周一申购的鼎阳科技、芯导科技需中签缴款。" declaimer="aixia" speechRate="1" pitchRate="1">
-          <ssml id="1V5iJtxiYzpnmzKY">&lt;speak provider="aliyun"&gt;&lt;voice name="aixia"&gt;&lt;prosody contenteditable="true" rate="0"&gt;&lt;p&gt;周三，长江材料、内蒙新华可申购，周一申购的鼎阳科技、芯导科技需中签缴款。&lt;/p&gt;&lt;/prosody&gt;&lt;/voice&gt;&lt;/speak&gt;</ssml>
-        </textToSound>
-      </textToSounds>
-      <captions>
-        <caption id="1v5IJtBFqjjNJtnM" scaleX="77" scaleY="215" width="92" height="48" index="12" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="30" fontWeight="400" fontColor="#ffffff" lineHeight="36" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>11/24</text>
-        </caption>
-        <caption id="1V5IjtHbneNr0TyF" scaleX="454" scaleY="194" width="192" height="72" index="13" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="60" fontWeight="400" fontColor="#ffffff" lineHeight="72" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>星期三</text>
-        </caption>
-        <caption id="1V5ijtGwutyI3TYV" scaleX="105.4" scaleY="357.4" width="79.2" height="43.2" index="14" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>申购</text>
-        </caption>
-        <caption id="1V5ijtf7Z8DQzacZ" scaleX="262.4" scaleY="363.4" width="151.2" height="43.2" index="15" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>长江材料</text>
-        </caption>
-        <caption id="1V5ijtBTBJcfsqkM" scaleX="456.4" scaleY="363.4" width="151.2" height="43.2" index="16" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>内蒙新华</text>
-        </caption>
-        <caption id="1V5ijt5TMJEYa36p" scaleX="105.4" scaleY="464.4" width="79.7" height="43.2" index="17" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>上市</text>
-        </caption>
-        <caption id="1v5ijTrcbu4m6PDf" scaleX="262.4" scaleY="470.4" width="43.2" height="43.2" index="18" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1V5IjtkjnoVX5Dkk" scaleX="87.4" scaleY="571.4" width="115.2" height="43.2" index="19" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签号</text>
-        </caption>
-        <caption id="1v5ijTaLCAa7k6r7" scaleX="262.4" scaleY="577.4" width="151.2" height="43.2" index="20" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>鼎阳科技</text>
-        </caption>
-        <caption id="1v5IJtBa23qKSV3c" scaleX="456.4" scaleY="577.4" width="151.2" height="43.2" index="21" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>芯导科技</text>
-        </caption>
-        <caption id="1v5ijTiGisYEa5Qg" scaleX="87.4" scaleY="678.4" width="115.2" height="43.2" index="22" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签率</text>
-        </caption>
-        <caption id="1v5iJtG3GgMpTLlH" scaleX="262.4" scaleY="684.4" width="151.2" height="43.2" index="23" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>洁雅股份</text>
-        </caption>
-        <caption id="1V5ijTh3rQj0gf6K" scaleX="456.4" scaleY="684.4" width="151.2" height="43.2" index="24" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>喜悦智行</text>
-        </caption>
-        <caption id="1V5IjtOk2R9mVHAI" scaleX="262.4" scaleY="791.4" width="151.2" height="43.2" index="25" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>鼎阳科技</text>
-        </caption>
-        <caption id="1V5IjtFq4ZikDvls" scaleX="456.4" scaleY="791.4" width="151.2" height="43.2" index="26" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>芯导科技</text>
-        </caption>
-        <caption id="1v5IjThBImLgDFCN" scaleX="87.4" scaleY="785.4" width="115.2" height="43.2" index="32" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="7" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>缴款日</text>
-        </caption>
-      </captions>
-      <transition name="InvertedPageCurl" duration="0.8"/>
-    </board>
-    <board id="1v5IjTqGy3nIXEuq" poster="/avesto/plat/tmplres/scenetmpl/xgrl/cover05.png" duration="6">
-      <bgblock id="1V5ijTnTFitMwSIN" inPoint="0" fillColor="#000"/>
-      <resources>
-        <resource id="1V5ijTlyJj6deOoU" scaleX="0" scaleY="0" width="720" height="960" inPoint="0" outPoint="6" resId="1V5ijT65UQW8wvZb"/>
-        <resource id="1V5IjtyGy70iuxBv" scaleX="40" scaleY="34" width="68" height="50" index="1" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1v5iJtFAhZA9IrSF"/>
-        <resource id="1v5IjTCAfViWq3vO" scaleX="118" scaleY="35" width="160" height="48" index="2" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1V5IjtHoq7BN3FHp"/>
-        <resource id="1V5IJtxFsqGniRkN" scaleX="499" scaleY="39" width="181" height="40" index="3" animationIn="fadeInRight" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1v5IJtO8Ibqw8MNO"/>
-        <resource id="1v5IjtaYvS83eI3k" scaleX="20" scaleY="136" width="680" height="800" index="4" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1v5IJt1peMWxV1vn"/>
-        <resource id="1v5iJtRbranD4pXc" scaleX="40" scaleY="140" width="640" height="140" index="5" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1v5iJTtTb9pUvw0c"/>
-        <resource id="1V5IjtyOeGKbwNa6" scaleX="50" scaleY="304" width="620" height="6" index="6" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1v5IjTf5iCwLdcMh"/>
-        <resource id="1V5ijtKhxQpvoNjQ" scaleX="70" scaleY="335" width="150" height="87" index="7" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IjtrsKyj6q457" scaleX="70" scaleY="442" width="150" height="87" index="8" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IJtNt7cvXsyv9" scaleX="70" scaleY="549" width="150" height="87" index="9" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5IJtbdJVKYBIS0" scaleX="70" scaleY="656" width="150" height="87" index="10" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5ijtsJGY9A4OXv" scaleX="140" scaleY="348" width="510" height="74" index="25" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1v5ijT3wS1o7sQVA" scaleX="140" scaleY="455" width="510" height="74" index="26" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1V5ijT5utme7rVoU" scaleX="140" scaleY="562" width="510" height="74" index="27" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1V5IjtPgYPsI3oWa" scaleX="140" scaleY="669" width="510" height="74" index="28" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1v5iJTm1WJRnqa7E" scaleX="70" scaleY="763" width="150" height="87" index="29" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5IJttxbShCgZjL" scaleX="140" scaleY="776" width="510" height="74" index="30" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" resId="1V5ijThrP90FX8OV"/>
-      </resources>
-      <textToSounds>
-        <textToSound id="1v5ijTjSRkYYSRCr" scaleX="0" scaleY="0" width="0" height="0" index="0" inPoint="0.5" outPoint="6" volume="1" resId="1V5ijt8Wfwbr9EVk" loop="false" muted="false" provider="aliyun" text="周四，无申购，洁雅股份、喜悦智行需中签缴款。" declaimer="aixia" speechRate="1" pitchRate="1">
-          <ssml id="1V5IjtSl7uklcAPt">&lt;speak provider="aliyun"&gt;&lt;voice name="aixia"&gt;&lt;prosody contenteditable="true" rate="0"&gt;&lt;p&gt;周四，无申购，洁雅股份、喜悦智行需中签缴款。&lt;/p&gt;&lt;/prosody&gt;&lt;/voice&gt;&lt;/speak&gt;</ssml>
-        </textToSound>
-      </textToSounds>
-      <captions>
-        <caption id="1v5iJtBwgmbNTlax" scaleX="77" scaleY="215" width="92" height="48" index="11" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="30" fontWeight="400" fontColor="#ffffff" lineHeight="36" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>11/25</text>
-        </caption>
-        <caption id="1v5iJTQel8fmjbEC" scaleX="454" scaleY="194" width="192" height="72" index="12" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="60" fontWeight="400" fontColor="#ffffff" lineHeight="72" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>星期四</text>
-        </caption>
-        <caption id="1V5Ijtk2I35RRS6t" scaleX="105.4" scaleY="357.4" width="79.2" height="43.2" index="13" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>申购</text>
-        </caption>
-        <caption id="1v5IjtCgvO9EjGBX" scaleX="262.4" scaleY="363.4" width="43.2" height="43.2" index="14" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1v5IjT4meSXXzGY0" scaleX="105.4" scaleY="464.4" width="79.7" height="43.2" index="15" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>上市</text>
-        </caption>
-        <caption id="1v5iJtgtBHQ09bsr" scaleX="262.4" scaleY="470.4" width="43.2" height="43.2" index="16" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1v5IJt5HjQOM81CX" scaleX="87.4" scaleY="571.4" width="115.2" height="43.2" index="17" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签号</text>
-        </caption>
-        <caption id="1v5IJTwXNwLQSdiy" scaleX="262.4" scaleY="577.4" width="151.2" height="43.2" index="18" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>洁雅股份</text>
-        </caption>
-        <caption id="1v5ijtOikbpTHfKh" scaleX="456.4" scaleY="577.4" width="151.2" height="43.2" index="19" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>喜悦智行</text>
-        </caption>
-        <caption id="1v5IJtJ0yUuoqhSU" scaleX="87.4" scaleY="678.4" width="115.2" height="43.2" index="20" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签率</text>
-        </caption>
-        <caption id="1V5iJth2K5OOeUi2" scaleX="262.4" scaleY="684.4" width="151.2" height="43.2" index="21" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>长江材料</text>
-        </caption>
-        <caption id="1v5ijtzhAv5PmF6B" scaleX="456.4" scaleY="684.4" width="151.2" height="43.2" index="22" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>内蒙新华</text>
-        </caption>
-        <caption id="1v5IjTdnKpPOBhlF" scaleX="262.4" scaleY="791.4" width="151.2" height="43.2" index="23" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>洁雅股份</text>
-        </caption>
-        <caption id="1v5ijT1C2oAbfYAl" scaleX="456.4" scaleY="791.4" width="151.2" height="43.2" index="24" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>喜悦智行</text>
-        </caption>
-        <caption id="1v5IjTTYXfUPCjni" scaleX="87.4" scaleY="785.4" width="115.2" height="43.2" index="31" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>缴款日</text>
-        </caption>
-      </captions>
-      <transition name="InvertedPageCurl" duration="0.8"/>
-    </board>
-    <board id="1v5IjTOoi9hN7Qnk" poster="/avesto/plat/tmplres/scenetmpl/xgrl/cover06.png" duration="6">
-      <bgblock id="1V5ijTYmuTOqcBhJ" inPoint="0" fillColor="#000"/>
-      <resources>
-        <resource id="1v5ijTHMDBEcP2gH" scaleX="0" scaleY="0" width="720" height="960" inPoint="0" outPoint="6" resId="1V5ijT65UQW8wvZb"/>
-        <resource id="1v5IJtwENdiemdwU" scaleX="40" scaleY="34" width="68" height="50" index="1" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1v5iJtFAhZA9IrSF"/>
-        <resource id="1v5ijTmsdEfnYgwh" scaleX="118" scaleY="35" width="160" height="48" index="2" animationIn="fadeInLeft" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1V5IjtHoq7BN3FHp"/>
-        <resource id="1v5ijTKCA0No0zrN" scaleX="499" scaleY="39" width="181" height="40" index="3" animationIn="fadeInRight" animationInDuration="0.5" inPoint="0.5" outPoint="6" resId="1v5IJtO8Ibqw8MNO"/>
-        <resource id="1v5iJtdczA3yVRRW" scaleX="20" scaleY="136" width="680" height="800" index="4" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1v5IJt1peMWxV1vn"/>
-        <resource id="1v5IjThEnBwaxIjx" scaleX="40" scaleY="140" width="640" height="140" index="5" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1V5iJt4UQM405z6C"/>
-        <resource id="1v5ijTGLK6WmQNiM" scaleX="50" scaleY="304" width="620" height="6" index="6" animationIn="fadeIn" animationInDuration="0.5" inPoint="1" outPoint="6" resId="1v5IjTf5iCwLdcMh"/>
-        <resource id="1V5ijTm6nNyxOUwi" scaleX="70" scaleY="335" width="150" height="87" index="7" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5ijTYQydcoPTwd" scaleX="70" scaleY="442" width="150" height="87" index="8" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5iJtsCZezl0AIK" scaleX="70" scaleY="549" width="150" height="87" index="9" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5iJt18hcJPLwgT" scaleX="70" scaleY="656" width="150" height="87" index="10" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1v5iJt0adfOBWaE9" scaleX="140" scaleY="348" width="510" height="74" index="24" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1v5iJtbwMGQgP7eW" scaleX="140" scaleY="455" width="510" height="74" index="25" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1V5iJt9ITtBH3hD0" scaleX="140" scaleY="562" width="510" height="74" index="26" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" resId="1V5ijThrP90FX8OV"/>
-        <resource id="1v5IJtknybTLkoqF" scaleX="140" scaleY="669" width="510" height="74" index="27" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" resId="1v5IJtO8upF5u6Zk"/>
-        <resource id="1v5ijtjSjaIj2KMm" scaleX="70" scaleY="763" width="150" height="87" index="28" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" resId="1v5iJT8N88WWDf31"/>
-        <resource id="1V5ijTPG3X9zJmyU" scaleX="140" scaleY="776" width="510" height="74" index="29" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" resId="1V5ijThrP90FX8OV"/>
-      </resources>
-      <textToSounds>
-        <textToSound id="1V5iJtHbzhnbirlF" scaleX="0" scaleY="0" width="0" height="0" index="0" inPoint="0.5" outPoint="6" volume="1" resId="1V5iJTSUBZ22liNp" loop="false" muted="false" provider="aliyun" text="周五，达嘉维康申购，长江材料、内蒙新华中签缴款。" declaimer="aixia" speechRate="1" pitchRate="1">
-          <ssml id="1V5ijtjVQi7iqNXi">&lt;speak provider="aliyun"&gt;&lt;voice name="aixia"&gt;&lt;prosody contenteditable="true" rate="0"&gt;&lt;p&gt;周五，达嘉维康申购，长江材料、内蒙新华中签缴款。&lt;/p&gt;&lt;/prosody&gt;&lt;/voice&gt;&lt;/speak&gt;</ssml>
-        </textToSound>
-      </textToSounds>
-      <captions>
-        <caption id="1v5iJTMLPFBs7XHp" scaleX="77" scaleY="215" width="92" height="48" index="11" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="30" fontWeight="400" fontColor="#ffffff" lineHeight="36" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>11/26</text>
-        </caption>
-        <caption id="1v5IJtTYHmwzVU2Z" scaleX="454" scaleY="194" width="192" height="72" index="12" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="60" fontWeight="400" fontColor="#ffffff" lineHeight="72" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>星期五</text>
-        </caption>
-        <caption id="1v5IjtucbOkkEQTF" scaleX="105.4" scaleY="357.4" width="79.2" height="43.2" index="13" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>申购</text>
-        </caption>
-        <caption id="1v5iJTJ025xPzvyG" scaleX="262.4" scaleY="363.4" width="151.2" height="43.2" index="14" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC-Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>达嘉维康</text>
-        </caption>
-        <caption id="1v5iJtohAAGwLlIp" scaleX="105.4" scaleY="464.4" width="79.7" height="43.2" index="15" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>上市</text>
-        </caption>
-        <caption id="1V5iJt9qy6cRFPGY" scaleX="262.4" scaleY="470.4" width="43.2" height="43.2" index="16" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1V5ijTcfXKxJZc9e" scaleX="87.4" scaleY="571.4" width="115.2" height="43.2" index="17" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签号</text>
-        </caption>
-        <caption id="1v5IjTSaX0FPUiwd" scaleX="262.4" scaleY="577.4" width="151.2" height="43.2" index="18" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>长江材料</text>
-        </caption>
-        <caption id="1V5iJt1hDZ0eVjTA" scaleX="456.4" scaleY="577.4" width="151.2" height="43.2" index="19" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>内蒙新华</text>
-        </caption>
-        <caption id="1V5ijtrxBO0mSaUJ" scaleX="87.4" scaleY="678.4" width="115.2" height="43.2" index="20" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>中签率</text>
-        </caption>
-        <caption id="1v5iJtn06xzrLGlG" scaleX="262.4" scaleY="684.4" width="43.2" height="43.2" index="21" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>无</text>
-        </caption>
-        <caption id="1V5IjTdRH5aT19xE" scaleX="262.4" scaleY="791.4" width="151.2" height="43.2" index="22" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>长江材料</text>
-        </caption>
-        <caption id="1V5IJtbLUJ5MREtb" scaleX="456.4" scaleY="791.4" width="151.2" height="43.2" index="23" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#000000" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>内蒙新华</text>
-        </caption>
-        <caption id="1v5IjtRUzS3hakFc" scaleX="87.4" scaleY="785.4" width="115.2" height="43.2" index="30" animationIn="fadeInUp" animationInDuration="0.5" inPoint="3.5" outPoint="6" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="36" fontWeight="400" fontColor="#ffffff" lineHeight="43.199999999999996" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>缴款日</text>
-        </caption>
-      </captions>
-      <transition name="InvertedPageCurl" duration="0.8"/>
-    </board>
-    <board id="1v5ijtYjLHV7Yg1J" poster="/avesto/plat/tmplres/scenetmpl/xgrl/cover07.png" duration="5">
-      <bgblock id="1v5ijTKzprMC6nTk" inPoint="0" fillColor="#000"/>
-      <resources>
-        <resource id="1v5IjtyIc8bHi5b7" scaleX="0" scaleY="0" width="720" height="960" inPoint="0" outPoint="5" resId="1V5IjtHt0xzdW8dd"/>
-        <resource id="1v5IjT5xbTcomNyJ" scaleX="499" scaleY="160" width="45" height="65" index="5" animationIn="fadeIn" animationInDuration="0.5" inPoint="0.5" outPoint="5" resId="1v5ijTvgLAILndTC"/>
-        <resource id="1v5IjtGcI0qJCGwl" scaleX="269" scaleY="780" width="181" height="40" index="6" animationIn="fadeIn" animationInDuration="0.5" inPoint="2.5" outPoint="5" resId="1v5IJtO8Ibqw8MNO"/>
-      </resources>
-      <textToSounds>
-        <textToSound id="1V5iJt9tzAlhH4Uz" scaleX="0" scaleY="0" width="0" height="0" index="0" inPoint="0.5" outPoint="5" volume="1" resId="1V5iJtbIHUML2M5v" loop="false" muted="false" provider="aliyun" text="以上是本周的新股信息，祝您多多中签。" declaimer="aixia" speechRate="1" pitchRate="1">
-          <ssml id="1v5IjtWMarrOv15X">&lt;speak provider="aliyun"&gt;&lt;voice name="aixia"&gt;&lt;prosody contenteditable="true" rate="0"&gt;&lt;p&gt;以上是本周的新股信息，祝您多多中签。&lt;/p&gt;&lt;/prosody&gt;&lt;/voice&gt;&lt;/speak&gt;</ssml>
-        </textToSound>
-      </textToSounds>
-      <captions>
-        <caption id="1v5IjTpi9Rsac0S2" scaleX="234" scaleY="144" width="252" height="97" index="1" animationIn="fadeInUp" animationInDuration="0.5" inPoint="0.5" outPoint="5" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="60" fontWeight="400" fontColor="#FF380F" lineHeight="72" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>风险提示</text>
-        </caption>
-        <caption id="1V5IjtpDcK1MrWP9" scaleX="136" scaleY="300" width="448" height="155" index="2" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1" outPoint="5" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontWeight="400" fontColor="#FF380F" lineHeight="48" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>上述内容仅供投资者参考</text>
-        </caption>
-        <caption id="1V5IjT8MdumhINYi" scaleX="206" scaleY="360" width="388" height="68" index="3" animationIn="fadeInUp" animationInDuration="0.5" inPoint="1.5" outPoint="5" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontWeight="400" fontColor="#FF380F" lineHeight="48" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>不构成投资建议</text>
-        </caption>
-        <caption id="1V5iJtyTf8WDWkOe" scaleX="166" scaleY="420" width="418" height="68" index="4" animationIn="fadeInUp" animationInDuration="0.5" inPoint="2" outPoint="5" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="40" fontWeight="400" fontColor="#FF380F" lineHeight="48" wordSpacing="0" textAlign="left" lineWrap="false">
-          <text>据此操作，风险自担</text>
-        </caption>
-      </captions>
-    </board>
-  </storyBoards>
-</project>
+<?xml version="1.0"?>
+<template version="2.0.0" id="7ffa9750c6a711eca2099fbaac50477e" name="全球金融市场回顾" mode="scene" actuator="10000" width="720" height="1280" aspectRatio="9:16" fps="30" duration="72500" volume="1" createTime="1651118325" updateTime="1651118325" buildBy="system">
+  <audio id="1v5L9XhkN4X9RXGW" isBackground="true" startTime="5000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/19829215.mp3" volume="0.3" loop="true" muted="false" fadeInDuration="5000"/>
+  <scene id="1v5l9xY41QEd7c19" poster="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/cover01.png" width="720" height="1280" aspectRatio="9:16" duration="6000" transition-type="fade" transition-duration="500">
+    <video id="1V5l9XoQclQGP1uP" x="0" y="0" width="720" height="1280" isBackground="true" startTime="0" endTime="6000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/pt1.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1v5l9xAI8CcVIIQX" startTime="500" endTime="6000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/tts/151895f067bf11ecaa1fad033c46ef8f.mp3" volume="80" loop="false" muted="false" provider="aliyun" text="欢迎收看12月28日全球市场回顾" declaimer="aixia" speechRate="1">
+      <ssml id="1V5l9XtxVlSZI61C">
+        <speak>
+          <voice name="aixia">
+            <prosody contenteditable="true" rate="1">
+              <p>欢迎收看12月28日全球市场回顾</p>
+            </prosody>
+          </voice>
+        </speak>
+      </ssml>
+    </voice>
+    <image id="1v5L9XmbqIjiIPv3" x="217" y="446" width="287" height="65" zIndex="2" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="1500" endTime="6000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/logo_club1.png" mode="scaleToFill" dynamic="false"/>
+    <text id="1v5L9xs3Ba25gNBC" x="193.4" y="686.4" width="407.2" height="43.2" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="2000" endTime="6000" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="36" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">2021-12-28 星期二</text>
+  </scene>
+  <scene id="1v5L9xILfVgzxTbA" poster="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/cover02.png" width="720" height="1280" aspectRatio="9:16" duration="9500" transition-type="fade" transition-duration="500">
+    <video id="1v5L9xs45xmmAodj" x="0" y="0" width="720" height="1280" isBackground="true" startTime="0" endTime="9500" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/bg11.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1v5L9XfCBeAlK2On" startTime="500" endTime="9500" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/tts/151895f167bf11ecaa1fad033c46ef8f.mp3" volume="80" loop="false" muted="false" provider="aliyun" text="昨日，全球主要股指普遍上涨，其中纳斯达克综合指数上涨1.39%，收报15871.26点" declaimer="aixia" speechRate="1">
+      <ssml id="1v5l9XEGZEhmVnLw">
+        <speak>
+          <voice name="aixia">
+            <prosody contenteditable="true" rate="1">
+              <p>昨日，全球主要股指普遍上涨，其中纳斯达克综合指数上涨1.39%，收报15871.26点</p>
+            </prosody>
+          </voice>
+        </speak>
+      </ssml>
+    </voice>
+    <image id="1v5L9xxfwmJMj5eN" x="30" y="226" width="660" height="180" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="9000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi1.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1V5L9xmCZBZr7FSY" x="30" y="436" width="660" height="180" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="9300" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi1.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5l9xjCHpIjc3Gj" x="30" y="732" width="660" height="180" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="9600" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi1.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5L9XHQ15xXrINC" x="30" y="942" width="660" height="180" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1400" endTime="9900" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi1.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5L9xt0Lu5mAdIi" x="300" y="251" width="40" height="40" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="9000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/USA.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1V5l9xQSoZgudsog" x="330" y="461" width="40" height="40" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="9300" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/USA.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5l9XoJkYGZDbzZ" x="238" y="757" width="40" height="40" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="9600" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/Japan.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5L9xPup0Eazt4I" x="180" y="967" width="40" height="40" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1400" endTime="9900" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/HK.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5L9xYpwz69kpnZ" x="217" y="1172" width="286" height="57" zIndex="2" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="1500" endTime="9500" src="/avesto/plat/tmplres/scenetmpl/dapan_huigu_pt/logo_sidi.png" mode="scaleToFill" dynamic="false"/>
+    <chart id="1v5L9XKalQwyrW5m" x="30" y="226" width="660" height="180" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="9000" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_ixic_hq_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_ixic_hq_digb/ddcdata.json" chartId="greatwall_ixic_hq_digb"/>
+    <chart id="1v5l9XX1iKGdtPsD" x="30" y="436" width="660" height="180" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="9300" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_dj_hq_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_dj_hq_digb/ddcdata.json" chartId="greatwall_dj_hq_digb"/>
+    <chart id="1V5l9XaKVnB3RwPC" x="30" y="732" width="660" height="180" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="9600" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_n255_hq_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_n255_hq_digb/ddcdata.json" chartId="greatwall_n255_hq_digb"/>
+    <chart id="1V5l9XGSS1l26mrM" x="30" y="942" width="660" height="180" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1400" endTime="9900" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_hs_hq_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_hs_hq_digb/ddcdata.json" chartId="greatwall_hs_hq_digb"/>
+    <image id="1V5l9xGpNQfpiwwm" x="640" y="321" width="30" height="50" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="9000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/zhang.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5l9xB1Az5aNAQA" x="640" y="531" width="30" height="50" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="9300" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/zhang.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5L9xH70G8PsUip" x="640" y="827" width="30" height="50" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="9600" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/die.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5L9xH9SelbxpxP" x="640" y="1037" width="30" height="50" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1400" endTime="9900" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/zhang.png" mode="scaleToFill" dynamic="false"/>
+    <text id="1V5L9XNArGmVLanX" x="35.2" y="47.2" width="393.6" height="57.6" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="500" endTime="9500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="48" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">全球主要市场表现</text>
+    <text id="1V5l9XneBYBSaMr1" x="520" y="67" width="173" height="36" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="500" endTime="9500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontWeight="400" fontColor="#DDCCFF" lineHeight="1" wordSpacing="0" lineWrap="false">2021-12-28</text>
+    <text id="1v5L9xJpgJ36EP44" x="320.4" y="156.4" width="79.2" height="43.2" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOut" exitEffect-duration="500" startTime="500" endTime="9000" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">美洲</text>
+    <text id="1v5l9XV424aVwq4U" x="320.4" y="662.4" width="79.2" height="43.2" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOut" exitEffect-duration="500" startTime="1100" endTime="9400" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="36" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">亚洲</text>
+  </scene>
+  <scene id="1V5L9XRsjDLYOUbf" poster="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/cover04.png" width="720" height="1280" aspectRatio="9:16" duration="11000" transition-type="fade" transition-duration="500">
+    <video id="1V5l9xuHuJcJvJAp" x="0" y="0" width="720" height="1280" isBackground="true" startTime="0" endTime="11000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/bg22.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1V5l9Xaz7xuMbQGT" startTime="500" endTime="11000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/tts/151895f267bf11ecaa1fad033c46ef8f.mp3" volume="80" loop="false" muted="false" provider="aliyun" text="美元指数较昨日上涨0.07%，收于96.09。近90天美元指数最高点为96.88，最低点为92.04" declaimer="aixia" speechRate="1">
+      <ssml id="1v5l9X34YTA9t5fp">
+        <speak>
+          <voice name="aixia">
+            <prosody contenteditable="true" rate="1">
+              <p>美元指数较昨日上涨0.07%，收于96.09。近90天美元指数最高点为96.88，最低点为92.04</p>
+            </prosody>
+          </voice>
+        </speak>
+      </ssml>
+    </voice>
+    <image id="1v5L9xH3BQ2kLouy" x="40" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="10000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi2.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5l9X9f9FS3eyho" x="380" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="10300" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi2.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1V5l9X6mnHaiFlPz" x="40" y="440" width="640" height="640" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="10600" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi3.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1V5l9xuzTqK8eTpZ" x="217" y="1172" width="286" height="57" zIndex="2" startTime="0" endTime="11000" src="/avesto/plat/tmplres/scenetmpl/dapan_huigu_pt/logo_sidi.png" mode="scaleToFill" dynamic="false"/>
+    <chart id="1v5L9xE72dTP6Yt2" x="40" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="10000" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_usdx_updown_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_usdx_updown_digb/ddcdata.json" chartId="greatwall_usdx_updown_digb"/>
+    <chart id="1V5l9xriHlgUDqQ5" x="380" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="10300" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_usdx_close_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_usdx_close_digb/ddcdata.json" chartId="greatwall_usdx_close_digb"/>
+    <chart id="1v5l9Xw15lIj3RrS" x="40" y="440" width="640" height="640" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="10600" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_usdx_cloes3m_line/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_usdx_cloes3m_line/ddcdata.json" chartId="greatwall_usdx_cloes3m_line"/>
+    <text id="1v5L9xT2qi2v7bXs" x="35.2" y="47.2" width="209.6" height="57.6" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="500" endTime="11000" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="48" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">美元指数</text>
+    <text id="1V5L9xFGbmYBh8RB" x="520" y="67" width="176" height="36" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="500" endTime="11000" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontWeight="400" fontColor="#DDCCFF" lineHeight="1" wordSpacing="0" lineWrap="false">2021-12-28</text>
+  </scene>
+  <scene id="1v5L9XRioerpechC" poster="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/cover05.png" width="720" height="1280" aspectRatio="9:16" duration="14000" transition-type="fade" transition-duration="500">
+    <video id="1V5l9xC8D397IFko" x="0" y="0" width="720" height="1280" isBackground="true" startTime="0" endTime="14000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/bg33.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1v5l9xkemwS9wWlE" startTime="500" endTime="14000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/tts/151895f367bf11ecaa1fad033c46ef8f.mp3" volume="80" loop="false" muted="false" provider="aliyun" text="WTI原油指数昨日上涨2.41%，报收75.57美元每桶。近90日WTI原油最高点为84.65美元每桶、最低点为65.57美元每桶" declaimer="aixia" speechRate="1">
+      <ssml id="1v5l9XLrLh4eV1s2">
+        <speak>
+          <voice name="aixia">
+            <prosody contenteditable="true" rate="1">
+              <p>WTI原油指数昨日上涨2.41%，报收75.57美元每桶。近90日WTI原油最高点为84.65美元每桶、最低点为65.57美元每桶</p>
+            </prosody>
+          </voice>
+        </speak>
+      </ssml>
+    </voice>
+    <image id="1V5l9xmXOfpT9y6Z" x="40" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="13000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi2.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1V5L9xFXgR9zoo4z" x="380" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="13300" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi2.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1V5l9x39HpbnuwYJ" x="40" y="440" width="640" height="640" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="13600" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi3.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5l9x4L0DhW6gk0" x="217" y="1172" width="286" height="57" zIndex="2" startTime="0" endTime="14000" src="/avesto/plat/tmplres/scenetmpl/dapan_huigu_pt/logo_sidi.png" mode="scaleToFill" dynamic="false"/>
+    <chart id="1V5l9XcJQ3ntd5y5" x="40" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="13000" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_wti_updown_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_wti_updown_digb/ddcdata.json" chartId="greatwall_wti_updown_digb"/>
+    <chart id="1v5L9xAAaYZ9NSRl" x="380" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="13300" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_wti_close_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_wti_close_digb/ddcdata.json" chartId="greatwall_wti_close_digb"/>
+    <chart id="1v5L9Xc7dfsJCmu9" x="40" y="440" width="640" height="640" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="13600" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_wti_close3m_line/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_wti_close3m_line/ddcdata.json" chartId="greatwall_wti_close3m_line"/>
+    <text id="1v5L9x0xOW9BHEMr" x="35.2" y="47.2" width="209.6" height="57.6" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="500" endTime="14000" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="48" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">WTI原油</text>
+    <text id="1v5l9XXwvT2UqVUU" x="520" y="67" width="176" height="36" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="500" endTime="14000" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontWeight="400" fontColor="#DDCCFF" lineHeight="1" wordSpacing="0" lineWrap="false">2021-12-28</text>
+  </scene>
+  <scene id="1v5L9XBNL5Mhmzqu" poster="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/cover06.png" width="720" height="1280" aspectRatio="9:16" duration="19000" transition-type="fade" transition-duration="500">
+    <video id="1v5l9xLErkHnUI0P" x="0" y="0" width="720" height="1280" isBackground="true" startTime="0" endTime="19000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/bg44.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1v5l9X1dYisxo1tj" startTime="500" endTime="19000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/tts/151895f467bf11ecaa1fad033c46ef8f.mp3" volume="80" loop="false" muted="false" provider="aliyun" text="纽交所交投最为活跃的黄金期货昨日上涨0.15%，收于每盎司1812.80美元。近90天来，黄金期货最高价为1869.5美元每盎司，最低价为1726.1美元每盎司" declaimer="aixia" speechRate="1">
+      <ssml id="1v5l9XHJTLVt7FoP">
+        <speak>
+          <voice name="aixia">
+            <prosody contenteditable="true" rate="1">
+              <p>纽交所交投最为活跃的黄金期货昨日上涨0.15%，收于每盎司1812.80美元。近90天来，黄金期货最高价为1869.5美元每盎司，最低价为1726.1美元每盎司</p>
+            </prosody>
+          </voice>
+        </speak>
+      </ssml>
+    </voice>
+    <image id="1v5L9x1jrcGiyC6N" x="40" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="18000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi2.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1V5L9xdpbG7jpVZJ" x="380" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="18300" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi2.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5L9xNhOOMcsVH7" x="40" y="440" width="640" height="640" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="18600" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/toumingdi3.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1v5L9x4onHk3TkcM" x="217" y="1172" width="286" height="57" zIndex="2" startTime="0" endTime="19000" src="/avesto/plat/tmplres/scenetmpl/dapan_huigu_pt/logo_sidi.png" mode="scaleToFill" dynamic="false"/>
+    <chart id="1v5L9XhddqQubxl4" x="40" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="500" endTime="18000" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_comex_updown_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_comex_updown_digb/ddcdata.json" chartId="greatwall_comex_updown_digb"/>
+    <chart id="1v5L9Xlxr2e9k6yf" x="380" y="200" width="300" height="200" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="800" endTime="18300" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_comex_close_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_comex_close_digb/ddcdata.json" chartId="greatwall_comex_close_digb"/>
+    <chart id="1v5l9XszDWfnXC1r" x="40" y="440" width="640" height="640" zIndex="2" enterEffect-type="fadeInRight" enterEffect-duration="500" exitEffect-type="fadeOutLeft" exitEffect-duration="500" startTime="1100" endTime="18600" configSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_comex_close3m_line/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/greatwall/gmarketreview/greatwall_comex_close3m_line/ddcdata.json" chartId="greatwall_comex_close3m_line"/>
+    <text id="1V5l9xToXAwjQgku" x="35.2" y="47.2" width="289.6" height="57.6" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="500" endTime="19000" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="48" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">COMEX黄金</text>
+    <text id="1V5L9xF1WOFph9S8" x="520" y="67" width="176" height="36" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="500" endTime="19000" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontWeight="400" fontColor="#DDCCFF" lineHeight="1" wordSpacing="0" lineWrap="false">2021-12-28</text>
+  </scene>
+  <scene id="1v5l9xYrSaMBMnvg" poster="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/cover07.png" width="720" height="1280" aspectRatio="9:16" duration="7000" transition-type="fade" transition-duration="500">
+    <video id="1v5L9XVnfQTq6ySf" x="0" y="0" width="720" height="1280" isBackground="true" startTime="0" endTime="7000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/bg11.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1V5L9xQuIMFOQTsp" startTime="1000" endTime="7000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/tts/151895f567bf11ecaa1fad033c46ef8f.mp3" volume="80" loop="false" muted="false" provider="aliyun" text="数据来源于公开市场，仅供参考，不构成具体投资建议" declaimer="aixia" speechRate="1">
+      <ssml id="1v5L9xxhGmfw3SWh">
+        <speak>
+          <voice name="aixia">
+            <prosody contenteditable="true" rate="1">
+              <p>数据来源于公开市场，仅供参考，不构成具体投资建议</p>
+            </prosody>
+          </voice>
+        </speak>
+      </ssml>
+    </voice>
+    <image id="1v5L9xkyru3alYkL" x="60" y="610" width="600" height="2" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="1500" endTime="7000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/line.png" mode="scaleToFill" dynamic="false"/>
+    <text id="1v5l9XycZTwparh5" x="255" y="215" width="220" height="60" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="500" endTime="7000" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="50" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">风险提示</text>
+    <text id="1V5l9xL3nGcnumbu" x="129.5" y="648" width="478" height="48" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="1500" endTime="7000" fontFamily="HarmonyOS_Sans_SC_Bold" fontSize="40" fontWeight="400" fontColor="#FC9F36" lineHeight="1" wordSpacing="0" lineWrap="false">市场有风险     投资需谨慎</text>
+    <text id="1v5L9XNYDqm1tThl" x="57" y="317" width="606" height="256" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="500" endTime="7000" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1.667" wordSpacing="0" lineWrap="false">本产品仅供参考，不构成对所涉股票任何买卖建议或意见，不作为投资决策的依据。投资者依据本产品内容进行投资决策所产生的收益和损失，由投资者自行承担，本公司不承担任何责任。</text>
+  </scene>
+  <scene id="1V5L9XA52Q5uFG5J" poster="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/cover08.png" width="720" height="1280" aspectRatio="9:16" duration="6000">
+    <video id="1v5L9xrJCc3SP22i" x="0" y="0" width="720" height="1280" isBackground="true" startTime="0" endTime="6000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/pw1.mp4" volume="1" loop="false" muted="false"/>
+    <text id="1V5l9xky4YmA4stU" x="267" y="597" width="186" height="36" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="1000" startTime="1000" endTime="6000" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">关注思迪信息</text>
+    <text id="1V5L9xLsguhSa5bJ" x="267" y="637" width="186" height="36" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="1000" startTime="1000" endTime="6000" fontFamily="HarmonyOS_Sans_SC_Medium" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">随时把握行情</text>
+    <image id="1v5l9xDf8tJpdccW" x="217" y="490" width="287" height="65" zIndex="3" enterEffect-type="fadeInDown" enterEffect-duration="500" startTime="0" endTime="6000" src="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/logo_club1.png" mode="scaleToFill" dynamic="false"/>
+  </scene>
+</template>

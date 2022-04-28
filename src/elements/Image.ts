@@ -45,7 +45,7 @@ class Crop {
             width: this.width,
             height: this.height,
             left: this.x,
-            right: this.y,
+            top: this.y,
             clipStyle: this.clipStyle,
             clipType: this.clipType
         };

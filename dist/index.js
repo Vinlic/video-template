@@ -655,7 +655,7 @@ var Crop = class {
       width: this.width,
       height: this.height,
       left: this.x,
-      right: this.y,
+      top: this.y,
       clipStyle: this.clipStyle,
       clipType: this.clipType
     };
@@ -1730,11 +1730,27 @@ var OldParser = class {
                   new SSML_default({
                     value: (_a = voice.children[0]) == null ? void 0 : _a.children[0]
                   })
-                ] : [],
+                ] : [
+                  new SSML_default({
+                    value: (0, import_xmlbuilder23.create)({
+                      speak: {
+                        "@provider": voice.provider,
+                        voice: {
+                          "@name": voice.voice,
+                          prosody: {
+                            "@contenteditable": true,
+                            "@rate": Number(voice.speechRate) === 0 ? 1 : voice.speechRate,
+                            p: voice.text
+                          }
+                        }
+                      }
+                    }).end()
+                  })
+                ],
                 text: voice.text,
                 declaimer: voice.voice,
-                speechRate: voice.speechRate ? voice.speechRate : void 0,
-                pitchRate: voice.pitchRate ? Number(voice.pitchRate) + 1 : void 0
+                speechRate: Number(voice.speechRate) === 0 ? 1 : voice.speechRate,
+                pitchRate: util_default.isFinite(Number(voice.pitchRate)) ? Number(voice.pitchRate) + 1 : void 0
               })));
             });
             break;
@@ -1838,7 +1854,7 @@ var OptionsParser = class {
       var _a;
       return {
         id: obj.id,
-        name: obj.name,
+        name: obj.name || void 0,
         x: obj.left,
         y: obj.top,
         width: obj.width,
@@ -2056,6 +2072,7 @@ var OptionsParser = class {
     return new Template_default({
       id: options.id,
       name: options.name,
+      actuator: options.actuator || void 0,
       fps: options.fps,
       poster: options.poster,
       width: options.videoWidth,

@@ -301,17 +301,31 @@ class OldParser {
                             loop: voice.loop,
                             muted: voice.muted,
                             provider: voice.provider,
-                            children: voice.children[0]
-                                ? [
-                                    new SSML({
-                                        value: voice.children[0]?.children[0],
-                                    }),
-                                ]
-                                : [],
+                            children: voice.children[0] ? [
+                                new SSML({
+                                    value: voice.children[0]?.children[0],
+                                })
+                            ] : [
+                                new SSML({
+                                    value: create({
+                                        speak: {
+                                            "@provider": voice.provider,
+                                            voice: {
+                                                "@name": voice.voice,
+                                                prosody: {
+                                                    "@contenteditable": true,
+                                                    "@rate": Number(voice.speechRate) === 0 ? 1 : voice.speechRate,
+                                                    p: voice.text
+                                                }
+                                            }
+                                        }
+                                    }).end()
+                                })
+                            ],
                             text: voice.text,
                             declaimer: voice.voice,
-                            speechRate: voice.speechRate ? voice.speechRate : undefined,
-                            pitchRate: voice.pitchRate ? Number(voice.pitchRate) + 1 : undefined,
+                            speechRate: Number(voice.speechRate) === 0 ? 1 : voice.speechRate,
+                            pitchRate: util.isFinite(Number(voice.pitchRate)) ? Number(voice.pitchRate) + 1 : undefined,
                         })));
                         break;
                     case 'vtubers':

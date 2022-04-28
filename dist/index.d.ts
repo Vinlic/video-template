@@ -226,7 +226,7 @@ declare class Crop {
         width: number;
         height: number;
         left: number;
-        right: number;
+        top: number;
         clipStyle: string | undefined;
         clipType: string | undefined;
     };
