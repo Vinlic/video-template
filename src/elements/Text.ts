@@ -31,8 +31,8 @@ class Text extends Element {
                 lineHeight: (v: any) => Number(util.defaultTo(v, 1)),
                 wordSpacing: (v: any) => Number(util.defaultTo(v, 0)),
                 lineWrap: (v: any) => util.defaultTo(util.booleanParse(v), true),
-                effectWordDuration: (v: any) => v && Number(v),
-                effectWordInterval: (v: any) => v && Number(v),
+                effectWordDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                effectWordInterval: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             },
             {
                 fontFamily: (v: any) => util.isUndefined(v) || util.isString(v),

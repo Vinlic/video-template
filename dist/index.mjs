@@ -221,17 +221,17 @@ var _Element = class {
     util_default.optionsInject(this, options, {
       type: (v) => util_default.defaultTo(v, type),
       id: (v) => util_default.defaultTo(_Element.isId(v) ? v : void 0, util_default.uniqid()),
-      x: (v) => v && Number(v),
-      y: (v) => v && Number(v),
-      width: (v) => v && Number(v),
-      height: (v) => v && Number(v),
-      zIndex: (v) => v && Number(v),
-      rotate: (v) => v && Number(v),
-      opacity: (v) => v && Number(v),
-      scaleWidth: (v) => v && Number(v),
-      scaleHeight: (v) => v && Number(v),
-      startTime: (v) => v && Number(v),
-      endTime: (v) => v && Number(v),
+      x: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      y: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      width: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      height: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      zIndex: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      rotate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      opacity: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      scaleWidth: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      scaleHeight: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      startTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      endTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       enterEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       exitEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       stayEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
@@ -408,10 +408,10 @@ var Media = class extends Element_default {
     util_default.optionsInject(this, options, {
       loop: (v) => util_default.booleanParse(util_default.defaultTo(v, false)),
       volume: (v) => Number(util_default.defaultTo(v, 1)),
-      duration: (v) => v && Number(v),
-      seekStart: (v) => v && Number(v),
-      seekEnd: (v) => v && Number(v),
-      playbackRate: (v) => v && Number(v),
+      duration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      seekStart: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      seekEnd: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      playbackRate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       muted: (v) => util_default.booleanParse(util_default.defaultTo(v, false))
     }, {
       poster: (v) => util_default.isUndefined(v) || util_default.isString(v),
@@ -519,8 +519,8 @@ var Text = class extends Element_default {
       lineHeight: (v) => Number(util_default.defaultTo(v, 1)),
       wordSpacing: (v) => Number(util_default.defaultTo(v, 0)),
       lineWrap: (v) => util_default.defaultTo(util_default.booleanParse(v), true),
-      effectWordDuration: (v) => v && Number(v),
-      effectWordInterval: (v) => v && Number(v)
+      effectWordDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      effectWordInterval: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
       fontFamily: (v) => util_default.isUndefined(v) || util_default.isString(v),
       fontSize: (v) => util_default.isFinite(v),
@@ -738,8 +738,8 @@ var Audio = class extends Media_default {
       throw new TypeError("options must be an Object");
     super(options, ElementTypes_default.Audio);
     util_default.optionsInject(this, options, {
-      fadeInDuration: (v) => v && Number(v),
-      fadeOutDuration: (v) => v && Number(v)
+      fadeInDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      fadeOutDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
       fadeInDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       fadeOutDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
@@ -795,8 +795,8 @@ var _Voice = class extends Media_default {
     super(options, ElementTypes_default.Voice);
     util_default.optionsInject(this, options, {
       provider: (v) => util_default.defaultTo(v, VoiceProviders_default.Aliyun),
-      speechRate: (v) => v && Number(v),
-      pitchRate: (v) => v && Number(v)
+      speechRate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      pitchRate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
       provider: (v) => util_default.isString(v),
       text: (v) => util_default.isUndefined(v) || util_default.isString(v),
@@ -1208,8 +1208,10 @@ var _Scene = class {
       id: this.id,
       name: this.name,
       poster: this.poster,
-      duration: this.duration / 1e3
-    }) : __privateMethod(this, _createXMLRoot, createXMLRoot_fn).call(this, "board");
+      duration: util_default.millisecondsToSenconds(this.duration)
+    }) : __privateMethod(this, _createXMLRoot, createXMLRoot_fn).call(this, "board", {
+      duration: util_default.millisecondsToSenconds(this.duration)
+    });
     if (this.backgroundColor) {
       board.ele("bgblock", {
         id: util_default.uniqid(),
@@ -1257,9 +1259,9 @@ var _Scene = class {
 };
 var Scene = _Scene;
 _createXMLRoot = new WeakSet();
-createXMLRoot_fn = function(tagName = "scene", headless = true) {
+createXMLRoot_fn = function(tagName = "scene", attributes = {}, headless = true) {
   const root = headless ? create() : create({ version: "1.0" });
-  const scene = root.ele(tagName, {
+  const scene = root.ele(tagName, __spreadValues({
     id: this.id,
     name: this.name,
     poster: this.poster,
@@ -1268,7 +1270,7 @@ createXMLRoot_fn = function(tagName = "scene", headless = true) {
     aspectRatio: this.aspectRatio,
     duration: this.duration,
     backgroundColor: this.backgroundColor
-  });
+  }, attributes));
   return scene;
 };
 __publicField(Scene, "type", "scene");
@@ -1311,6 +1313,7 @@ var Parser = class {
       sampleRate: _template.sampleRate,
       audioBitrate: _template.audioBitrate,
       backgroundColor: _template.backgroundColor,
+      captureTime: _template.captureTime,
       createTime: _template.createTime,
       updateTime: _template.updateTime,
       buildBy: _template.buildBy
@@ -1499,6 +1502,7 @@ var OldParser = class {
       videoHeight: template.height,
       poster: template.poster,
       fps: template.fps,
+      captureTime: !util_default.isUndefined(template.captureTime) ? template.captureTime / 1e3 : void 0,
       videoBitrate: 2097152,
       audioBitrate: 131072
     });
@@ -1816,6 +1820,7 @@ var OldParser = class {
       height: global.videoHeight,
       aspectRatio: global.videoSize,
       backgroundColor: templateBackgroundColor,
+      captureTime: util_default.isFinite(Number(global.captureTime)) ? global.captureTime * 1e3 : void 0,
       fps: global.fps,
       compile,
       children: templateChildren
@@ -1861,6 +1866,7 @@ var OptionsParser = class {
       videoHeight: template.height,
       poster: template.poster,
       fps: template.fps,
+      captureTime: !util_default.isUndefined(template.captureTime) ? template.captureTime / 1e3 : void 0,
       duration: util_default.millisecondsToSenconds(template.duration),
       videoBitrate: template.videoBitrate,
       audioBitrate: template.audioBitrate,
@@ -2116,6 +2122,7 @@ var OptionsParser = class {
       videoBitrate: `${options.videoBitrate}`,
       audioBitrate: `${options.audioBitrate}`,
       backgroundColor: options.bgColor ? options.bgColor.fillColor || void 0 : void 0,
+      captureTime: util_default.isFinite(options.captureTime) ? options.captureTime * 1e3 : void 0,
       compile: options.compile,
       children: templateChildren
     });
@@ -2335,6 +2342,7 @@ var _Template = class {
   sampleRate;
   audioBitrate;
   backgroundColor;
+  captureTime;
   createTime = 0;
   updateTime = 0;
   buildBy = "";
@@ -2350,9 +2358,10 @@ var _Template = class {
       width: (v) => Number(v),
       height: (v) => Number(v),
       fps: (v) => Number(util_default.defaultTo(v, 60)),
-      crf: (v) => v && Number(v),
+      crf: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       volume: (v) => Number(util_default.defaultTo(v, 1)),
-      frameQuality: (v) => v && Number(v),
+      frameQuality: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      captureTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       createTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
       updateTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
       buildBy: (v) => util_default.defaultTo(v, "system"),
@@ -2388,6 +2397,7 @@ var _Template = class {
       audioCodec: (v) => util_default.isUndefined(v) || util_default.isString(v),
       sampleRate: (v) => util_default.isUndefined(v) || util_default.isString(v),
       audioBitrate: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      captureTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       createTime: (v) => util_default.isUnixTimestamp(v),
       updateTime: (v) => util_default.isUnixTimestamp(v),
       buildBy: (v) => util_default.isString(v),

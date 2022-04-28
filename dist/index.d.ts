@@ -473,6 +473,7 @@ interface ITemplateOptions {
     sampleRate?: string;
     audioBitrate?: string;
     backgroundColor?: string;
+    captureTime?: number;
     createTime?: number;
     updateTime?: number;
     buildBy?: string;
@@ -524,6 +525,7 @@ declare class Template {
     sampleRate?: string;
     audioBitrate?: string;
     backgroundColor?: string;
+    captureTime?: number;
     createTime: number;
     updateTime: number;
     buildBy: string;

@@ -41,6 +41,7 @@ class OptionsParser {
             videoHeight: template.height,
             poster: template.poster,
             fps: template.fps,
+            captureTime: !util.isUndefined(template.captureTime) ? template.captureTime / 1000 : undefined,
             duration: util.millisecondsToSenconds(template.duration),
             videoBitrate: template.videoBitrate,
             audioBitrate: template.audioBitrate,
@@ -315,6 +316,7 @@ class OptionsParser {
             videoBitrate: `${options.videoBitrate}`,
             audioBitrate: `${options.audioBitrate}`,
             backgroundColor: options.bgColor ? (options.bgColor.fillColor || undefined) : undefined,
+            captureTime: util.isFinite(options.captureTime) ? options.captureTime * 1000 : undefined,
             compile: options.compile,
             children: templateChildren
         });

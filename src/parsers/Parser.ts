@@ -40,6 +40,7 @@ class Parser {
             sampleRate: _template.sampleRate,
             audioBitrate: _template.audioBitrate,
             backgroundColor: _template.backgroundColor,
+            captureTime: _template.captureTime,
             createTime: _template.createTime,
             updateTime: _template.updateTime,
             buildBy: _template.buildBy

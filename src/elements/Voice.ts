@@ -25,8 +25,8 @@ class Voice extends Media {
             options,
             {
                 provider: (v: any) => util.defaultTo(v, VoiceProviders.Aliyun),
-                speechRate: (v: any) => v && Number(v),
-                pitchRate: (v: any) => v && Number(v),
+                speechRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                pitchRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             },
             {
                 provider: (v: any) => util.isString(v),

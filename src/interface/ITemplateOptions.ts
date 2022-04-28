@@ -27,6 +27,7 @@ interface ITemplateOptions {
   sampleRate?: string;
   audioBitrate?: string;
   backgroundColor?: string;
+  captureTime?: number;
   createTime?: number;
   updateTime?: number;
   buildBy?: string;

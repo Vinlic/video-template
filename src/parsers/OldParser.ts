@@ -33,6 +33,7 @@ class OldParser {
             videoHeight: template.height,
             poster: template.poster,
             fps: template.fps,
+            captureTime: !util.isUndefined(template.captureTime) ? template.captureTime / 1000 : undefined,
             videoBitrate: 2097152,
             audioBitrate: 131072,
         });
@@ -375,6 +376,7 @@ class OldParser {
             height: global.videoHeight,
             aspectRatio: global.videoSize,
             backgroundColor: templateBackgroundColor,
+            captureTime: util.isFinite(Number(global.captureTime)) ? global.captureTime * 1000 : undefined,
             fps: global.fps,
             compile,
             children: templateChildren,

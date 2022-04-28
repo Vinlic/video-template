@@ -28,10 +28,10 @@ class Media extends Element {
             {
                 loop: (v: any) => util.booleanParse(util.defaultTo(v, false)),
                 volume: (v: any) => Number(util.defaultTo(v, 1)),
-                duration: (v: any) => v && Number(v),
-                seekStart: (v: any) => v && Number(v),
-                seekEnd: (v: any) => v && Number(v),
-                playbackRate: (v: any) => v && Number(v),
+                duration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                seekStart: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                seekEnd: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                playbackRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
                 muted: (v: any) => util.booleanParse(util.defaultTo(v, false)),
             },
             {

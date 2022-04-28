@@ -33,7 +33,7 @@
     <resource type="voice" id="151895f567bf11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/tts/151895f567bf11ecaa1fad033c46ef8f.mp3" build="true"/>
     <resource type="voice" id="151895f667bf11ecaa1fad033c46ef8f" resPath="/avesto/plat/tmplres/scenetmpl/Global_Market_pt/tts/151895f667bf11ecaa1fad033c46ef8f.mp3" build="true"/>
   </projRes>
-  <global videoSize="9:16" videoWidth="720" videoHeight="1280" fps="30" videoBitrate="2097152" audioBitrate="131072">
+  <global videoSize="9:16" videoWidth="720" videoHeight="1280" fps="30" videoBitrate="2097152" audioBitrate="131072" captureTime="3">
     <bgmusic id="3998db7067a011ec9081454c29b4e58d" resId="19829215" loop="true" inPoint="5" volume="0.3" fadeIn="0" fadeOut="3"/>
   </global>
   <storyBoards>

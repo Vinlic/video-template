@@ -31,6 +31,7 @@ class Template {
     public sampleRate?: string; //音频采样率
     public audioBitrate?: string; //音频码率
     public backgroundColor?: string; //主背景颜色
+    public captureTime?: number;  //封面捕获时间点
     public createTime = 0; //模板创建时间
     public updateTime = 0; //模板最后更新时间
     public buildBy = ''; //模板从何处构建
@@ -50,9 +51,10 @@ class Template {
                 width: (v: any) => Number(v),
                 height: (v: any) => Number(v),
                 fps: (v: any) => Number(util.defaultTo(v, 60)),
-                crf: (v: any) => v && Number(v),
+                crf: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
                 volume: (v: any) => Number(util.defaultTo(v, 1)),
-                frameQuality: (v: any) => v && Number(v),
+                frameQuality: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                captureTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
                 createTime: (v: any) => Number(util.defaultTo(v, util.unixTimestamp())),
                 updateTime: (v: any) => Number(util.defaultTo(v, util.unixTimestamp())),
                 buildBy: (v: any) => util.defaultTo(v, 'system'),
@@ -89,6 +91,7 @@ class Template {
                 audioCodec: (v: any) => util.isUndefined(v) || util.isString(v),
                 sampleRate: (v: any) => util.isUndefined(v) || util.isString(v),
                 audioBitrate: (v: any) => util.isUndefined(v) || util.isString(v),
+                captureTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
                 createTime: (v: any) => util.isUnixTimestamp(v),
                 updateTime: (v: any) => util.isUnixTimestamp(v),
                 buildBy: (v: any) => util.isString(v),

@@ -208,8 +208,10 @@ class Scene {
                 id: this.id,
                 name: this.name,
                 poster: this.poster,
-                duration: (this.duration as number) / 1000,
-            }) : this.#createXMLRoot('board');
+                duration: util.millisecondsToSenconds(this.duration),
+            }) : this.#createXMLRoot('board', {
+                duration: util.millisecondsToSenconds(this.duration)
+            });
         if (this.backgroundColor) {
             board.ele('bgblock', {
                 id: util.uniqid(),
@@ -229,7 +231,7 @@ class Scene {
     /**
      * 创建XML根节点
      */
-    #createXMLRoot(tagName = 'scene', headless = true) {
+    #createXMLRoot(tagName = 'scene', attributes = {}, headless = true) {
         const root = headless ? create() : create({ version: "1.0" });
         const scene = root.ele(tagName, {
             id: this.id,
@@ -239,7 +241,8 @@ class Scene {
             height: this.height,
             aspectRatio: this.aspectRatio,
             duration: this.duration,
-            backgroundColor: this.backgroundColor
+            backgroundColor: this.backgroundColor,
+            ...attributes
         });
         return scene;
     }

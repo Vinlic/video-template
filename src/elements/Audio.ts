@@ -16,8 +16,8 @@ class Audio extends Media {
             this,
             options,
             {
-                fadeInDuration: (v: any) => v && Number(v),
-                fadeOutDuration: (v: any) => v && Number(v),
+                fadeInDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                fadeOutDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             },
             {
                 fadeInDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
