@@ -1447,7 +1447,7 @@ var xmlParser2 = new XMLParser2({
 });
 var OldParser = class {
   static toXML(template, pretty = false) {
-    const root = create3("project");
+    const root = create3({ version: "1.0.0" });
     const project = root.ele("project", {
       version: "1.0.0",
       id: template.id,

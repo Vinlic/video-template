@@ -1470,7 +1470,7 @@ var xmlParser2 = new import_fast_xml_parser2.XMLParser({
 });
 var OldParser = class {
   static toXML(template, pretty = false) {
-    const root = (0, import_xmlbuilder23.create)("project");
+    const root = (0, import_xmlbuilder23.create)({ version: "1.0.0" });
     const project = root.ele("project", {
       version: "1.0.0",
       id: template.id,
