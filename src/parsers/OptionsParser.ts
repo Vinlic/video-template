@@ -1,7 +1,7 @@
 import util from '../util';
 import Template from '../Template';
 import Scene from '../Scene';
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML } from '../elements';
+import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, Canvas, SSML } from '../elements';
 
 class OptionsParser {
 
@@ -226,6 +226,15 @@ class OptionsParser {
                         sceneChildren.push(new Chart({
                             ...buildBaseData(element, duration),
                             chartId: element.chartId,
+                            poster: element.poster,
+                            duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
+                            configSrc: element.optionsPath,
+                            dataSrc: element.dataPath,
+                        }));
+                        break;
+                    case "canvas":
+                        sceneChildren.push(new Canvas({
+                            ...buildBaseData(element, duration),
                             poster: element.poster,
                             duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
                             configSrc: element.optionsPath,

@@ -7,4 +7,5 @@ export { default as Voice } from './Voice';
 export { default as Video } from './Video';
 export { default as Vtuber } from './Vtuber';
 export { default as Chart } from './Chart';
+export { default as Canvas } from './Canvas';
 export { default as SSML } from './SSML';

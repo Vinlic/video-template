@@ -398,6 +398,8 @@ type index_Vtuber = Vtuber;
 declare const index_Vtuber: typeof Vtuber;
 type index_Chart = Chart;
 declare const index_Chart: typeof Chart;
+type index_Canvas = Canvas;
+declare const index_Canvas: typeof Canvas;
 type index_SSML = SSML;
 declare const index_SSML: typeof SSML;
 declare namespace index {
@@ -411,6 +413,7 @@ declare namespace index {
     index_Video as Video,
     index_Vtuber as Vtuber,
     index_Chart as Chart,
+    index_Canvas as Canvas,
     index_SSML as SSML,
   };
 }

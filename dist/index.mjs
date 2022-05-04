@@ -153,6 +153,7 @@ var ElementTypes_default = ElementTypes;
 var elements_exports = {};
 __export(elements_exports, {
   Audio: () => Audio_default,
+  Canvas: () => Canvas_default,
   Chart: () => Chart_default,
   Element: () => Element_default,
   Image: () => Image_default,
@@ -2044,6 +2045,14 @@ var OptionsParser = class {
           case "chart":
             sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               chartId: element.chartId,
+              poster: element.poster,
+              duration: !util_default.isUndefined(element.duration) ? element.duration * 1e3 : void 0,
+              configSrc: element.optionsPath,
+              dataSrc: element.dataPath
+            })));
+            break;
+          case "canvas":
+            sceneChildren.push(new Canvas_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
               poster: element.poster,
               duration: !util_default.isUndefined(element.duration) ? element.duration * 1e3 : void 0,
               configSrc: element.optionsPath,
