@@ -580,8 +580,8 @@ var Text = class extends Element_default {
     const caption = super.renderOldXML(parent, resources, global);
     caption.att("fontFamily", this.fontFamily);
     caption.att("fontSize", this.fontSize);
-    caption.att("bold", this.fontWeight > 400);
-    caption.att("italic", this.fontStyle === "italic");
+    this.fontWeight > 400 && caption.att("bold", this.fontWeight);
+    this.fontStyle === "italic" && caption.att("italic", true);
     caption.att("fontColor", this.fontColor);
     caption.att("lineHeight", (this.lineHeight || 1) * this.fontSize);
     caption.att("wordSpacing", this.wordSpacing);
@@ -603,8 +603,8 @@ var Text = class extends Element_default {
       fontFamily: this.fontFamily,
       lineHeight: (this.lineHeight || 1) * this.fontSize,
       wordSpacing: this.wordSpacing,
-      bold: this.fontWeight,
-      italic: this.fontStyle === "italic" ? "italic" : void 0,
+      bold: this.fontWeight > 400 ? this.fontWeight : void 0,
+      italic: this.fontStyle === "italic" ? true : void 0,
       effectType: this.effectType,
       effectWordDuration: util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0,
       effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0
