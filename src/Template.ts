@@ -291,7 +291,7 @@ class Template {
                 track = track.concat(node.generateAllTrack(baseTime));
                 baseTime += node.duration;
             } else {
-                node.setParentSection(baseTime, duration);
+                node.setParentSection(0, duration);
                 track.push(node);
             }
         });
