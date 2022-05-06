@@ -340,6 +340,7 @@ declare class Vtuber extends Media {
 }
 
 interface ICanvasOptions extends IElementOptions {
+    chartId?: string;
     poster?: string;
     duration?: number | string;
     configSrc?: string;
@@ -347,10 +348,10 @@ interface ICanvasOptions extends IElementOptions {
 }
 
 interface IChartOptions extends ICanvasOptions {
-    chartId?: string;
 }
 
 declare class Canvas extends Element {
+    chartId: string;
     configSrc: string;
     dataSrc: string;
     duration?: number;
@@ -363,7 +364,6 @@ declare class Canvas extends Element {
 }
 
 declare class Chart extends Canvas {
-    chartId?: string;
     constructor(options: IChartOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;

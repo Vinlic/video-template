@@ -6,17 +6,13 @@ import util from '../util';
 
 class Chart extends Canvas {
 
-    public chartId?: string; //图表唯一ID
-
     public constructor(options: IChartOptions) {
         super(options, ElementTypes.Chart);
         util.optionsInject(
             this,
             options,
             {},
-            {
-                chartId: (v: any) => util.isUndefined(v) || util.isString(v)
-            },
+            {},
         );
     }
 
@@ -26,21 +22,16 @@ class Chart extends Canvas {
      * @param {XMLObject} parent 上级节点XML对象
      */
     public renderXML(parent: any) {
-        const chart = super.renderXML(parent);
-        chart.att('chartId', this.chartId);
+        // const chart = super.renderXML(parent);
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
-        const chart = super.renderOldXML(parent, resources, global);
-        chart.att('chartId', this.chartId);
+        // const chart = super.renderOldXML(parent, resources, global);
     }
 
     public toOptions() {
         const parentOptions = super.toOptions();
-        return {
-            ...parentOptions,
-            chartId: this.chartId
-        };
+        return parentOptions;
     }
 
     public static isInstance(value: any) {

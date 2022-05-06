@@ -58,7 +58,7 @@ class Voice extends Media {
         const voice = super.renderOldXML(parent, resources, global);
         voice.att('provider', this.provider);
         voice.att('text', this.text);
-        voice.att('declaimer', this.declaimer);
+        voice.att('voice', this.declaimer);
         voice.att('sampleRate', this.sampleRate);
         voice.att('speechRate', this.speechRate);
         voice.att('pitchRate', this.pitchRate);

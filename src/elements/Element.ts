@@ -202,6 +202,7 @@ class Element {
                 [ElementTypes.Video]: 'resources',
                 [ElementTypes.Voice]: 'textToSounds',
                 [ElementTypes.Chart]: 'dynDataCharts',
+                [ElementTypes.Canvas]: 'dynDataCharts',
                 [ElementTypes.Vtuber]: 'vtubers',
             }[this.type as string]) : parent)
             .ele({
@@ -212,6 +213,7 @@ class Element {
                 [ElementTypes.Voice]: 'textToSound',
                 [ElementTypes.SSML]: 'ssml',
                 [ElementTypes.Chart]: 'dynDataChart',
+                [ElementTypes.Canvas]: 'dynDataChart',
                 [ElementTypes.Vtuber]: 'vtuber',
             }[this.type as string],
             attributes);

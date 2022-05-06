@@ -85,8 +85,8 @@ class Text extends Element {
         caption.att('textAlign', this.textAlign);
         caption.att('lineWrap', this.lineWrap);
         caption.att('effectType', this.effectType);
-        caption.att('effectWordDuration', this.effectWordDuration);
-        caption.att('effectWordInterval', this.effectWordInterval);
+        caption.att('effectWordDuration', util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration!) : undefined);
+        caption.att('effectWordInterval', util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval!) : undefined);
         const text = caption.ele('text');
         text.txt(this.value);
     }

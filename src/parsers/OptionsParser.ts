@@ -235,9 +235,10 @@ class OptionsParser {
                     case "canvas":
                         sceneChildren.push(new Canvas({
                             ...buildBaseData(element, duration),
+                            chartId: element.chartId,
                             poster: element.poster,
                             duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
-                            configSrc: element.optionsPath,
+                            configSrc: element.optionPath,
                             dataSrc: element.dataPath,
                         }));
                         break;

@@ -328,6 +328,7 @@ var _Element = class {
         [ElementTypes_default.Video]: "resources",
         [ElementTypes_default.Voice]: "textToSounds",
         [ElementTypes_default.Chart]: "dynDataCharts",
+        [ElementTypes_default.Canvas]: "dynDataCharts",
         [ElementTypes_default.Vtuber]: "vtubers"
       }[this.type]) : parent).ele({
         [ElementTypes_default.Text]: "caption",
@@ -337,6 +338,7 @@ var _Element = class {
         [ElementTypes_default.Voice]: "textToSound",
         [ElementTypes_default.SSML]: "ssml",
         [ElementTypes_default.Chart]: "dynDataChart",
+        [ElementTypes_default.Canvas]: "dynDataChart",
         [ElementTypes_default.Vtuber]: "vtuber"
       }[this.type], attributes);
     }
@@ -565,8 +567,8 @@ var Text = class extends Element_default {
     caption.att("textAlign", this.textAlign);
     caption.att("lineWrap", this.lineWrap);
     caption.att("effectType", this.effectType);
-    caption.att("effectWordDuration", this.effectWordDuration);
-    caption.att("effectWordInterval", this.effectWordInterval);
+    caption.att("effectWordDuration", util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0);
+    caption.att("effectWordInterval", util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0);
     const text = caption.ele("text");
     text.txt(this.value);
   }
@@ -820,7 +822,7 @@ var _Voice = class extends Media_default {
     const voice = super.renderOldXML(parent, resources, global);
     voice.att("provider", this.provider);
     voice.att("text", this.text);
-    voice.att("declaimer", this.declaimer);
+    voice.att("voice", this.declaimer);
     voice.att("sampleRate", this.sampleRate);
     voice.att("speechRate", this.speechRate);
     voice.att("pitchRate", this.pitchRate);
@@ -955,6 +957,7 @@ var Vtuber_default = Vtuber;
 
 // src/elements/Canvas.ts
 var Canvas = class extends Element_default {
+  chartId = "";
   configSrc = "";
   dataSrc = "";
   duration;
@@ -964,6 +967,7 @@ var Canvas = class extends Element_default {
     util_default.optionsInject(this, options, {
       duration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
+      chartId: (v) => util_default.isString(v),
       configSrc: (v) => util_default.isString(v),
       dataSrc: (v) => util_default.isString(v),
       duration: (v) => util_default.isUndefined(v) || util_default.isNumber(v),
@@ -972,6 +976,7 @@ var Canvas = class extends Element_default {
   }
   renderXML(parent) {
     const canvas = super.renderXML(parent);
+    canvas.att("chartId", this.chartId);
     canvas.att("poster", this.poster);
     canvas.att("duration", this.duration);
     canvas.att("configSrc", this.configSrc);
@@ -980,6 +985,7 @@ var Canvas = class extends Element_default {
   }
   renderOldXML(parent, resources, global) {
     const canvas = super.renderOldXML(parent, resources, global);
+    canvas.att("chartId", this.chartId);
     canvas.att("poster", this.poster);
     canvas.att("duration", this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0);
     canvas.att("optionsPath", this.configSrc);
@@ -989,9 +995,10 @@ var Canvas = class extends Element_default {
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
+      chartId: this.chartId,
       poster: this.poster,
       duration: this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0,
-      optionsPath: this.configSrc,
+      optionPath: this.configSrc,
       dataPath: this.dataSrc
     });
   }
@@ -1003,26 +1010,17 @@ var Canvas_default = Canvas;
 
 // src/elements/Chart.ts
 var Chart = class extends Canvas_default {
-  chartId;
   constructor(options) {
     super(options, ElementTypes_default.Chart);
-    util_default.optionsInject(this, options, {}, {
-      chartId: (v) => util_default.isUndefined(v) || util_default.isString(v)
-    });
+    util_default.optionsInject(this, options, {}, {});
   }
   renderXML(parent) {
-    const chart = super.renderXML(parent);
-    chart.att("chartId", this.chartId);
   }
   renderOldXML(parent, resources, global) {
-    const chart = super.renderOldXML(parent, resources, global);
-    chart.att("chartId", this.chartId);
   }
   toOptions() {
     const parentOptions = super.toOptions();
-    return __spreadProps(__spreadValues({}, parentOptions), {
-      chartId: this.chartId
-    });
+    return parentOptions;
   }
   static isInstance(value) {
     return value instanceof Chart;
@@ -1069,6 +1067,8 @@ var ElementFactory = class {
         return new Vtuber_default(data);
       case ElementTypes_default.Chart:
         return new Chart_default(data);
+      case ElementTypes_default.Canvas:
+        return new Canvas_default(data);
       case ElementTypes_default.SSML:
         return new SSML_default(data);
     }
@@ -2053,9 +2053,10 @@ var OptionsParser = class {
             break;
           case "canvas":
             sceneChildren.push(new Canvas_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
+              chartId: element.chartId,
               poster: element.poster,
               duration: !util_default.isUndefined(element.duration) ? element.duration * 1e3 : void 0,
-              configSrc: element.optionsPath,
+              configSrc: element.optionPath,
               dataSrc: element.dataPath
             })));
             break;

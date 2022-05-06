@@ -2,7 +2,7 @@ import IElementOptions from './elements/interface/IElementOptions';
 
 import ElementTypes from './enums/ElementTypes';
 
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML } from './elements';
+import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML, Canvas } from './elements';
 import util from './util';
 
 class ElementFactory {
@@ -29,6 +29,8 @@ class ElementFactory {
                 return new Vtuber(data);
             case ElementTypes.Chart: //图表元素
                 return new Chart(data);
+            case ElementTypes.Canvas:  //画布元素
+                return new Canvas(data);
             case ElementTypes.SSML: //SSML文档元素
                 return new SSML(data);
         }
