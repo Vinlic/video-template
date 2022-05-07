@@ -4,6 +4,7 @@ import ElementTypes from '../enums/ElementTypes';
 import VoiceProviders from '../enums/VoiceProviders';
 
 import Media from './Media';
+import SSML from './SSML';
 import util from '../util';
 
 class Voice extends Media {
@@ -20,23 +21,19 @@ class Voice extends Media {
     public constructor(options: IVoiceOptions) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
         super(options, ElementTypes.Voice);
-        util.optionsInject(
-            this,
-            options,
-            {
-                provider: (v: any) => util.defaultTo(v, VoiceProviders.Aliyun),
-                speechRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                pitchRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-            },
-            {
-                provider: (v: any) => util.isString(v),
-                text: (v: any) => util.isUndefined(v) || util.isString(v),
-                declaimer: (v: any) => util.isUndefined(v) || util.isString(v),
-                sampleRate: (v: any) => util.isUndefined(v) || util.isString(v),
-                speechRate: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                pitchRate: (v: any) => util.isUndefined(v) || util.isFinite(v),
-            },
-        );
+        util.optionsInject(this, options, {
+            provider: (v: any) => util.defaultTo(v, VoiceProviders.Aliyun),
+            speechRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            pitchRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+        }, {
+            provider: (v: any) => util.isString(v),
+            text: (v: any) => util.isUndefined(v) || util.isString(v),
+            declaimer: (v: any) => util.isUndefined(v) || util.isString(v),
+            sampleRate: (v: any) => util.isUndefined(v) || util.isString(v),
+            speechRate: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            pitchRate: (v: any) => util.isUndefined(v) || util.isFinite(v),
+        });
+        !this.children.length && this.children.push(this.generateSSML());
     }
 
     /**
@@ -78,6 +75,12 @@ class Voice extends Media {
             content: this.text,
             ssml: this.ssml
         };
+    }
+
+    private generateSSML() {
+        return new SSML({
+            value: `<speak provider="${this.provider}"><voice name="${this.declaimer}"><prosody contenteditable="true" rate="${this.playbackRate}" volume="${this.volume}"><p>${this.text}</p></prosody></voice></speak>`
+        });
     }
 
     public get ssml() {

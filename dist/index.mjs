@@ -783,6 +783,25 @@ var VoiceProviders = /* @__PURE__ */ ((VoiceProviders2) => {
 })(VoiceProviders || {});
 var VoiceProviders_default = VoiceProviders;
 
+// src/elements/SSML.ts
+var SSML = class extends Element_default {
+  constructor(options) {
+    super(options, ElementTypes_default.SSML);
+  }
+  renderXML(parent) {
+    const ssml = super.renderXML(parent);
+    this.value && ssml.ele(this.value);
+  }
+  renderOldXML(parent, resources, global) {
+    const ssml = super.renderOldXML(parent, resources, global);
+    this.value && ssml.txt(this.value);
+  }
+  static isInstance(value) {
+    return value instanceof SSML;
+  }
+};
+var SSML_default = SSML;
+
 // src/elements/Voice.ts
 var _Voice = class extends Media_default {
   provider = "";
@@ -808,6 +827,7 @@ var _Voice = class extends Media_default {
       speechRate: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       pitchRate: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
     });
+    !this.children.length && this.children.push(this.generateSSML());
   }
   renderXML(parent) {
     const voice = super.renderXML(parent);
@@ -839,6 +859,11 @@ var _Voice = class extends Media_default {
       enableSubtitle: this.enableSubtitle,
       content: this.text,
       ssml: this.ssml
+    });
+  }
+  generateSSML() {
+    return new SSML_default({
+      value: `<speak provider="${this.provider}"><voice name="${this.declaimer}"><prosody contenteditable="true" rate="${this.playbackRate}" volume="${this.volume}"><p>${this.text}</p></prosody></voice></speak>`
     });
   }
   get ssml() {
@@ -877,7 +902,7 @@ var Video = class extends Media_default {
       video.att("crop-clipType", this.crop.clipType);
       video.att("crop-clipStyle", this.crop.clipStyle);
     }
-    this.demuxSrc && video.att("demuxSrc", this.demuxSrc);
+    video.att("demuxSrc", this.demuxSrc);
   }
   renderOldXML(parent, resources, global) {
     const video = super.renderOldXML(parent, resources, global);
@@ -890,7 +915,7 @@ var Video = class extends Media_default {
       video.att("clipType", this.crop.clipType);
       video.att("clipStyle", this.crop.clipStyle);
     }
-    this.demuxSrc && video.att("demuxSrc", this.demuxSrc);
+    video.att("demuxSrc", this.demuxSrc);
   }
   toOptions() {
     const parentOptions = super.toOptions();
@@ -920,13 +945,15 @@ var _Vtuber = class extends Media_default {
   text = "";
   solution = "";
   declaimer;
+  demuxSrc;
   constructor(options) {
     super(options, ElementTypes_default.Vtuber);
     util_default.optionsInject(this, options, {}, {
       provider: (v) => util_default.isString(v),
       text: (v) => util_default.isString(v),
       solution: (v) => util_default.isString(v),
-      declaimer: (v) => util_default.isUndefined(v) || util_default.isString(v)
+      declaimer: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      demuxSrc: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
   }
   renderXML(parent) {
@@ -935,6 +962,7 @@ var _Vtuber = class extends Media_default {
     vtuber.att("text", this.value || this.text);
     vtuber.att("solution", this.solution);
     vtuber.att("declaimer", this.declaimer);
+    vtuber.att("demuxSrc", this.demuxSrc);
   }
   renderOldXML(parent, resources, global) {
     const vtuber = super.renderOldXML(parent, resources, global);
@@ -942,6 +970,7 @@ var _Vtuber = class extends Media_default {
     vtuber.att("text", this.value || this.text);
     vtuber.att("solution", this.solution);
     vtuber.att("declaimer", this.declaimer);
+    vtuber.att("demuxSrc", this.demuxSrc);
   }
   toOptions() {
     const parentOptions = super.toOptions();
@@ -949,7 +978,8 @@ var _Vtuber = class extends Media_default {
       provider: this.provider,
       text: this.value || this.text,
       declaimer: this.declaimer,
-      solution: this.solution
+      solution: this.solution,
+      demuxSrc: this.demuxSrc
     });
   }
   static isInstance(value) {
@@ -1036,25 +1066,6 @@ var Chart = class extends Canvas_default {
   }
 };
 var Chart_default = Chart;
-
-// src/elements/SSML.ts
-var SSML = class extends Element_default {
-  constructor(options) {
-    super(options, ElementTypes_default.SSML);
-  }
-  renderXML(parent) {
-    const ssml = super.renderXML(parent);
-    this.value && ssml.ele(this.value);
-  }
-  renderOldXML(parent, resources, global) {
-    const ssml = super.renderOldXML(parent, resources, global);
-    this.value && ssml.txt(this.value);
-  }
-  static isInstance(value) {
-    return value instanceof SSML;
-  }
-};
-var SSML_default = SSML;
 
 // src/ElementFactory.ts
 var ElementFactory = class {
@@ -1814,7 +1825,8 @@ var OldParser = class {
               muted: vtuber.muted,
               loop: vtuber.loop,
               seekStart: vtuber.seekStart ? vtuber.seekStart * 1e3 : void 0,
-              seekEnd: vtuber.seekEnd ? vtuber.seekEnd * 1e3 : void 0
+              seekEnd: vtuber.seekEnd ? vtuber.seekEnd * 1e3 : void 0,
+              demuxSrc: vtuber.demuxSrc
             }))));
         }
       });
@@ -2085,7 +2097,8 @@ var OptionsParser = class {
               muted: element.muted,
               loop: element.loop,
               seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
-              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0
+              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
+              demuxSrc: element.demuxSrc
             })));
             break;
         }

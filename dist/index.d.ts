@@ -296,6 +296,7 @@ declare class Voice extends Media {
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
     toOptions(): any;
+    private generateSSML;
     get ssml(): string | null | undefined;
     static isInstance(value: any): boolean;
 }
@@ -326,6 +327,7 @@ interface IVtuberOptions extends IMediaOptions {
     text?: string;
     solution?: string;
     declaimer?: string;
+    demuxSrc?: string;
 }
 
 declare class Vtuber extends Media {
@@ -334,6 +336,7 @@ declare class Vtuber extends Media {
     text: string;
     solution: string;
     declaimer?: string;
+    demuxSrc?: string;
     constructor(options: IVtuberOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
