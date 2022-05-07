@@ -1015,8 +1015,10 @@ var Chart = class extends Canvas_default {
     util_default.optionsInject(this, options, {}, {});
   }
   renderXML(parent) {
+    super.renderXML(parent);
   }
   renderOldXML(parent, resources, global) {
+    super.renderOldXML(parent, resources, global);
   }
   toOptions() {
     const parentOptions = super.toOptions();

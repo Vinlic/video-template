@@ -22,11 +22,11 @@ class Chart extends Canvas {
      * @param {XMLObject} parent 上级节点XML对象
      */
     public renderXML(parent: any) {
-        // const chart = super.renderXML(parent);
+        super.renderXML(parent);
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
-        // const chart = super.renderOldXML(parent, resources, global);
+        super.renderOldXML(parent, resources, global);
     }
 
     public toOptions() {
