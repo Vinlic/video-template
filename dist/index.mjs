@@ -856,12 +856,14 @@ var Voice_default = Voice;
 // src/elements/Video.ts
 var Video = class extends Media_default {
   crop;
+  demuxSrc;
   constructor(options) {
     super(options, ElementTypes_default.Video);
     util_default.optionsInject(this, options, {
       crop: (v) => v && new Crop_default(v)
     }, {
-      crop: (v) => util_default.isUndefined(v) || Crop_default.isInstance(v)
+      crop: (v) => util_default.isUndefined(v) || Crop_default.isInstance(v),
+      demuxSrc: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
   }
   renderXML(parent) {
@@ -875,6 +877,7 @@ var Video = class extends Media_default {
       video.att("crop-clipType", this.crop.clipType);
       video.att("crop-clipStyle", this.crop.clipStyle);
     }
+    this.demuxSrc && video.att("demuxSrc", this.demuxSrc);
   }
   renderOldXML(parent, resources, global) {
     const video = super.renderOldXML(parent, resources, global);
@@ -887,11 +890,13 @@ var Video = class extends Media_default {
       video.att("clipType", this.crop.clipType);
       video.att("clipStyle", this.crop.clipStyle);
     }
+    this.demuxSrc && video.att("demuxSrc", this.demuxSrc);
   }
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
-      crop: this.crop ? this.crop.toOptions() : void 0
+      crop: this.crop ? this.crop.toOptions() : void 0,
+      demuxSrc: this.demuxSrc
     });
   }
   static isInstance(value) {
@@ -1022,7 +1027,9 @@ var Chart = class extends Canvas_default {
   }
   toOptions() {
     const parentOptions = super.toOptions();
-    return parentOptions;
+    return __spreadValues({
+      optionsPath: this.configSrc
+    }, parentOptions);
   }
   static isInstance(value) {
     return value instanceof Chart;
@@ -1620,7 +1627,8 @@ var OldParser = class {
             loop: tag.loop,
             isBackground: true,
             seekStart: tag.seekStart ? tag.seekStart * 1e3 : void 0,
-            seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0
+            seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0,
+            demuxSrc: tag.demuxSrc
           })));
           break;
       }
@@ -1725,7 +1733,8 @@ var OldParser = class {
                     muted: data2.muted,
                     loop: data2.loop,
                     seekStart: data2.seekStart ? data2.seekStart * 1e3 : void 0,
-                    seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0
+                    seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0,
+                    demuxSrc: data2.demuxSrc
                   }));
                   break;
                 case "sound":
@@ -2041,7 +2050,8 @@ var OptionsParser = class {
               muted: element.muted,
               loop: element.loop,
               seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
-              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0
+              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
+              demuxSrc: element.demuxSrc
             })));
             break;
           case "chart":

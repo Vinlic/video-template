@@ -31,7 +31,10 @@ class Chart extends Canvas {
 
     public toOptions() {
         const parentOptions = super.toOptions();
-        return parentOptions;
+        return {
+            optionsPath: this.configSrc,
+            ...parentOptions
+        };
     }
 
     public static isInstance(value: any) {

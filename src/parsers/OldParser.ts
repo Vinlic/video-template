@@ -156,6 +156,7 @@ class OldParser {
                             isBackground: true,
                             seekStart: tag.seekStart ? tag.seekStart * 1000 : undefined,
                             seekEnd: tag.seekEnd ? tag.seekEnd * 1000 : undefined,
+                            demuxSrc: tag.demuxSrc
                         }),
                     );
                     break;
@@ -267,6 +268,7 @@ class OldParser {
                                         loop: data.loop,
                                         seekStart: data.seekStart ? data.seekStart * 1000 : undefined,
                                         seekEnd: data.seekEnd ? data.seekEnd * 1000 : undefined,
+                                        demuxSrc: data.demuxSrc
                                     });
                                     break;
                                 case 'sound':
@@ -351,6 +353,7 @@ class OldParser {
                                 loop: vtuber.loop,
                                 seekStart: vtuber.seekStart ? vtuber.seekStart * 1000 : undefined,
                                 seekEnd: vtuber.seekEnd ? vtuber.seekEnd * 1000 : undefined,
+                                demuxSrc: vtuber.demuxSrc
                             })
                         ));
                 }

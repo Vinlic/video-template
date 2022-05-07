@@ -302,10 +302,12 @@ declare class Voice extends Media {
 
 interface IVideoOptions extends IMediaOptions {
     crop?: ICropOptions;
+    demuxSrc?: string;
 }
 
 declare class Video extends Media {
     crop?: Crop;
+    demuxSrc?: string;
     constructor(options: IVideoOptions);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;

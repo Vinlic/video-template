@@ -220,6 +220,7 @@ class OptionsParser {
                             loop: element.loop,
                             seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
                             seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
+                            demuxSrc: element.demuxSrc
                         }));
                         break;
                     case "chart":
@@ -257,6 +258,7 @@ class OptionsParser {
                             loop: element.loop,
                             seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
                             seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
+                            demuxSrc: element.demuxSrc
                         }));
                         break;
                 }

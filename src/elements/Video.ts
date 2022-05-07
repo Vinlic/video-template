@@ -8,14 +8,16 @@ import util from '../util';
 
 class Video extends Media {
 
-    public crop?: Crop; //图像裁剪参数
+    public crop?: Crop; //视频裁剪参数
+    public demuxSrc?: string;  //视频解复用文件路径
 
     public constructor(options: IVideoOptions) {
         super(options, ElementTypes.Video);
         util.optionsInject(this, options, {
             crop: (v: any) => v && new Crop(v)
         }, {
-            crop: (v: any) => util.isUndefined(v) || Crop.isInstance(v)
+            crop: (v: any) => util.isUndefined(v) || Crop.isInstance(v),
+            demuxSrc: (v: any) => util.isUndefined(v) || util.isString(v)
         });
     }
 
@@ -35,6 +37,7 @@ class Video extends Media {
             video.att('crop-clipType', this.crop.clipType);
             video.att('crop-clipStyle', this.crop.clipStyle);
         }
+        video.att("demuxSrc", this.demuxSrc);
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
@@ -48,13 +51,15 @@ class Video extends Media {
             video.att('clipType', this.crop.clipType);
             video.att('clipStyle', this.crop.clipStyle);
         }
+        video.att("demuxSrc", this.demuxSrc);
     }
 
     public toOptions() {
         const parentOptions = super.toOptions();
         return {
             ...parentOptions,
-            crop: this.crop ? this.crop.toOptions() : undefined
+            crop: this.crop ? this.crop.toOptions() : undefined,
+            demuxSrc: this.demuxSrc
         };
     }
 
