@@ -205,7 +205,7 @@ class Compiler {
     const list: string[] = match;
     return Array.from(new Set(list)).map((expression: any) => {
       return {
-        expression, //被提取表达式
+        expression: expression.replace(/\$\#/g,"{").replace(/\#\$/g,"}"), //被提取表达式
         replace: (oldValue: string, newValue: string) => {
           //如果新值为空或未定义则返回空
           if (util.isUndefined(newValue) || newValue == null)

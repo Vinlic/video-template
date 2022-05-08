@@ -1940,18 +1940,10 @@ var OptionsParser = class {
       const { id, poster, duration } = board;
       const sceneChildren = [];
       board.bgImage && sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgImage, duration)), {
-        x: 0,
-        y: 0,
-        width: options.videoWidth,
-        height: options.videoHeight,
         isBackground: true,
         src: board.bgImage.src
       })));
       board.bgVideo && sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgVideo, duration)), {
-        x: 0,
-        y: 0,
-        width: options.videoWidth,
-        height: options.videoHeight,
         poster: board.bgVideo.poster,
         src: board.bgVideo.src,
         duration: board.bgVideo.duration ? board.bgVideo.duration * 1e3 : void 0,
@@ -2120,18 +2112,10 @@ var OptionsParser = class {
       }));
     });
     options.bgImage && templateChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgImage)), {
-      x: 0,
-      y: 0,
-      width: options.videoWidth,
-      height: options.videoHeight,
       isBackground: true,
       src: options.bgImage.src
     })));
     options.bgVideo && templateChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgVideo)), {
-      x: 0,
-      y: 0,
-      width: options.videoWidth,
-      height: options.videoHeight,
       poster: options.bgVideo.poster,
       src: options.bgVideo.src,
       duration: options.bgVideo.duration ? options.bgVideo.duration * 1e3 : void 0,
@@ -2348,7 +2332,7 @@ var Compiler = class {
     const list = match;
     return Array.from(new Set(list)).map((expression) => {
       return {
-        expression,
+        expression: expression.replace(/\$\#/g, "{").replace(/\#\$/g, "}"),
         replace: (oldValue, newValue) => {
           if (util_default.isUndefined(newValue) || newValue == null)
             return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), "") || null;

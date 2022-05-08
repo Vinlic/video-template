@@ -90,19 +90,11 @@ class OptionsParser {
             const sceneChildren: Element[] = [];
             board.bgImage && sceneChildren.push(new Image({
                 ...buildBaseData(board.bgImage, duration),
-                x: 0,
-                y: 0,
-                width: options.videoWidth,
-                height: options.videoHeight,
                 isBackground: true,
                 src: board.bgImage.src
             }));
             board.bgVideo && sceneChildren.push(new Video({
                 ...buildBaseData(board.bgVideo, duration),
-                x: 0,
-                y: 0,
-                width: options.videoWidth,
-                height: options.videoHeight,
                 poster: board.bgVideo.poster,
                 src: board.bgVideo.src,
                 duration: board.bgVideo.duration ? board.bgVideo.duration * 1000 : undefined,
@@ -281,19 +273,11 @@ class OptionsParser {
         });
         options.bgImage && templateChildren.push(new Image({
             ...buildBaseData(options.bgImage),
-            x: 0,
-            y: 0,
-            width: options.videoWidth,
-            height: options.videoHeight,
             isBackground: true,
             src: options.bgImage.src
         }));
         options.bgVideo && templateChildren.push(new Video({
             ...buildBaseData(options.bgVideo),
-            x: 0,
-            y: 0,
-            width: options.videoWidth,
-            height: options.videoHeight,
             poster: options.bgVideo.poster,
             src: options.bgVideo.src,
             duration: options.bgVideo.duration ? options.bgVideo.duration * 1000 : undefined,
