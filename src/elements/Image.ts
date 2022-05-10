@@ -21,25 +21,21 @@ class Image extends Element {
 
     public constructor(options: IImageOptions) {
         super(options, ElementTypes.Image);
-        util.optionsInject(
-            this,
-            options,
-            {
-                mode: (v: any) => util.defaultTo(v, ImageModes.ScaleToFill),
-                crop: (v: any) => v && new Crop(v),
-                loop: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
-                dynamic: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
-            },
-            {
-                src: (v: any) => util.isString(v),
-                path: (v: any) => util.isUndefined(v) || util.isString(v),
-                mode: (v: any) => util.isString(v),
-                crop: (v: any) => util.isUndefined(v) || Crop.isInstance(v),
-                loop: (v: any) => util.isUndefined(v) || util.isBoolean(v),
-                dynamic: (v: any) => util.isUndefined(v) || util.isBoolean(v),
-                filter: (v: any) => util.isUndefined(v) || util.isObject(v),
-            },
-        );
+        util.optionsInject(this, options, {
+            mode: (v: any) => util.defaultTo(v, ImageModes.ScaleToFill),
+            crop: (v: any) => v && new Crop(v),
+            loop: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
+            dynamic: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
+        }, {
+            src: (v: any) => util.isString(v),
+            path: (v: any) => util.isUndefined(v) || util.isString(v),
+            mode: (v: any) => util.isString(v),
+            crop: (v: any) => util.isUndefined(v) || Crop.isInstance(v),
+            loop: (v: any) => util.isUndefined(v) || util.isBoolean(v),
+            dynamic: (v: any) => util.isUndefined(v) || util.isBoolean(v),
+            filter: (v: any) => util.isUndefined(v) || util.isObject(v),
+        });
+        if (this.isBackground) this.endTime = undefined;  //背景图片禁用退场时间点
     }
 
     /**
