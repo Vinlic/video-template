@@ -90,6 +90,8 @@ class OptionsParser {
             const sceneChildren: Element[] = [];
             board.bgImage && sceneChildren.push(new Image({
                 ...buildBaseData(board.bgImage, duration),
+                enterEffect: undefined,
+                exitEffect: undefined,
                 isBackground: true,
                 src: board.bgImage.src
             }));
@@ -101,6 +103,8 @@ class OptionsParser {
                 volume: board.bgVideo.volume,
                 muted: board.bgVideo.muted,
                 loop: board.bgVideo.loop,
+                enterEffect: undefined,
+                exitEffect: undefined,
                 isBackground: true,
                 seekStart: board.bgVideo.seekStart ? board.bgVideo.seekStart * 1000 : undefined,
                 seekEnd: board.bgVideo.seekEnd ? board.bgVideo.seekEnd * 1000 : undefined
@@ -273,6 +277,8 @@ class OptionsParser {
         });
         options.bgImage && templateChildren.push(new Image({
             ...buildBaseData(options.bgImage),
+            enterEffect: undefined,
+            exitEffect: undefined,
             isBackground: true,
             src: options.bgImage.src
         }));
@@ -284,6 +290,8 @@ class OptionsParser {
             volume: options.bgVideo.volume,
             muted: options.bgVideo.muted,
             loop: options.bgVideo.loop,
+            enterEffect: undefined,
+            exitEffect: undefined,
             isBackground: true,
             seekStart: options.bgVideo.seekStart ? options.bgVideo.seekStart * 1000 : undefined,
             seekEnd: options.bgVideo.seekEnd ? options.bgVideo.seekEnd * 1000 : undefined

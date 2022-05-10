@@ -1963,6 +1963,8 @@ var OptionsParser = class {
       const { id, poster, duration } = board;
       const sceneChildren = [];
       board.bgImage && sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgImage, duration)), {
+        enterEffect: void 0,
+        exitEffect: void 0,
         isBackground: true,
         src: board.bgImage.src
       })));
@@ -1973,6 +1975,8 @@ var OptionsParser = class {
         volume: board.bgVideo.volume,
         muted: board.bgVideo.muted,
         loop: board.bgVideo.loop,
+        enterEffect: void 0,
+        exitEffect: void 0,
         isBackground: true,
         seekStart: board.bgVideo.seekStart ? board.bgVideo.seekStart * 1e3 : void 0,
         seekEnd: board.bgVideo.seekEnd ? board.bgVideo.seekEnd * 1e3 : void 0
@@ -2135,6 +2139,8 @@ var OptionsParser = class {
       }));
     });
     options.bgImage && templateChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgImage)), {
+      enterEffect: void 0,
+      exitEffect: void 0,
       isBackground: true,
       src: options.bgImage.src
     })));
@@ -2145,6 +2151,8 @@ var OptionsParser = class {
       volume: options.bgVideo.volume,
       muted: options.bgVideo.muted,
       loop: options.bgVideo.loop,
+      enterEffect: void 0,
+      exitEffect: void 0,
       isBackground: true,
       seekStart: options.bgVideo.seekStart ? options.bgVideo.seekStart * 1e3 : void 0,
       seekEnd: options.bgVideo.seekEnd ? options.bgVideo.seekEnd * 1e3 : void 0
