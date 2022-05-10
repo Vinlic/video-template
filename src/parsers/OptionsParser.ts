@@ -147,7 +147,7 @@ class OptionsParser {
                             fontSize: element.fontSize,
                             fontColor: element.fontColor,
                             fontWeight: element.bold,
-                            fontStyle: element.italic ? "italic" : undefined,
+                            fontStyle: element.italic === "italic" ? "italic" : undefined,
                             lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
                             wordSpacing: element.wordSpacing,
                             textAlign: element.textAlign,

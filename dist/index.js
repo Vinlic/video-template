@@ -606,7 +606,7 @@ var Text = class extends Element_default {
       lineHeight: (this.lineHeight || 1) * this.fontSize,
       wordSpacing: this.wordSpacing,
       bold: this.fontWeight > 400 ? this.fontWeight : void 0,
-      italic: this.fontStyle === "italic" ? true : void 0,
+      italic: this.fontStyle === "italic" ? "italic" : "normal",
       effectType: this.effectType,
       effectWordDuration: util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0,
       effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0
@@ -2016,7 +2016,7 @@ var OptionsParser = class {
               fontSize: element.fontSize,
               fontColor: element.fontColor,
               fontWeight: element.bold,
-              fontStyle: element.italic,
+              fontStyle: element.italic === "italic" ? "italic" : void 0,
               lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
               wordSpacing: element.wordSpacing,
               textAlign: element.textAlign,

@@ -103,7 +103,7 @@ class Text extends Element {
             lineHeight: (this.lineHeight || 1) * this.fontSize,
             wordSpacing: this.wordSpacing,
             bold: this.fontWeight > 400 ? this.fontWeight : undefined,
-            italic: this.fontStyle === "italic" ? true : undefined,
+            italic: this.fontStyle === "italic" ? "italic" : "normal",
             effectType: this.effectType,
             effectWordDuration: util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration as number) : undefined,
             effectWordInterval: util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval as number) : undefined
