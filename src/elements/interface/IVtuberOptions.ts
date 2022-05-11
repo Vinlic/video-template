@@ -6,6 +6,7 @@ interface IVtuberOptions extends IMediaOptions {
   text?: string;
   solution?: string;
   declaimer?: string;
+  cutoutColor?: string;
   demuxSrc?: string;
 }
 

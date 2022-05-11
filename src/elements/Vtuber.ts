@@ -13,6 +13,7 @@ class Vtuber extends Media {
   public text = ''; //虚拟人阅读文本
   public solution = ''; //虚拟人形象
   public declaimer?: string; //虚拟人文本朗读者
+  public cutoutColor?: string;  //抠除背景色
   public demuxSrc?: string;  //视频解复用文件路径
 
   public constructor(options: IVtuberOptions) {
@@ -26,6 +27,7 @@ class Vtuber extends Media {
         text: (v: any) => util.isString(v),
         solution: (v: any) => util.isString(v),
         declaimer: (v: any) => util.isUndefined(v) || util.isString(v),
+        cutoutColor: (v: any) => util.isUndefined(v) || util.isString(v),
         demuxSrc: (v: any) => util.isUndefined(v) || util.isString(v)
       },
     );
@@ -42,6 +44,7 @@ class Vtuber extends Media {
     vtuber.att('text', this.value || this.text);
     vtuber.att('solution', this.solution);
     vtuber.att('declaimer', this.declaimer);
+    vtuber.att('cutoutColor', this.cutoutColor);
     vtuber.att("demuxSrc", this.demuxSrc);
   }
 
@@ -51,6 +54,7 @@ class Vtuber extends Media {
     vtuber.att('text', this.value || this.text);
     vtuber.att('solution', this.solution);
     vtuber.att('declaimer', this.declaimer);
+    vtuber.att('cutoutColor', this.cutoutColor);
     vtuber.att("demuxSrc", this.demuxSrc);
   }
 
@@ -62,6 +66,7 @@ class Vtuber extends Media {
         text: this.value || this.text,
         declaimer: this.declaimer,
         solution: this.solution,
+        cutoutColor: this.cutoutColor,
         demuxSrc: this.demuxSrc
     };
 }

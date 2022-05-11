@@ -351,6 +351,7 @@ class OldParser {
                                 text: vtuber.text,
                                 solution: vtuber.solution,
                                 declaimer: vtuber.declaimer,
+                                cutoutColor: vtuber.cutoutColor,
                                 duration: vtuber.duration ? vtuber.duration * 1000 : undefined,
                                 volume: vtuber.volume,
                                 muted: vtuber.muted,

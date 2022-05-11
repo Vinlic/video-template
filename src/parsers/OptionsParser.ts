@@ -246,6 +246,7 @@ class OptionsParser {
                             text: element.text,
                             solution: element.solution,
                             declaimer: element.declaimer,
+                            cutoutColor: element.cutoutColor,
                             duration: element.duration ? element.duration * 1000 : undefined,
                             volume: element.volume,
                             muted: element.muted,
