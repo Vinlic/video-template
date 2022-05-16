@@ -2,7 +2,7 @@ import IElementOptions from './elements/interface/IElementOptions';
 
 import ElementTypes from './enums/ElementTypes';
 
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML, Canvas } from './elements';
+import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML, Canvas, Group, Sticker, Subtitle } from './elements';
 import util from './util';
 
 class ElementFactory {
@@ -31,6 +31,12 @@ class ElementFactory {
                 return new Chart(data);
             case ElementTypes.Canvas:  //画布元素
                 return new Canvas(data);
+            case ElementTypes.Group:  //组合元素
+                return new Group(data);
+            case ElementTypes.Sticker:  //贴图元素
+                return new Sticker(data);
+            case ElementTypes.Subtitle:  //字幕元素
+                return new Subtitle(data);
             case ElementTypes.SSML: //SSML文档元素
                 return new SSML(data);
         }

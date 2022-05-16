@@ -9,6 +9,8 @@ enum ElementTypes {
   Vtuber = 'vtuber',
   Canvas = 'canvas',
   Chart = 'chart',
+  Sticker = 'sticker',
+  Subtitle = 'subtitle',
   Media = 'media',
   SSML = 'ssml',
 }

@@ -20,35 +20,30 @@ class Media extends Element {
     public filter?: IFilterOptions; //媒体滤镜
     public muted = false; //媒体是否静音
 
-    public constructor(options: IMediaOptions, type: ElementTypes = ElementTypes.Media) {
+    public constructor(options: IMediaOptions, type = ElementTypes.Media) {
         super(options, type);
-        util.optionsInject(
-            this,
-            options,
-            {
-                loop: (v: any) => util.booleanParse(util.defaultTo(v, false)),
-                volume: (v: any) => Number(util.defaultTo(v, 1)),
-                duration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                seekStart: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                seekEnd: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                playbackRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                muted: (v: any) => util.booleanParse(util.defaultTo(v, false)),
-            },
-            {
-                poster: (v: any) => util.isUndefined(v) || util.isString(v),
-                src: (v: any) => util.isUndefined(v) || util.isString(v),
-                path: (v: any) => util.isUndefined(v) || util.isString(v),
-                volume: (v: any) => util.isFinite(v),
-                format: (v: any) => util.isUndefined(v) || util.isString(v),
-                duration: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                seekStart: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                seekEnd: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                loop: (v: any) => util.isBoolean(v),
-                playbackRate: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                filter: (v: any) => util.isUndefined(v) || util.isObject(v),
-                muted: (v: any) => util.isBoolean(v),
-            },
-        );
+        util.optionsInject(this, options, {
+            loop: (v: any) => util.booleanParse(util.defaultTo(v, false)),
+            volume: (v: any) => Number(util.defaultTo(v, 1)),
+            duration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            seekStart: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            seekEnd: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            playbackRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            muted: (v: any) => util.booleanParse(util.defaultTo(v, false)),
+        }, {
+            poster: (v: any) => util.isUndefined(v) || util.isString(v),
+            src: (v: any) => util.isUndefined(v) || util.isString(v),
+            path: (v: any) => util.isUndefined(v) || util.isString(v),
+            volume: (v: any) => util.isFinite(v),
+            format: (v: any) => util.isUndefined(v) || util.isString(v),
+            duration: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            seekStart: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            seekEnd: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            loop: (v: any) => util.isBoolean(v),
+            playbackRate: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            filter: (v: any) => util.isUndefined(v) || util.isObject(v),
+            muted: (v: any) => util.isBoolean(v),
+        });
     }
 
     /**

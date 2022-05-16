@@ -23,6 +23,7 @@ interface IElementOptions {
   backgroundColor?: string;
   startTime?: number | string;
   endTime?: number | string;
+  fixedScale?: boolean | string;
   trackId?: string;
   value?: string;
   children?: (Element | IElementOptions)[];

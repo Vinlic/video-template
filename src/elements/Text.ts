@@ -19,8 +19,8 @@ class Text extends Element {
     public effectWordDuration?: number; //文本单字动效时长
     public effectWordInterval?: number; //文本单字间隔
 
-    public constructor(options: ITextOptions) {
-        super(options, ElementTypes.Text);
+    public constructor(options: ITextOptions, type = ElementTypes.Text) {
+        super(options, type);
         util.optionsInject(
             this,
             options,

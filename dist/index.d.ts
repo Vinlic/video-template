@@ -15,6 +15,8 @@ declare enum ElementTypes {
     Vtuber = "vtuber",
     Canvas = "canvas",
     Chart = "chart",
+    Sticker = "sticker",
+    Subtitle = "subtitle",
     Media = "media",
     SSML = "ssml"
 }
@@ -54,6 +56,7 @@ declare class Element {
     backgroundColor?: string;
     startTime?: number;
     endTime?: number;
+    fixedScale?: boolean;
     trackId?: string;
     value?: string;
     children: Element[];
@@ -88,6 +91,7 @@ interface IElementOptions {
     backgroundColor?: string;
     startTime?: number | string;
     endTime?: number | string;
+    fixedScale?: boolean | string;
     trackId?: string;
     value?: string;
     children?: (Element | IElementOptions)[];
@@ -179,7 +183,7 @@ declare class Text extends Element {
     effectType?: string;
     effectWordDuration?: number;
     effectWordInterval?: number;
-    constructor(options: ITextOptions);
+    constructor(options: ITextOptions, type?: ElementTypes);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
     toOptions(): any;
@@ -242,7 +246,7 @@ declare class Image extends Element {
     loop?: boolean;
     dynamic?: boolean;
     filter?: IFilterOptions;
-    constructor(options: IImageOptions);
+    constructor(options: IImageOptions, type?: ElementTypes);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -327,6 +331,7 @@ interface IVtuberOptions extends IMediaOptions {
     text?: string;
     solution?: string;
     declaimer?: string;
+    cutoutColor?: string;
     demuxSrc?: string;
 }
 
@@ -336,6 +341,7 @@ declare class Vtuber extends Media {
     text: string;
     solution: string;
     declaimer?: string;
+    cutoutColor?: string;
     demuxSrc?: string;
     constructor(options: IVtuberOptions);
     renderXML(parent: any): void;
@@ -376,6 +382,28 @@ declare class Chart extends Canvas {
     static isInstance(value: any): boolean;
 }
 
+interface IGroupOptions extends IElementOptions {
+}
+
+declare class Group extends Element {
+    constructor(options: IGroupOptions);
+    static isInstance(value: any): boolean;
+}
+
+declare type IStickerOptions = IImageOptions;
+
+declare class Sticker extends Image {
+    constructor(options: IStickerOptions);
+    static isInstance(value: any): boolean;
+}
+
+declare type ISubtitleOptions = ITextOptions;
+
+declare class Subtitle extends Text {
+    constructor(options: ISubtitleOptions);
+    static isInstance(value: any): boolean;
+}
+
 declare type ISSMLOptions = IElementOptions;
 
 declare class SSML extends Element {
@@ -405,6 +433,12 @@ type index_Chart = Chart;
 declare const index_Chart: typeof Chart;
 type index_Canvas = Canvas;
 declare const index_Canvas: typeof Canvas;
+type index_Group = Group;
+declare const index_Group: typeof Group;
+type index_Sticker = Sticker;
+declare const index_Sticker: typeof Sticker;
+type index_Subtitle = Subtitle;
+declare const index_Subtitle: typeof Subtitle;
 type index_SSML = SSML;
 declare const index_SSML: typeof SSML;
 declare namespace index {
@@ -419,6 +453,9 @@ declare namespace index {
     index_Vtuber as Vtuber,
     index_Chart as Chart,
     index_Canvas as Canvas,
+    index_Group as Group,
+    index_Sticker as Sticker,
+    index_Subtitle as Subtitle,
     index_SSML as SSML,
   };
 }

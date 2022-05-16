@@ -143,6 +143,8 @@ var ElementTypes = /* @__PURE__ */ ((ElementTypes2) => {
   ElementTypes2["Vtuber"] = "vtuber";
   ElementTypes2["Canvas"] = "canvas";
   ElementTypes2["Chart"] = "chart";
+  ElementTypes2["Sticker"] = "sticker";
+  ElementTypes2["Subtitle"] = "subtitle";
   ElementTypes2["Media"] = "media";
   ElementTypes2["SSML"] = "ssml";
   return ElementTypes2;
@@ -156,9 +158,12 @@ __export(elements_exports, {
   Canvas: () => Canvas_default,
   Chart: () => Chart_default,
   Element: () => Element_default,
+  Group: () => Group_default,
   Image: () => Image_default,
   Media: () => Media_default,
   SSML: () => SSML_default,
+  Sticker: () => Sticker_default,
+  Subtitle: () => Subtitle_default,
   Text: () => Text_default,
   Video: () => Video_default,
   Voice: () => Voice_default,
@@ -214,6 +219,7 @@ var _Element = class {
     __publicField(this, "backgroundColor");
     __publicField(this, "startTime");
     __publicField(this, "endTime");
+    __publicField(this, "fixedScale");
     __publicField(this, "trackId");
     __publicField(this, "value");
     __publicField(this, "children", []);
@@ -233,6 +239,7 @@ var _Element = class {
       scaleHeight: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       startTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       endTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      fixedScale: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       enterEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       exitEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       stayEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
@@ -258,6 +265,7 @@ var _Element = class {
       backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       startTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       endTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      fixedScale: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       trackId: (v) => util_default.isUndefined(v) || util_default.isString(v),
       value: (v) => util_default.isUndefined(v) || util_default.isString(v),
       children: (v) => util_default.isArray(v)
@@ -347,15 +355,16 @@ var _Element = class {
   }
   toOptions() {
     var _a, _b;
+    const elements = [];
+    this.children.forEach((node) => _Element.isInstance(node) && elements.push(node.toOptions()));
     return {
       elementType: this.type,
       id: this.id,
       type: {
         image: "img",
         video: "video",
-        audio: "sound",
-        voice: "voice"
-      }[this.type],
+        audio: "sound"
+      }[this.type] || this.type,
       name: this.name,
       left: this.x,
       top: this.y,
@@ -366,6 +375,7 @@ var _Element = class {
       index: this.zIndex || 0,
       animationIn: util_default.isNumber(this.startTime) ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,
       animationOut: util_default.isNumber(this.endTime) ? ((_b = this.exitEffect) == null ? void 0 : _b.toOptions(this.endTime)) || { delay: util_default.millisecondsToSenconds(this.endTime) } : void 0,
+      elements,
       fillColor: this.backgroundColor
     };
   }
@@ -513,8 +523,8 @@ var Text = class extends Element_default {
   effectType;
   effectWordDuration;
   effectWordInterval;
-  constructor(options) {
-    super(options, ElementTypes_default.Text);
+  constructor(options, type = ElementTypes_default.Text) {
+    super(options, type);
     util_default.optionsInject(this, options, {
       fontSize: (v) => Number(util_default.defaultTo(v, 32)),
       fontWeight: (v) => Number(util_default.defaultTo(v, 400)),
@@ -655,8 +665,8 @@ var _Image = class extends Element_default {
   loop;
   dynamic;
   filter;
-  constructor(options) {
-    super(options, ElementTypes_default.Image);
+  constructor(options, type = ElementTypes_default.Image) {
+    super(options, type);
     util_default.optionsInject(this, options, {
       mode: (v) => util_default.defaultTo(v, ImageModes_default.ScaleToFill),
       crop: (v) => v && new Crop_default(v),
@@ -949,6 +959,7 @@ var _Vtuber = class extends Media_default {
   text = "";
   solution = "";
   declaimer;
+  cutoutColor;
   demuxSrc;
   constructor(options) {
     super(options, ElementTypes_default.Vtuber);
@@ -957,6 +968,7 @@ var _Vtuber = class extends Media_default {
       text: (v) => util_default.isString(v),
       solution: (v) => util_default.isString(v),
       declaimer: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      cutoutColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       demuxSrc: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
   }
@@ -966,6 +978,7 @@ var _Vtuber = class extends Media_default {
     vtuber.att("text", this.value || this.text);
     vtuber.att("solution", this.solution);
     vtuber.att("declaimer", this.declaimer);
+    vtuber.att("cutoutColor", this.cutoutColor);
     vtuber.att("demuxSrc", this.demuxSrc);
   }
   renderOldXML(parent, resources, global) {
@@ -974,6 +987,7 @@ var _Vtuber = class extends Media_default {
     vtuber.att("text", this.value || this.text);
     vtuber.att("solution", this.solution);
     vtuber.att("declaimer", this.declaimer);
+    vtuber.att("cutoutColor", this.cutoutColor);
     vtuber.att("demuxSrc", this.demuxSrc);
   }
   toOptions() {
@@ -983,6 +997,7 @@ var _Vtuber = class extends Media_default {
       text: this.value || this.text,
       declaimer: this.declaimer,
       solution: this.solution,
+      cutoutColor: this.cutoutColor,
       demuxSrc: this.demuxSrc
     });
   }
@@ -1071,6 +1086,39 @@ var Chart = class extends Canvas_default {
 };
 var Chart_default = Chart;
 
+// src/elements/Group.ts
+var Group = class extends Element_default {
+  constructor(options) {
+    super(options, ElementTypes_default.Group);
+  }
+  static isInstance(value) {
+    return value instanceof Group;
+  }
+};
+var Group_default = Group;
+
+// src/elements/Sticker.ts
+var Sticker = class extends Image_default {
+  constructor(options) {
+    super(options, ElementTypes_default.Sticker);
+  }
+  static isInstance(value) {
+    return value instanceof Sticker;
+  }
+};
+var Sticker_default = Sticker;
+
+// src/elements/Subtitle.ts
+var Subtitle = class extends Text_default {
+  constructor(options) {
+    super(options, ElementTypes_default.Subtitle);
+  }
+  static isInstance(value) {
+    return value instanceof Subtitle;
+  }
+};
+var Subtitle_default = Subtitle;
+
 // src/ElementFactory.ts
 var ElementFactory = class {
   static createElement(data) {
@@ -1093,6 +1141,12 @@ var ElementFactory = class {
         return new Chart_default(data);
       case ElementTypes_default.Canvas:
         return new Canvas_default(data);
+      case ElementTypes_default.Group:
+        return new Group_default(data);
+      case ElementTypes_default.Sticker:
+        return new Sticker_default(data);
+      case ElementTypes_default.Subtitle:
+        return new Subtitle_default(data);
       case ElementTypes_default.SSML:
         return new SSML_default(data);
     }
@@ -1828,6 +1882,7 @@ var OldParser = class {
               text: vtuber.text,
               solution: vtuber.solution,
               declaimer: vtuber.declaimer,
+              cutoutColor: vtuber.cutoutColor,
               duration: vtuber.duration ? vtuber.duration * 1e3 : void 0,
               volume: vtuber.volume,
               muted: vtuber.muted,
@@ -2094,6 +2149,7 @@ var OptionsParser = class {
               text: element.text,
               solution: element.solution,
               declaimer: element.declaimer,
+              cutoutColor: element.cutoutColor,
               duration: element.duration ? element.duration * 1e3 : void 0,
               volume: element.volume,
               muted: element.muted,

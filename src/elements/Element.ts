@@ -69,6 +69,7 @@ class Element {
     public backgroundColor?: string; //元素背景颜色
     public startTime?: number; //元素入场时间点
     public endTime?: number; //元素退场时间点
+    public fixedScale?: boolean;  //元素固定比例
     public trackId?: string; //元素轨道ID
     public value?: string; //元素值
     public children: Element[] = []; //元素子节点
@@ -93,6 +94,7 @@ class Element {
                 scaleHeight: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
                 startTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
                 endTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                fixedScale: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
                 enterEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
                 exitEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
                 stayEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
@@ -122,6 +124,7 @@ class Element {
                 backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
                 startTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
                 endTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
+                fixedScale: (v: any) => util.isUndefined(v) || util.isBoolean(v),
                 trackId: (v: any) => util.isUndefined(v) || util.isString(v),
                 value: (v: any) => util.isUndefined(v) || util.isString(v),
                 children: (v: any) => util.isArray(v),
@@ -226,15 +229,16 @@ class Element {
      * 转换为前端支持的options
      */
     public toOptions(): any {
+        const elements: any[] = [];
+        this.children.forEach((node) => Element.isInstance(node) && elements.push(node.toOptions()));
         return {
             elementType: this.type,
             id: this.id,
             type: {
                 image: "img",
                 video: "video",
-                audio: "sound",
-                voice: "voice"
-            }[this.type as string],
+                audio: "sound"
+            }[this.type as string] || this.type,
             name: this.name,
             left: this.x,
             top: this.y,
@@ -245,6 +249,7 @@ class Element {
             index: this.zIndex || 0,
             animationIn: util.isNumber(this.startTime) ? (this.enterEffect?.toOptions(this.startTime) || { delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
             animationOut: util.isNumber(this.endTime) ? (this.exitEffect?.toOptions(this.endTime) || { delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
+            elements,
             fillColor: this.backgroundColor
         };
     }

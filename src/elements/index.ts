@@ -8,4 +8,7 @@ export { default as Video } from './Video';
 export { default as Vtuber } from './Vtuber';
 export { default as Chart } from './Chart';
 export { default as Canvas } from './Canvas';
+export { default as Group } from './Group';
+export { default as Sticker } from './Sticker';
+export { default as Subtitle } from './Subtitle';
 export { default as SSML } from './SSML';
