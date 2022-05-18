@@ -168,6 +168,8 @@ interface ITextOptions extends IElementOptions {
     effectType?: string;
     effectWordDuration?: number | string;
     effectWordInterval?: number | string;
+    textShadow?: any;
+    textStroke?: any;
 }
 
 declare class Text extends Element {
@@ -183,6 +185,8 @@ declare class Text extends Element {
     effectType?: string;
     effectWordDuration?: number;
     effectWordInterval?: number;
+    textShadow: any;
+    textStroke: any;
     constructor(options: ITextOptions, type?: ElementTypes);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;

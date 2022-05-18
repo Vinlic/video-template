@@ -18,37 +18,36 @@ class Text extends Element {
     public effectType?: string; //文本动效类型
     public effectWordDuration?: number; //文本单字动效时长
     public effectWordInterval?: number; //文本单字间隔
+    public textShadow: any = {};  //文本阴影对象
+    public textStroke: any = {};  //文本描边对象
 
     public constructor(options: ITextOptions, type = ElementTypes.Text) {
         super(options, type);
-        util.optionsInject(
-            this,
-            options,
-            {
-                fontSize: (v: any) => Number(util.defaultTo(v, 32)),
-                fontWeight: (v: any) => Number(util.defaultTo(v, 400)),
-                fontColor: (v: any) => util.defaultTo(v, '#000'),
-                lineHeight: (v: any) => Number(util.defaultTo(v, 1)),
-                wordSpacing: (v: any) => Number(util.defaultTo(v, 0)),
-                lineWrap: (v: any) => util.defaultTo(util.booleanParse(v), true),
-                effectWordDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                effectWordInterval: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-            },
-            {
-                fontFamily: (v: any) => util.isUndefined(v) || util.isString(v),
-                fontSize: (v: any) => util.isFinite(v),
-                fontWeight: (v: any) => util.isFinite(v),
-                fontStyle: (v: any) => util.isUndefined(v) || util.isString(v),
-                fontColor: (v: any) => util.isString(v),
-                lineHeight: (v: any) => util.isFinite(v),
-                wordSpacing: (v: any) => util.isFinite(v),
-                textAlign: (v: any) => util.isUndefined(v) || util.isString(v),
-                lineWrap: (v: any) => util.isBoolean(v),
-                effectType: (v: any) => util.isUndefined(v) || util.isString(v),
-                effectWordDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                effectWordInterval: (v: any) => util.isUndefined(v) || util.isFinite(v),
-            },
-        );
+        util.optionsInject(this, options, {
+            fontSize: (v: any) => Number(util.defaultTo(v, 32)),
+            fontWeight: (v: any) => Number(util.defaultTo(v, 400)),
+            fontColor: (v: any) => util.defaultTo(v, '#000'),
+            lineHeight: (v: any) => Number(util.defaultTo(v, 1)),
+            wordSpacing: (v: any) => Number(util.defaultTo(v, 0)),
+            lineWrap: (v: any) => util.defaultTo(util.booleanParse(v), true),
+            effectWordDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            effectWordInterval: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
+        }, {
+            fontFamily: (v: any) => util.isUndefined(v) || util.isString(v),
+            fontSize: (v: any) => util.isFinite(v),
+            fontWeight: (v: any) => util.isFinite(v),
+            fontStyle: (v: any) => util.isUndefined(v) || util.isString(v),
+            fontColor: (v: any) => util.isString(v),
+            lineHeight: (v: any) => util.isFinite(v),
+            wordSpacing: (v: any) => util.isFinite(v),
+            textAlign: (v: any) => util.isUndefined(v) || util.isString(v),
+            lineWrap: (v: any) => util.isBoolean(v),
+            effectType: (v: any) => util.isUndefined(v) || util.isString(v),
+            effectWordDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            effectWordInterval: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            textShadow: (v: any) => util.isUndefined(v) || util.isObject(v),
+            textStroke: (v: any) => util.isUndefined(v) || util.isObject(v)
+        });
     }
 
     /**
@@ -71,6 +70,14 @@ class Text extends Element {
         text.att('effectType', this.effectType);
         text.att('effectWordDuration', this.effectWordDuration);
         text.att('effectWordInterval', this.effectWordInterval);
+        for(let key in this.textShadow) {
+            const value = this.textShadow[key];
+            text.att(`textShadow-${key}`, value);
+        }
+        for(let key in this.textStroke) {
+            const value = this.textStroke[key];
+            text.att(`textStroke-${key}`, value);
+        }
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
@@ -87,6 +94,14 @@ class Text extends Element {
         caption.att('effectType', this.effectType);
         caption.att('effectWordDuration', util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration!) : undefined);
         caption.att('effectWordInterval', util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval!) : undefined);
+        for(let key in this.textShadow) {
+            const value = this.textShadow[key];
+            caption.att(`textShadow-${key}`, value);
+        }
+        for(let key in this.textStroke) {
+            const value = this.textStroke[key];
+            caption.att(`textStroke-${key}`, value);
+        }
         const text = caption.ele('text');
         text.txt(this.value);
     }
@@ -106,7 +121,9 @@ class Text extends Element {
             italic: this.fontStyle === "italic" ? "italic" : "normal",
             effectType: this.effectType,
             effectWordDuration: util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration as number) : undefined,
-            effectWordInterval: util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval as number) : undefined
+            effectWordInterval: util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval as number) : undefined,
+            textShadow: this.textShadow,
+            textStroke: this.textStroke
         };
     }
 

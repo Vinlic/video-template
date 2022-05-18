@@ -156,6 +156,8 @@ class OptionsParser {
                             effectType: element.effectType,
                             effectWordDuration: element.effectWordDuration ? element.effectWordDuration * 1000 : undefined,
                             effectWordInterval: element.effectWordInterval ? element.effectWordInterval * 1000 : undefined,
+                            textShadow: element.textShadow,
+                            textStroke: element.textStroke,
                         }));
                         break;
                     case "audio":

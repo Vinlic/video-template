@@ -546,6 +546,8 @@ var Text = class extends Element_default {
   effectType;
   effectWordDuration;
   effectWordInterval;
+  textShadow = {};
+  textStroke = {};
   constructor(options, type = ElementTypes_default.Text) {
     super(options, type);
     util_default.optionsInject(this, options, {
@@ -569,7 +571,9 @@ var Text = class extends Element_default {
       lineWrap: (v) => util_default.isBoolean(v),
       effectType: (v) => util_default.isUndefined(v) || util_default.isString(v),
       effectWordDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
-      effectWordInterval: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
+      effectWordInterval: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      textShadow: (v) => util_default.isUndefined(v) || util_default.isObject(v),
+      textStroke: (v) => util_default.isUndefined(v) || util_default.isObject(v)
     });
   }
   renderXML(parent) {
@@ -587,6 +591,14 @@ var Text = class extends Element_default {
     text.att("effectType", this.effectType);
     text.att("effectWordDuration", this.effectWordDuration);
     text.att("effectWordInterval", this.effectWordInterval);
+    for (let key in this.textShadow) {
+      const value = this.textShadow[key];
+      text.att(`textShadow-${key}`, value);
+    }
+    for (let key in this.textStroke) {
+      const value = this.textStroke[key];
+      text.att(`textStroke-${key}`, value);
+    }
   }
   renderOldXML(parent, resources, global) {
     const caption = super.renderOldXML(parent, resources, global);
@@ -602,6 +614,14 @@ var Text = class extends Element_default {
     caption.att("effectType", this.effectType);
     caption.att("effectWordDuration", util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0);
     caption.att("effectWordInterval", util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0);
+    for (let key in this.textShadow) {
+      const value = this.textShadow[key];
+      caption.att(`textShadow-${key}`, value);
+    }
+    for (let key in this.textStroke) {
+      const value = this.textStroke[key];
+      caption.att(`textStroke-${key}`, value);
+    }
     const text = caption.ele("text");
     text.txt(this.value);
   }
@@ -619,7 +639,9 @@ var Text = class extends Element_default {
       italic: this.fontStyle === "italic" ? "italic" : "normal",
       effectType: this.effectType,
       effectWordDuration: util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0,
-      effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0
+      effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0,
+      textShadow: this.textShadow,
+      textStroke: this.textStroke
     });
   }
   static isInstance(value) {
@@ -1787,7 +1809,9 @@ var OldParser = class {
                 textAlign: caption.textAlign,
                 effectType: caption.effectType,
                 effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1e3 : void 0,
-                effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1e3 : void 0
+                effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1e3 : void 0,
+                textShadow: caption.textShadow ? JSON.parse(caption.textShadow) : void 0,
+                textStroke: caption.textStroke ? JSON.parse(caption.textStroke) : void 0
               })));
             });
             break;
@@ -2087,7 +2111,9 @@ var OptionsParser = class {
               textAlign: element.textAlign,
               effectType: element.effectType,
               effectWordDuration: element.effectWordDuration ? element.effectWordDuration * 1e3 : void 0,
-              effectWordInterval: element.effectWordInterval ? element.effectWordInterval * 1e3 : void 0
+              effectWordInterval: element.effectWordInterval ? element.effectWordInterval * 1e3 : void 0,
+              textShadow: element.textShadow,
+              textStroke: element.textStroke
             })));
             break;
           case "audio":
