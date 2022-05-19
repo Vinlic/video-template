@@ -1810,8 +1810,8 @@ var OldParser = class {
                 effectType: caption.effectType,
                 effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1e3 : void 0,
                 effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1e3 : void 0,
-                textShadow: caption.textShadow ? JSON.parse(caption.textShadow) : void 0,
-                textStroke: caption.textStroke ? JSON.parse(caption.textStroke) : void 0
+                textShadow: caption.textShadow,
+                textStroke: caption.textStroke
               })));
             });
             break;
@@ -2020,6 +2020,8 @@ var OptionsParser = class {
     };
   }
   static parseOptions(options) {
+    if (util_default.isString(options))
+      options = JSON.parse(options);
     const templateChildren = [];
     function buildBaseData(obj, parentDuration) {
       var _a;
@@ -2078,138 +2080,154 @@ var OptionsParser = class {
         fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1e3 : void 0,
         fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1e3 : void 0
       })));
-      board == null ? void 0 : board.elements.forEach((element) => {
-        switch (element.elementType) {
-          case "image":
-            sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
-              crop: element.crop ? {
-                style: element.crop.style,
-                x: element.crop.left,
-                y: element.crop.top,
-                width: element.crop.width,
-                height: element.crop.height,
-                clipType: element.crop.clipType,
-                clipStyle: element.crop.clipStyle
-              } : void 0,
-              src: element.src,
-              loop: element.loop,
-              dynamic: element.src.indexOf(".gif") !== -1
-            })));
-            break;
-          case "text":
-            sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
-              width: element.width || element.renderWidth || 0,
-              height: element.height || element.renderHeight || 0,
-              value: element.content,
-              fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
-              fontSize: element.fontSize,
-              fontColor: element.fontColor,
-              fontWeight: element.bold,
-              fontStyle: element.italic === "italic" ? "italic" : void 0,
-              lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
-              wordSpacing: element.wordSpacing,
-              textAlign: element.textAlign,
-              effectType: element.effectType,
-              effectWordDuration: element.effectWordDuration ? element.effectWordDuration * 1e3 : void 0,
-              effectWordInterval: element.effectWordInterval ? element.effectWordInterval * 1e3 : void 0,
-              textShadow: element.textShadow,
-              textStroke: element.textStroke
-            })));
-            break;
-          case "audio":
-            sceneChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
-              src: element.src,
-              duration: element.duration ? element.duration * 1e3 : void 0,
-              volume: element.volume,
-              muted: element.muted,
-              loop: element.loop,
-              seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
-              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
-              fadeInDuration: element.fadeInDuration ? element.fadeInDuration * 1e3 : void 0,
-              fadeOutDuration: element.fadeOutDuration ? element.fadeOutDuration * 1e3 : void 0
-            })));
-            break;
-          case "voice":
-            sceneChildren.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
-              src: element.src,
-              duration: element.duration ? element.duration * 1e3 : void 0,
-              volume: element.volume,
-              seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
-              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
-              loop: element.loop,
-              muted: element.muted,
-              provider: element.provider,
-              children: element.ssml ? [
-                new SSML_default({
-                  value: element.ssml
-                })
-              ] : [],
-              text: element.text,
-              declaimer: element.voice,
-              speechRate: element.playbackRate ? element.playbackRate : void 0,
-              pitchRate: element.pitchRate ? Number(element.pitchRate) + 1 : void 0
-            })));
-            break;
-          case "video":
-            sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
-              poster: element.poster,
-              src: element.src,
-              crop: element.crop ? {
-                style: element.crop.style,
-                x: element.crop.left,
-                y: element.crop.top,
-                width: element.crop.width,
-                height: element.crop.height,
-                clipType: element.crop.clipType,
-                clipStyle: element.crop.clipStyle
-              } : void 0,
-              duration: element.duration ? element.duration * 1e3 : void 0,
-              volume: element.volume,
-              muted: element.muted,
-              loop: element.loop,
-              seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
-              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
-              demuxSrc: element.demuxSrc
-            })));
-            break;
-          case "chart":
-            sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
-              chartId: element.chartId,
-              poster: element.poster,
-              duration: !util_default.isUndefined(element.duration) ? element.duration * 1e3 : void 0,
-              configSrc: element.optionsPath,
-              dataSrc: element.dataPath
-            })));
-            break;
-          case "canvas":
-            sceneChildren.push(new Canvas_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
-              chartId: element.chartId,
-              poster: element.poster,
-              duration: !util_default.isUndefined(element.duration) ? element.duration * 1e3 : void 0,
-              configSrc: element.optionPath,
-              dataSrc: element.dataPath
-            })));
-            break;
-          case "vtuber":
-            sceneChildren.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(element, duration)), {
-              poster: element.poster,
-              src: element.src,
-              provider: element.provider,
-              text: element.text,
-              solution: element.solution,
-              declaimer: element.declaimer,
-              cutoutColor: element.cutoutColor,
-              duration: element.duration ? element.duration * 1e3 : void 0,
-              volume: element.volume,
-              muted: element.muted,
-              loop: element.loop,
-              seekStart: element.seekStart ? element.seekStart * 1e3 : void 0,
-              seekEnd: element.seekEnd ? element.seekEnd * 1e3 : void 0,
-              demuxSrc: element.demuxSrc
-            })));
-            break;
-        }
-      });
+      function elementsPush(element, target) {
+        element == null ? void 0 : element.elements.forEach((element2) => {
+          switch (element2.elementType) {
+            case "image":
+              target.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                crop: element2.crop ? {
+                  style: element2.crop.style,
+                  x: element2.crop.left,
+                  y: element2.crop.top,
+                  width: element2.crop.width,
+                  height: element2.crop.height,
+                  clipType: element2.crop.clipType,
+                  clipStyle: element2.crop.clipStyle
+                } : void 0,
+                src: element2.src,
+                loop: element2.loop,
+                dynamic: element2.src.indexOf(".gif") !== -1
+              })));
+              break;
+            case "sticker":
+              target.push(new Sticker_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                src: element2.src,
+                loop: element2.loop
+              })));
+              break;
+            case "text":
+              target.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                width: element2.width || element2.renderWidth || 0,
+                height: element2.height || element2.renderHeight || 0,
+                value: element2.content,
+                fontFamily: element2.fontFamily ? element2.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
+                fontSize: element2.fontSize,
+                fontColor: element2.fontColor,
+                fontWeight: element2.bold,
+                fontStyle: element2.italic === "italic" ? "italic" : void 0,
+                lineHeight: parseFloat((Number(element2.lineHeight) / Number(element2.fontSize)).toFixed(3)),
+                wordSpacing: element2.wordSpacig,
+                textAlign: element2.textAlign,
+                effectType: element2.effectType,
+                effectWordDuration: element2.effectWordDuration ? element2.effectWordDuration * 1e3 : void 0,
+                effectWordInterval: element2.effectWordInterval ? element2.effectWordInterval * 1e3 : void 0,
+                textShadow: element2.textShadow,
+                textStroke: element2.textStroke
+              })));
+              break;
+            case "audio":
+              target.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                src: element2.src,
+                duration: element2.duration ? element2.duration * 1e3 : void 0,
+                volume: element2.volume,
+                muted: element2.muted,
+                loop: element2.loop,
+                seekStart: element2.seekStart ? element2.seekStart * 1e3 : void 0,
+                seekEnd: element2.seekEnd ? element2.seekEnd * 1e3 : void 0,
+                fadeInDuration: element2.fadeInDuration ? element2.fadeInDuration * 1e3 : void 0,
+                fadeOutDuration: element2.fadeOutDuration ? element2.fadeOutDuration * 1e3 : void 0
+              })));
+              break;
+            case "voice":
+              target.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                src: element2.src,
+                duration: element2.duration ? element2.duration * 1e3 : void 0,
+                volume: element2.volume,
+                seekStart: element2.seekStart ? element2.seekStart * 1e3 : void 0,
+                seekEnd: element2.seekEnd ? element2.seekEnd * 1e3 : void 0,
+                loop: element2.loop,
+                muted: element2.muted,
+                provider: element2.provider,
+                children: element2.ssml ? [
+                  new SSML_default({
+                    value: element2.ssml
+                  })
+                ] : [],
+                text: element2.text,
+                declaimer: element2.voice,
+                speechRate: element2.playbackRate ? element2.playbackRate : void 0,
+                pitchRate: element2.pitchRate ? Number(element2.pitchRate) + 1 : void 0
+              })));
+              break;
+            case "video":
+              target.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                poster: element2.poster,
+                src: element2.src,
+                crop: element2.crop ? {
+                  style: element2.crop.style,
+                  x: element2.crop.left,
+                  y: element2.crop.top,
+                  width: element2.crop.width,
+                  height: element2.crop.height,
+                  clipType: element2.crop.clipType,
+                  clipStyle: element2.crop.clipStyle
+                } : void 0,
+                duration: element2.duration ? element2.duration * 1e3 : void 0,
+                volume: element2.volume,
+                muted: element2.muted,
+                loop: element2.loop,
+                seekStart: element2.seekStart ? element2.seekStart * 1e3 : void 0,
+                seekEnd: element2.seekEnd ? element2.seekEnd * 1e3 : void 0,
+                demuxSrc: element2.demuxSrc
+              })));
+              break;
+            case "chart":
+              target.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                chartId: element2.chartId,
+                poster: element2.poster,
+                duration: !util_default.isUndefined(element2.duration) ? element2.duration * 1e3 : void 0,
+                configSrc: element2.optionsPath,
+                dataSrc: element2.dataPath
+              })));
+              break;
+            case "canvas":
+              target.push(new Canvas_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                chartId: element2.chartId,
+                poster: element2.poster,
+                duration: !util_default.isUndefined(element2.duration) ? element2.duration * 1e3 : void 0,
+                configSrc: element2.optionPath,
+                dataSrc: element2.dataPath
+              })));
+              break;
+            case "vtuber":
+              target.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                poster: element2.poster,
+                src: element2.src,
+                provider: element2.provider,
+                text: element2.text,
+                solution: element2.solution,
+                declaimer: element2.declaimer,
+                cutoutColor: element2.cutoutColor,
+                duration: element2.duration ? element2.duration * 1e3 : void 0,
+                volume: element2.volume,
+                muted: element2.muted,
+                loop: element2.loop,
+                seekStart: element2.seekStart ? element2.seekStart * 1e3 : void 0,
+                seekEnd: element2.seekEnd ? element2.seekEnd * 1e3 : void 0,
+                demuxSrc: element2.demuxSrc
+              })));
+              break;
+            case "group":
+              const children = [];
+              elementsPush(element2, children);
+              target.push(new Group_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
+                children
+              })));
+              break;
+          }
+        });
+      }
+      elementsPush(board, sceneChildren);
       templateChildren.push(new Scene_default({
         id,
         poster,

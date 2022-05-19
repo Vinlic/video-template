@@ -1,7 +1,7 @@
 import util from '../util';
 import Template from '../Template';
 import Scene from '../Scene';
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, Canvas, SSML } from '../elements';
+import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, Canvas, SSML, Sticker, Group } from '../elements';
 
 class OptionsParser {
 
@@ -59,6 +59,8 @@ class OptionsParser {
     }
 
     public static parseOptions(options: any) {
+        if(util.isString(options))
+            options = JSON.parse(options);
         const templateChildren: (Scene | Element)[] = [];
         function buildBaseData(obj: any, parentDuration?: number) {
             return {
@@ -120,146 +122,164 @@ class OptionsParser {
                 fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1000 : undefined,
                 fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1000 : undefined,
             }));
-            board?.elements.forEach((element: any) => {
-                switch (element.elementType) {
-                    case "image":
-                        sceneChildren.push(new Image({
-                            ...buildBaseData(element, duration),
-                            crop: element.crop ? {
-                                style: element.crop.style,
-                                x: element.crop.left,
-                                y: element.crop.top,
-                                width: element.crop.width,
-                                height: element.crop.height,
-                                clipType: element.crop.clipType,
-                                clipStyle: element.crop.clipStyle
-                            } : undefined,
-                            src: element.src,
-                            loop: element.loop,
-                            dynamic: element.src.indexOf('.gif') !== -1,
-                        }));
-                        break;
-                    case "text":
-                        sceneChildren.push(new Text({
-                            ...buildBaseData(element, duration),
-                            width: element.width || element.renderWidth || 0,
-                            height: element.height || element.renderHeight || 0,
-                            value: element.content,
-                            fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
-                            fontSize: element.fontSize,
-                            fontColor: element.fontColor,
-                            fontWeight: element.bold,
-                            fontStyle: element.italic === "italic" ? "italic" : undefined,
-                            lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
-                            wordSpacing: element.wordSpacing,
-                            textAlign: element.textAlign,
-                            effectType: element.effectType,
-                            effectWordDuration: element.effectWordDuration ? element.effectWordDuration * 1000 : undefined,
-                            effectWordInterval: element.effectWordInterval ? element.effectWordInterval * 1000 : undefined,
-                            textShadow: element.textShadow,
-                            textStroke: element.textStroke,
-                        }));
-                        break;
-                    case "audio":
-                        sceneChildren.push(new Audio({
-                            ...buildBaseData(element, duration),
-                            src: element.src,
-                            duration: element.duration ? element.duration * 1000 : undefined,
-                            volume: element.volume,
-                            muted: element.muted,
-                            loop: element.loop,
-                            seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
-                            seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
-                            fadeInDuration: element.fadeInDuration ? element.fadeInDuration * 1000 : undefined,
-                            fadeOutDuration: element.fadeOutDuration ? element.fadeOutDuration * 1000 : undefined,
-                        }));
-                        break;
-                    case "voice":
-                        sceneChildren.push(new Voice({
-                            ...buildBaseData(element, duration),
-                            src: element.src,
-                            duration: element.duration ? element.duration * 1000 : undefined,
-                            volume: element.volume,
-                            seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
-                            seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
-                            loop: element.loop,
-                            muted: element.muted,
-                            provider: element.provider,
-                            children: element.ssml ? [
-                                new SSML({
-                                    value: element.ssml,
-                                }),
-                            ] : [],
-                            text: element.text,
-                            declaimer: element.voice,
-                            speechRate: element.playbackRate ? element.playbackRate : undefined,
-                            pitchRate: element.pitchRate ? Number(element.pitchRate) + 1 : undefined,
-                        }));
-                        break;
-                    case "video":
-                        sceneChildren.push(new Video({
-                            ...buildBaseData(element, duration),
-                            poster: element.poster,
-                            src: element.src,
-                            crop: element.crop ? {
-                                style: element.crop.style,
-                                x: element.crop.left,
-                                y: element.crop.top,
-                                width: element.crop.width,
-                                height: element.crop.height,
-                                clipType: element.crop.clipType,
-                                clipStyle: element.crop.clipStyle
-                            } : undefined,
-                            duration: element.duration ? element.duration * 1000 : undefined,
-                            volume: element.volume,
-                            muted: element.muted,
-                            loop: element.loop,
-                            seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
-                            seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
-                            demuxSrc: element.demuxSrc
-                        }));
-                        break;
-                    case "chart":
-                        sceneChildren.push(new Chart({
-                            ...buildBaseData(element, duration),
-                            chartId: element.chartId,
-                            poster: element.poster,
-                            duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
-                            configSrc: element.optionsPath,
-                            dataSrc: element.dataPath,
-                        }));
-                        break;
-                    case "canvas":
-                        sceneChildren.push(new Canvas({
-                            ...buildBaseData(element, duration),
-                            chartId: element.chartId,
-                            poster: element.poster,
-                            duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
-                            configSrc: element.optionPath,
-                            dataSrc: element.dataPath,
-                        }));
-                        break;
-                    case "vtuber":
-                        sceneChildren.push(new Vtuber({
-                            ...buildBaseData(element, duration),
-                            poster: element.poster,
-                            src: element.src,
-                            provider: element.provider,
-                            text: element.text,
-                            solution: element.solution,
-                            declaimer: element.declaimer,
-                            cutoutColor: element.cutoutColor,
-                            duration: element.duration ? element.duration * 1000 : undefined,
-                            volume: element.volume,
-                            muted: element.muted,
-                            loop: element.loop,
-                            seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
-                            seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
-                            demuxSrc: element.demuxSrc
-                        }));
-                        break;
-                }
-            });
+            function elementsPush(element: any, target: any[]) {
+                element?.elements.forEach((element: any) => {
+                    switch (element.elementType) {
+                        case "image":
+                            target.push(new Image({
+                                ...buildBaseData(element, duration),
+                                crop: element.crop ? {
+                                    style: element.crop.style,
+                                    x: element.crop.left,
+                                    y: element.crop.top,
+                                    width: element.crop.width,
+                                    height: element.crop.height,
+                                    clipType: element.crop.clipType,
+                                    clipStyle: element.crop.clipStyle
+                                } : undefined,
+                                src: element.src,
+                                loop: element.loop,
+                                dynamic: element.src.indexOf('.gif') !== -1,
+                            }));
+                            break;
+                        case "sticker":
+                            target.push(new Sticker({
+                                ...buildBaseData(element, duration),
+                                src: element.src,
+                                loop: element.loop
+                            }));
+                            break;
+                        case "text":
+                            target.push(new Text({
+                                ...buildBaseData(element, duration),
+                                width: element.width || element.renderWidth || 0,
+                                height: element.height || element.renderHeight || 0,
+                                value: element.content,
+                                fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
+                                fontSize: element.fontSize,
+                                fontColor: element.fontColor,
+                                fontWeight: element.bold,
+                                fontStyle: element.italic === "italic" ? "italic" : undefined,
+                                lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
+                                wordSpacing: element.wordSpacig,
+                                textAlign: element.textAlign,
+                                effectType: element.effectType,
+                                effectWordDuration: element.effectWordDuration ? element.effectWordDuration * 1000 : undefined,
+                                effectWordInterval: element.effectWordInterval ? element.effectWordInterval * 1000 : undefined,
+                                textShadow: element.textShadow,
+                                textStroke: element.textStroke,
+                            }));
+                            break;
+                        case "audio":
+                            target.push(new Audio({
+                                ...buildBaseData(element, duration),
+                                src: element.src,
+                                duration: element.duration ? element.duration * 1000 : undefined,
+                                volume: element.volume,
+                                muted: element.muted,
+                                loop: element.loop,
+                                seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
+                                seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
+                                fadeInDuration: element.fadeInDuration ? element.fadeInDuration * 1000 : undefined,
+                                fadeOutDuration: element.fadeOutDuration ? element.fadeOutDuration * 1000 : undefined,
+                            }));
+                            break;
+                        case "voice":
+                            target.push(new Voice({
+                                ...buildBaseData(element, duration),
+                                src: element.src,
+                                duration: element.duration ? element.duration * 1000 : undefined,
+                                volume: element.volume,
+                                seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
+                                seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
+                                loop: element.loop,
+                                muted: element.muted,
+                                provider: element.provider,
+                                children: element.ssml ? [
+                                    new SSML({
+                                        value: element.ssml,
+                                    }),
+                                ] : [],
+                                text: element.text,
+                                declaimer: element.voice,
+                                speechRate: element.playbackRate ? element.playbackRate : undefined,
+                                pitchRate: element.pitchRate ? Number(element.pitchRate) + 1 : undefined,
+                            }));
+                            break;
+                        case "video":
+                            target.push(new Video({
+                                ...buildBaseData(element, duration),
+                                poster: element.poster,
+                                src: element.src,
+                                crop: element.crop ? {
+                                    style: element.crop.style,
+                                    x: element.crop.left,
+                                    y: element.crop.top,
+                                    width: element.crop.width,
+                                    height: element.crop.height,
+                                    clipType: element.crop.clipType,
+                                    clipStyle: element.crop.clipStyle
+                                } : undefined,
+                                duration: element.duration ? element.duration * 1000 : undefined,
+                                volume: element.volume,
+                                muted: element.muted,
+                                loop: element.loop,
+                                seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
+                                seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
+                                demuxSrc: element.demuxSrc
+                            }));
+                            break;
+                        case "chart":
+                            target.push(new Chart({
+                                ...buildBaseData(element, duration),
+                                chartId: element.chartId,
+                                poster: element.poster,
+                                duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
+                                configSrc: element.optionsPath,
+                                dataSrc: element.dataPath,
+                            }));
+                            break;
+                        case "canvas":
+                            target.push(new Canvas({
+                                ...buildBaseData(element, duration),
+                                chartId: element.chartId,
+                                poster: element.poster,
+                                duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
+                                configSrc: element.optionPath,
+                                dataSrc: element.dataPath,
+                            }));
+                            break;
+                        case "vtuber":
+                            target.push(new Vtuber({
+                                ...buildBaseData(element, duration),
+                                poster: element.poster,
+                                src: element.src,
+                                provider: element.provider,
+                                text: element.text,
+                                solution: element.solution,
+                                declaimer: element.declaimer,
+                                cutoutColor: element.cutoutColor,
+                                duration: element.duration ? element.duration * 1000 : undefined,
+                                volume: element.volume,
+                                muted: element.muted,
+                                loop: element.loop,
+                                seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
+                                seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
+                                demuxSrc: element.demuxSrc
+                            }));
+                            break;
+                        case "group":
+                            const children: any[] = [];
+                            elementsPush(element, children);
+                            target.push(new Group({
+                                ...buildBaseData(element, duration),
+                                children
+                            }));
+                            break;
+                    }
+                });
+            }
+            elementsPush(board, sceneChildren);
             templateChildren.push(new Scene({
                 id,
                 poster,
