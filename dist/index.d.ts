@@ -251,7 +251,7 @@ declare class Image extends Element {
     dynamic?: boolean;
     filter?: IFilterOptions;
     constructor(options: IImageOptions, type?: ElementTypes);
-    renderXML(parent: any): void;
+    renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
     static isInstance(value: any): boolean;
@@ -394,10 +394,16 @@ declare class Group extends Element {
     static isInstance(value: any): boolean;
 }
 
-declare type IStickerOptions = IImageOptions;
+interface IStickerOptions extends IImageOptions {
+    editable?: boolean | string;
+}
 
 declare class Sticker extends Image {
+    editable?: boolean;
     constructor(options: IStickerOptions);
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
+    toOptions(): any;
     static isInstance(value: any): boolean;
 }
 

@@ -146,7 +146,8 @@ class OptionsParser {
                             target.push(new Sticker({
                                 ...buildBaseData(element, duration),
                                 src: element.src,
-                                loop: element.loop
+                                loop: element.loop,
+                                editable: element.editable
                             }));
                             break;
                         case "text":

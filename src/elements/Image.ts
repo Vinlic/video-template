@@ -58,6 +58,7 @@ class Image extends Element {
             image.att('crop-clipType', this.crop.clipType);
             image.att('crop-clipStyle', this.crop.clipStyle);
         }
+        return image;
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {

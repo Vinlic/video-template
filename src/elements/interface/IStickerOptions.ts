@@ -1,5 +1,7 @@
 import IImageOptions from './IImageOptions';
 
-type IStickerOptions = IImageOptions;
+interface IStickerOptions extends IImageOptions {
+    editable?: boolean | string;
+}
 
 export default IStickerOptions;

@@ -744,6 +744,7 @@ var _Image = class extends Element_default {
       image.att("crop-clipType", this.crop.clipType);
       image.att("crop-clipStyle", this.crop.clipStyle);
     }
+    return image;
   }
   renderOldXML(parent, resources, global) {
     const image = super.renderOldXML(parent, resources, global);
@@ -1144,8 +1145,25 @@ var Group_default = Group;
 
 // src/elements/Sticker.ts
 var Sticker = class extends Image_default {
+  editable;
   constructor(options) {
     super(options, ElementTypes_default.Sticker);
+  }
+  renderXML(parent) {
+    const sticker = super.renderXML(parent);
+    sticker.att("editable", this.editable);
+    return sticker;
+  }
+  renderOldXML(parent, resources, global) {
+    const sticker = super.renderOldXML(parent, resources, global);
+    sticker.att("editable", this.editable);
+    return sticker;
+  }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      editable: this.editable
+    });
   }
   static isInstance(value) {
     return value instanceof Sticker;
@@ -2102,7 +2120,8 @@ var OptionsParser = class {
             case "sticker":
               target.push(new Sticker_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
                 src: element2.src,
-                loop: element2.loop
+                loop: element2.loop,
+                editable: element2.editable
               })));
               break;
             case "text":
