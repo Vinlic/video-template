@@ -3,6 +3,7 @@ import IStickerOptions from './interface/IStickerOptions';
 import ElementTypes from '../enums/ElementTypes';
 
 import Image from './Image';
+import util from '../util';
 
 class Sticker extends Image {
 
@@ -10,6 +11,11 @@ class Sticker extends Image {
 
     public constructor(options: IStickerOptions) {
         super(options, ElementTypes.Sticker);
+        util.optionsInject(this, options, {
+            editable: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined
+        }, {
+            editable: (v: any) => util.isUndefined(v) || util.isBoolean(v)
+        });
     }
 
     /**

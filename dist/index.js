@@ -1148,6 +1148,11 @@ var Sticker = class extends Image_default {
   editable;
   constructor(options) {
     super(options, ElementTypes_default.Sticker);
+    util_default.optionsInject(this, options, {
+      editable: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0
+    }, {
+      editable: (v) => util_default.isUndefined(v) || util_default.isBoolean(v)
+    });
   }
   renderXML(parent) {
     const sticker = super.renderXML(parent);

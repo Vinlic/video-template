@@ -28,7 +28,7 @@ const { Template } = require("../dist");
 
     console.info("template convert complete");
 
-    const template = Template.parseOptions(templateContent);
+    const template = Template.parse(templateContent);
 
     const ext = path.extname(outputPath);
 
