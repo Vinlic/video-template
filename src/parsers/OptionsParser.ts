@@ -147,7 +147,8 @@ class OptionsParser {
                                 ...buildBaseData(element, duration),
                                 src: element.src,
                                 loop: element.loop,
-                                editable: element.editable
+                                editable: element.editable,
+                                distortable: element.distortable
                             }));
                             break;
                         case "text":

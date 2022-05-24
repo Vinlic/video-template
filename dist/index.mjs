@@ -1123,28 +1123,34 @@ var Group_default = Group;
 // src/elements/Sticker.ts
 var Sticker = class extends Image_default {
   editable;
+  distortable;
   constructor(options) {
     super(options, ElementTypes_default.Sticker);
     util_default.optionsInject(this, options, {
-      editable: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0
+      editable: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
+      distortable: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0
     }, {
-      editable: (v) => util_default.isUndefined(v) || util_default.isBoolean(v)
+      editable: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
+      distortable: (v) => util_default.isUndefined(v) || util_default.isBoolean(v)
     });
   }
   renderXML(parent) {
     const sticker = super.renderXML(parent);
     sticker.att("editable", this.editable);
+    sticker.att("distortable", this.distortable);
     return sticker;
   }
   renderOldXML(parent, resources, global) {
     const sticker = super.renderOldXML(parent, resources, global);
     sticker.att("editable", this.editable);
+    sticker.att("distortable", this.distortable);
     return sticker;
   }
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
-      editable: this.editable
+      editable: this.editable,
+      distortable: this.distortable
     });
   }
   static isInstance(value) {
@@ -2103,7 +2109,8 @@ var OptionsParser = class {
               target.push(new Sticker_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
                 src: element2.src,
                 loop: element2.loop,
-                editable: element2.editable
+                editable: element2.editable,
+                distortable: element2.distortable
               })));
               break;
             case "text":

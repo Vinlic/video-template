@@ -396,10 +396,12 @@ declare class Group extends Element {
 
 interface IStickerOptions extends IImageOptions {
     editable?: boolean | string;
+    distortable?: boolean | string;
 }
 
 declare class Sticker extends Image {
     editable?: boolean;
+    distortable?: boolean;
     constructor(options: IStickerOptions);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
