@@ -219,6 +219,8 @@ var _Element = class {
     __publicField(this, "backgroundColor");
     __publicField(this, "startTime");
     __publicField(this, "endTime");
+    __publicField(this, "borderColor");
+    __publicField(this, "borderWidth");
     __publicField(this, "fixedScale");
     __publicField(this, "trackId");
     __publicField(this, "value");
@@ -237,6 +239,7 @@ var _Element = class {
       opacity: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       scaleWidth: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       scaleHeight: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      borderWidth: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       startTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       endTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       fixedScale: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
@@ -261,6 +264,8 @@ var _Element = class {
       enterEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       exitEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       stayEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
+      borderColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      borderWidth: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       isBackground: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       startTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
@@ -294,6 +299,8 @@ var _Element = class {
       "stayEffect-type": (_p = (_o = this.stayEffect) == null ? void 0 : _o.type) != null ? _p : void 0,
       "stayEffect-duration": (_r = (_q = this.stayEffect) == null ? void 0 : _q.duration) != null ? _r : void 0,
       "stayEffect-path": (_u = (_t = (_s = this.stayEffect) == null ? void 0 : _s.path) == null ? void 0 : _t.join(",")) != null ? _u : void 0,
+      borderColor: this.borderColor,
+      borderWidth: this.borderWidth,
       isBackground: this.isBackground,
       backgroundColor: this.backgroundColor,
       startTime: this.startTime,
@@ -318,6 +325,8 @@ var _Element = class {
       animationInDuration: ((_c = this.enterEffect) == null ? void 0 : _c.duration) ? util_default.millisecondsToSenconds(this.enterEffect.duration) : void 0,
       animationOut: (_e = (_d = this.exitEffect) == null ? void 0 : _d.type) != null ? _e : void 0,
       animationOutDuration: ((_f = this.exitEffect) == null ? void 0 : _f.duration) ? util_default.millisecondsToSenconds(this.exitEffect.duration) : void 0,
+      borderColor: this.borderColor,
+      borderWidth: this.borderWidth,
       inPoint: util_default.isNumber(this.startTime) ? util_default.millisecondsToSenconds(this.startTime) : void 0,
       outPoint: util_default.isNumber(this.endTime) ? util_default.millisecondsToSenconds(this.endTime) : void 0
     };
@@ -373,6 +382,8 @@ var _Element = class {
       rotate: this.rotate,
       opacity: this.opacity,
       index: this.zIndex || 0,
+      borderColor: this.borderColor,
+      borderWidth: this.borderWidth,
       animationIn: util_default.isNumber(this.startTime) ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,
       animationOut: util_default.isNumber(this.endTime) ? ((_b = this.exitEffect) == null ? void 0 : _b.toOptions(this.endTime)) || { delay: util_default.millisecondsToSenconds(this.endTime) } : void 0,
       elements,
@@ -1122,6 +1133,7 @@ var Group_default = Group;
 
 // src/elements/Sticker.ts
 var Sticker = class extends Image_default {
+  drawType;
   editable;
   distortable;
   constructor(options) {
@@ -1130,18 +1142,21 @@ var Sticker = class extends Image_default {
       editable: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       distortable: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0
     }, {
+      drawType: (v) => util_default.isUndefined(v) || util_default.isString(v),
       editable: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       distortable: (v) => util_default.isUndefined(v) || util_default.isBoolean(v)
     });
   }
   renderXML(parent) {
     const sticker = super.renderXML(parent);
+    sticker.att("drawType", this.drawType);
     sticker.att("editable", this.editable);
     sticker.att("distortable", this.distortable);
     return sticker;
   }
   renderOldXML(parent, resources, global) {
     const sticker = super.renderOldXML(parent, resources, global);
+    sticker.att("drawType", this.drawType);
     sticker.att("editable", this.editable);
     sticker.att("distortable", this.distortable);
     return sticker;
@@ -1149,6 +1164,7 @@ var Sticker = class extends Image_default {
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
+      drawType: this.drawType,
       editable: this.editable,
       distortable: this.distortable
     });
@@ -1689,6 +1705,8 @@ var OldParser = class {
         height: obj.height,
         opacity: obj.opacity,
         zIndex: obj.index,
+        borderColor: obj.borderColor,
+        borderWidth: obj.borderWidth,
         enterEffect: obj.animationIn ? {
           type: obj.animationIn,
           duration: obj.animationInDuration * 1e3
@@ -1699,7 +1717,7 @@ var OldParser = class {
         } : void 0,
         backgroundColor: obj.fillColor || void 0,
         startTime: Number(obj.inPoint) ? Number(obj.inPoint) * 1e3 : 0,
-        endTime: Number(obj.outPoint) ? Number(obj.outPoint) * 1e3 : parentDuration ? (parentDuration - (Number(obj.outPoint) || 0)) * 1e3 : void 0
+        endTime: Number(obj.outPoint) ? Number(obj.outPoint) * 1e3 : parentDuration ? parentDuration * 1e3 : void 0
       };
     }
     const templateChildren = [];
@@ -2030,7 +2048,6 @@ var OptionsParser = class {
       options = JSON.parse(options);
     const templateChildren = [];
     function buildBaseData(obj, parentDuration) {
-      var _a;
       return {
         id: obj.id,
         name: obj.name || void 0,
@@ -2041,6 +2058,8 @@ var OptionsParser = class {
         opacity: obj.opacity,
         rotate: obj.rotate,
         zIndex: obj.index,
+        borderColor: obj.borderColor,
+        borderWidth: obj.borderWidth,
         enterEffect: obj.animationIn && obj.animationIn.name !== "none" ? {
           type: obj.animationIn.name,
           duration: obj.animationIn.duration * 1e3
@@ -2051,7 +2070,7 @@ var OptionsParser = class {
         } : void 0,
         backgroundColor: obj.fillColor,
         startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1e3 : 0,
-        endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration ? (parentDuration - (((_a = obj == null ? void 0 : obj.animationOut) == null ? void 0 : _a.duration) || 0)) * 1e3 : void 0
+        endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration ? parentDuration * 1e3 : void 0
       };
     }
     options == null ? void 0 : options.storyboards.forEach((board) => {
@@ -2109,6 +2128,7 @@ var OptionsParser = class {
               target.push(new Sticker_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
                 src: element2.src,
                 loop: element2.loop,
+                drawType: element2.drawType,
                 editable: element2.editable,
                 distortable: element2.distortable
               })));

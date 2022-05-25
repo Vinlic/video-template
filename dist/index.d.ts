@@ -56,6 +56,8 @@ declare class Element {
     backgroundColor?: string;
     startTime?: number;
     endTime?: number;
+    borderColor?: string;
+    borderWidth?: number;
     fixedScale?: boolean;
     trackId?: string;
     value?: string;
@@ -89,6 +91,8 @@ interface IElementOptions {
     stayEffect?: IEffectOptions;
     isBackground?: boolean | string;
     backgroundColor?: string;
+    borderColor?: string;
+    borderWidth?: number | string;
     startTime?: number | string;
     endTime?: number | string;
     fixedScale?: boolean | string;
@@ -395,11 +399,13 @@ declare class Group extends Element {
 }
 
 interface IStickerOptions extends IImageOptions {
+    drawType?: string;
     editable?: boolean | string;
     distortable?: boolean | string;
 }
 
 declare class Sticker extends Image {
+    drawType?: string;
     editable?: boolean;
     distortable?: boolean;
     constructor(options: IStickerOptions);

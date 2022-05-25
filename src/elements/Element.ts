@@ -69,6 +69,9 @@ class Element {
     public backgroundColor?: string; //元素背景颜色
     public startTime?: number; //元素入场时间点
     public endTime?: number; //元素退场时间点
+    public borderStyle?: string;  //元素边框样式
+    public borderColor?: string;  //元素边框颜色
+    public borderWidth?: number;  //元素边框宽度
     public fixedScale?: boolean;  //元素固定比例
     public trackId?: string; //元素轨道ID
     public value?: string; //元素值
@@ -77,59 +80,58 @@ class Element {
     #absoluteEndTime?: number; //绝对结束时间
 
     public constructor(options: IElementOptions, type = ElementTypes.Element) {
-        util.optionsInject(
-            this,
-            options,
-            {
-                type: (v: any) => util.defaultTo(v, type),
-                id: (v: any) => util.defaultTo(Element.isId(v) ? v : undefined, util.uniqid()),
-                x: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                y: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                width: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                height: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                zIndex: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                rotate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                opacity: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                scaleWidth: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                scaleHeight: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                startTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                endTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                fixedScale: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
-                enterEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
-                exitEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
-                stayEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
-                isBackground: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
-                children: (datas: IElementOptions[]) =>
-                    util.isArray(datas)
-                        ? datas.map((data) => (Element.isInstance(data) ? data : ElementFactory.createElement(data)))
-                        : [], //实例化子节点
-            },
-            {
-                type: (v: any) => util.isString(v),
-                id: (v: any) => Element.isId(v),
-                name: (v: any) => util.isUndefined(v) || util.isString(v),
-                x: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                y: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                width: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                height: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                zIndex: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                rotate: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                opacity: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                scaleWidth: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                scaleHeight: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                enterEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
-                exitEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
-                stayEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
-                isBackground: (v: any) => util.isUndefined(v) || util.isBoolean(v),
-                backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
-                startTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                endTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                fixedScale: (v: any) => util.isUndefined(v) || util.isBoolean(v),
-                trackId: (v: any) => util.isUndefined(v) || util.isString(v),
-                value: (v: any) => util.isUndefined(v) || util.isString(v),
-                children: (v: any) => util.isArray(v),
-            },
-        );
+        util.optionsInject(this, options, {
+            type: (v: any) => util.defaultTo(v, type),
+            id: (v: any) => util.defaultTo(Element.isId(v) ? v : undefined, util.uniqid()),
+            x: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            y: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            width: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            height: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            zIndex: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            rotate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            opacity: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            scaleWidth: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            scaleHeight: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            borderWidth: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            startTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            endTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            fixedScale: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
+            enterEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
+            exitEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
+            stayEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
+            isBackground: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
+            children: (datas: IElementOptions[]) =>
+                util.isArray(datas)
+                    ? datas.map((data) => (Element.isInstance(data) ? data : ElementFactory.createElement(data)))
+                    : [], //实例化子节点
+        }, {
+            type: (v: any) => util.isString(v),
+            id: (v: any) => Element.isId(v),
+            name: (v: any) => util.isUndefined(v) || util.isString(v),
+            x: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            y: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            width: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            height: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            zIndex: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            rotate: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            opacity: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            scaleWidth: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            scaleHeight: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            enterEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
+            exitEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
+            stayEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
+            borderStyle: (v: any) => util.isUndefined(v) || util.isString(v),
+            borderColor: (v: any) => util.isUndefined(v) || util.isString(v),
+            borderWidth: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            isBackground: (v: any) => util.isUndefined(v) || util.isBoolean(v),
+            backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
+            startTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            endTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            fixedScale: (v: any) => util.isUndefined(v) || util.isBoolean(v),
+            trackId: (v: any) => util.isUndefined(v) || util.isString(v),
+            value: (v: any) => util.isUndefined(v) || util.isString(v),
+            children: (v: any) => util.isArray(v),
+        });
     }
 
     /**
@@ -160,6 +162,9 @@ class Element {
             'stayEffect-type': this.stayEffect?.type ?? undefined,
             'stayEffect-duration': this.stayEffect?.duration ?? undefined,
             'stayEffect-path': this.stayEffect?.path?.join(',') ?? undefined,
+            borderStyle: this.borderStyle,
+            borderColor: this.borderColor,
+            borderWidth: this.borderWidth,
             isBackground: this.isBackground,
             backgroundColor: this.backgroundColor,
             startTime: this.startTime,
@@ -184,6 +189,9 @@ class Element {
             animationInDuration: this.enterEffect?.duration ? util.millisecondsToSenconds(this.enterEffect.duration) : undefined,
             animationOut: this.exitEffect?.type ?? undefined,
             animationOutDuration: this.exitEffect?.duration ? util.millisecondsToSenconds(this.exitEffect.duration) : undefined,
+            borderStyle: this.borderStyle,
+            borderColor: this.borderColor,
+            borderWidth: this.borderWidth,
             inPoint: util.isNumber(this.startTime) ? util.millisecondsToSenconds(this.startTime) : undefined,
             outPoint: util.isNumber(this.endTime) ? util.millisecondsToSenconds(this.endTime) : undefined,
         };
@@ -208,18 +216,18 @@ class Element {
                 [ElementTypes.Canvas]: 'dynDataCharts',
                 [ElementTypes.Vtuber]: 'vtubers',
             }[this.type as string]) : parent)
-            .ele({
-                [ElementTypes.Text]: 'caption',
-                [ElementTypes.Image]: 'resource',
-                [ElementTypes.Audio]: 'resource',
-                [ElementTypes.Video]: 'resource',
-                [ElementTypes.Voice]: 'textToSound',
-                [ElementTypes.SSML]: 'ssml',
-                [ElementTypes.Chart]: 'dynDataChart',
-                [ElementTypes.Canvas]: 'dynDataChart',
-                [ElementTypes.Vtuber]: 'vtuber',
-            }[this.type as string],
-            attributes);
+                .ele({
+                    [ElementTypes.Text]: 'caption',
+                    [ElementTypes.Image]: 'resource',
+                    [ElementTypes.Audio]: 'resource',
+                    [ElementTypes.Video]: 'resource',
+                    [ElementTypes.Voice]: 'textToSound',
+                    [ElementTypes.SSML]: 'ssml',
+                    [ElementTypes.Chart]: 'dynDataChart',
+                    [ElementTypes.Canvas]: 'dynDataChart',
+                    [ElementTypes.Vtuber]: 'vtuber',
+                }[this.type as string],
+                    attributes);
         }
         this.children?.forEach((node) => Element.isInstance(node) && node.renderOldXML(element, resources, global));
         return element;
@@ -247,6 +255,9 @@ class Element {
             rotate: this.rotate,
             opacity: this.opacity,
             index: this.zIndex || 0,
+            borderStyle: this.borderStyle,
+            borderColor: this.borderColor,
+            borderWidth: this.borderWidth,
             animationIn: util.isNumber(this.startTime) ? (this.enterEffect?.toOptions(this.startTime) || { delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
             animationOut: util.isNumber(this.endTime) ? (this.exitEffect?.toOptions(this.endTime) || { delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
             elements,

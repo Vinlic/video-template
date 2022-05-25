@@ -21,6 +21,9 @@ interface IElementOptions {
   stayEffect?: IEffectOptions;
   isBackground?: boolean | string;
   backgroundColor?: string;
+  borderStyle?: string;
+  borderColor?: string;
+  borderWidth?: number | string;
   startTime?: number | string;
   endTime?: number | string;
   fixedScale?: boolean | string;

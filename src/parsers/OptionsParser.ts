@@ -73,6 +73,9 @@ class OptionsParser {
                 opacity: obj.opacity,
                 rotate: obj.rotate,
                 zIndex: obj.index,
+                borderStyle: obj.borderStyle,
+                borderColor: obj.borderColor,
+                borderWidth: obj.borderWidth,
                 enterEffect: obj.animationIn && obj.animationIn.name !== "none" ? {
                     type: obj.animationIn.name,
                     duration: obj.animationIn.duration * 1000
@@ -84,7 +87,7 @@ class OptionsParser {
                 backgroundColor: obj.fillColor,
                 startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1000 : 0,
                 endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1000 : 
-                (parentDuration ? (parentDuration - (obj?.animationOut?.duration || 0)) * 1000 : undefined)
+                (parentDuration ? parentDuration * 1000 : undefined)
             };
         }
         options?.storyboards.forEach((board: any) => {
@@ -147,6 +150,7 @@ class OptionsParser {
                                 ...buildBaseData(element, duration),
                                 src: element.src,
                                 loop: element.loop,
+                                drawType: element.drawType,
                                 editable: element.editable,
                                 distortable: element.distortable
                             }));
