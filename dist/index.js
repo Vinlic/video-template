@@ -2465,12 +2465,9 @@ var Compiler = class {
   static eval(expression, data = {}, valueMap = {}) {
     let result;
     const _data = __spreadValues(__spreadValues({}, data), valueMap);
-    const scope = {
-      data: _data,
-      eval: Function(`const {${Object.keys(_data).join(",")}}=this.data;return ${expression}`)
-    };
+    const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
     try {
-      result = scope.eval();
+      result = evalFun.bind(_data)();
     } catch (err) {
       result = "";
     }

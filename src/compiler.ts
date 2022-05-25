@@ -165,12 +165,9 @@ class Compiler {
   private static eval(expression: string, data = {}, valueMap = {}) {
     let result;
     const _data = { ...data, ...valueMap };
-    const scope = {
-      data: _data,
-      eval: Function(`const {${Object.keys(_data).join(',')}}=this.data;return ${expression}`),
-    }; //将表达式和数据注入在方法内
+    const evalFun = Function(`const {${Object.keys(_data).join(',')}}=this;return ${expression}`); //将表达式和数据注入在方法内
     try {
-      result = scope.eval();
+      result = evalFun.bind(_data)();
     } catch (err) {
       result = '';
     } //eval函数对象解构并执行表达式
