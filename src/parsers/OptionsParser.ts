@@ -132,8 +132,12 @@ class OptionsParser {
                     effectType: options.effectType,
                     effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1000 : undefined,
                     effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1000 : undefined,
+                    styleType: options.styleType,
                     textShadow: options.textShadow,
                     textStroke: options.textStroke,
+                    textBackground: options.textBackground,
+                    textFillColor: options.textFillColor,
+                    fillColorIntension: options.fillColorIntension
                 });
             case "audio":
                 return new Audio({

@@ -276,8 +276,9 @@ class Scene {
     public generateAllTrack(baseTime = 0) {
         let track: any = [];
         this.children.forEach(node => {
-            node.setParentSection(baseTime, this.duration as number);
+            node.setParentSection(baseTime, this.duration);
             track.push(node);
+            track = track.concat(node.generateAllTrack(baseTime, this.duration));
         });
         return track?.sort((n1: any, n2: any) => (n1.absoluteStartTime as number) - (n2.absoluteStartTime as number)); // 根据绝对开始时间排序
     }

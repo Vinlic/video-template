@@ -13,8 +13,12 @@ interface ITextOptions extends IElementOptions {
   effectType?: string;
   effectWordDuration?: number | string;
   effectWordInterval?: number | string;
+  styleType?: string,
   textShadow?: any;
   textStroke?: any;
+  textBackground?: any;
+  textFillColor?: string;
+  fillColorIntension?: number | string;
 }
 
 export default ITextOptions;

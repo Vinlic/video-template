@@ -280,7 +280,22 @@ class Element {
     public setParentSection(baseTime: number, duration: number) {
         this.#absoluteStartTime = baseTime + (this.startTime || 0);
         this.#absoluteEndTime = baseTime + (this.endTime || duration);
-        this.children?.forEach((node) => node.setParentSection(baseTime, duration));
+    }
+
+    /**
+     * 生成所有子元素的轨道
+     *
+     * @param {Number} baseTime 基准时间
+     * @returns
+     */
+     public generateAllTrack(baseTime = 0, duration: number) {
+        let track: any = [];
+        this.children?.forEach(node => {
+            node.setParentSection(baseTime, duration);
+            track.push(node);
+            track = track.concat(node.generateAllTrack(baseTime, duration));
+        });
+        return track?.sort((n1: any, n2: any) => (n1.absoluteStartTime as number) - (n2.absoluteStartTime as number)); // 根据绝对开始时间排序
     }
 
     public get absoluteStartTime() {

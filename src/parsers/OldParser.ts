@@ -233,8 +233,12 @@ class OldParser {
                             effectType: caption.effectType,
                             effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1000 : undefined,
                             effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1000 : undefined,
+                            styleType: caption.styleType,
                             textShadow: caption.textShadow,
-                            textStroke: caption.textStroke
+                            textStroke: caption.textStroke,
+                            textBackground: caption.textBackground,
+                            textFillColor: caption.textFillColor,
+                            fillColorIntension: caption.fillColorIntension
                         })));
                         break;
                     case 'resources':

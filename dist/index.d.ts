@@ -88,8 +88,12 @@ interface ITextOptions extends IElementOptions {
     effectType?: string;
     effectWordDuration?: number | string;
     effectWordInterval?: number | string;
+    styleType?: string;
     textShadow?: any;
     textStroke?: any;
+    textBackground?: any;
+    textFillColor?: string;
+    fillColorIntension?: number | string;
 }
 
 declare class Text extends Element {
@@ -105,8 +109,12 @@ declare class Text extends Element {
     effectType?: string;
     effectWordDuration?: number;
     effectWordInterval?: number;
+    styleType?: string;
     textShadow: any;
     textStroke: any;
+    textBackground: any;
+    textFillColor?: string;
+    fillColorIntension?: number;
     constructor(options: ITextOptions, type?: ElementTypes);
     renderXML(parent: any): void;
     renderOldXML(parent: any, resources: any, global: any): void;
@@ -450,6 +458,7 @@ declare class Element {
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
     setParentSection(baseTime: number, duration: number): void;
+    generateAllTrack(baseTime: number | undefined, duration: number): any;
     get absoluteStartTime(): number | undefined;
     get absoluteEndTime(): number | undefined;
 }

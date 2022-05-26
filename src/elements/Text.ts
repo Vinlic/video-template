@@ -18,8 +18,12 @@ class Text extends Element {
     public effectType?: string; //文本动效类型
     public effectWordDuration?: number; //文本单字动效时长
     public effectWordInterval?: number; //文本单字间隔
+    public styleType?: string;  //文本风格类型
     public textShadow: any = {};  //文本阴影对象
     public textStroke: any = {};  //文本描边对象
+    public textBackground: any = {};  //文本背景对象
+    public textFillColor?: string;  //文本填充色
+    public fillColorIntension?: number;  //文本填充色强度
 
     public constructor(options: ITextOptions, type = ElementTypes.Text) {
         super(options, type);
@@ -31,7 +35,8 @@ class Text extends Element {
             wordSpacing: (v: any) => Number(util.defaultTo(v, 0)),
             lineWrap: (v: any) => util.defaultTo(util.booleanParse(v), true),
             effectWordDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-            effectWordInterval: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
+            effectWordInterval: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            fillColorIntension: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
         }, {
             fontFamily: (v: any) => util.isUndefined(v) || util.isString(v),
             fontSize: (v: any) => util.isFinite(v),
@@ -45,8 +50,12 @@ class Text extends Element {
             effectType: (v: any) => util.isUndefined(v) || util.isString(v),
             effectWordDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
             effectWordInterval: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            styleType: (v: any) => util.isUndefined(v) || util.isString(v),
             textShadow: (v: any) => util.isUndefined(v) || util.isObject(v),
-            textStroke: (v: any) => util.isUndefined(v) || util.isObject(v)
+            textStroke: (v: any) => util.isUndefined(v) || util.isObject(v),
+            textBackground: (v: any) => util.isUndefined(v) || util.isObject(v),
+            textFillColor: (v: any) => util.isUndefined(v) || util.isString(v),
+            fillColorIntension: (v: any) => util.isUndefined(v) || util.isFinite(v)
         });
     }
 
@@ -70,6 +79,7 @@ class Text extends Element {
         text.att('effectType', this.effectType);
         text.att('effectWordDuration', this.effectWordDuration);
         text.att('effectWordInterval', this.effectWordInterval);
+        text.att('styleType', this.styleType);
         for(let key in this.textShadow) {
             const value = this.textShadow[key];
             text.att(`textShadow-${key}`, value);
@@ -78,6 +88,12 @@ class Text extends Element {
             const value = this.textStroke[key];
             text.att(`textStroke-${key}`, value);
         }
+        for(let key in this.textBackground) {
+            const value = this.textBackground[key];
+            text.att(`textBackground-${key}`, value);
+        }
+        text.att('textFillColor', this.textFillColor);
+        text.att('fillColorIntension', this.fillColorIntension);
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
@@ -94,6 +110,7 @@ class Text extends Element {
         caption.att('effectType', this.effectType);
         caption.att('effectWordDuration', util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration!) : undefined);
         caption.att('effectWordInterval', util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval!) : undefined);
+        caption.att('styleType', this.styleType);
         for(let key in this.textShadow) {
             const value = this.textShadow[key];
             caption.att(`textShadow-${key}`, value);
@@ -102,6 +119,12 @@ class Text extends Element {
             const value = this.textStroke[key];
             caption.att(`textStroke-${key}`, value);
         }
+        for(let key in this.textBackground) {
+            const value = this.textBackground[key];
+            caption.att(`textBackground-${key}`, value);
+        }
+        caption.att('textFillColor', this.textFillColor);
+        caption.att('fillColorIntension', this.fillColorIntension);
         const text = caption.ele('text');
         text.txt(this.value);
     }
@@ -122,8 +145,12 @@ class Text extends Element {
             effectType: this.effectType,
             effectWordDuration: util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration as number) : undefined,
             effectWordInterval: util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval as number) : undefined,
+            styleType: this.styleType,
             textShadow: this.textShadow,
-            textStroke: this.textStroke
+            textStroke: this.textStroke,
+            textBackground: this.textBackground,
+            textFillColor: this.textFillColor,
+            fillColorIntension: this.fillColorIntension
         };
     }
 

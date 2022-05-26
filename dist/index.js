@@ -599,8 +599,12 @@ var OldParser = class {
                 effectType: caption.effectType,
                 effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1e3 : void 0,
                 effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1e3 : void 0,
+                styleType: caption.styleType,
                 textShadow: caption.textShadow,
-                textStroke: caption.textStroke
+                textStroke: caption.textStroke,
+                textBackground: caption.textBackground,
+                textFillColor: caption.textFillColor,
+                fillColorIntension: caption.fillColorIntension
               })));
             });
             break;
@@ -879,8 +883,12 @@ var OptionsParser = class {
           effectType: options.effectType,
           effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1e3 : void 0,
           effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1e3 : void 0,
+          styleType: options.styleType,
           textShadow: options.textShadow,
-          textStroke: options.textStroke
+          textStroke: options.textStroke,
+          textBackground: options.textBackground,
+          textFillColor: options.textFillColor,
+          fillColorIntension: options.fillColorIntension
         }));
       case "audio":
         return new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
@@ -1343,10 +1351,18 @@ var _Element = class {
     return value instanceof _Element;
   }
   setParentSection(baseTime, duration) {
-    var _a;
     __privateSet(this, _absoluteStartTime, baseTime + (this.startTime || 0));
     __privateSet(this, _absoluteEndTime, baseTime + (this.endTime || duration));
-    (_a = this.children) == null ? void 0 : _a.forEach((node) => node.setParentSection(baseTime, duration));
+  }
+  generateAllTrack(baseTime = 0, duration) {
+    var _a;
+    let track = [];
+    (_a = this.children) == null ? void 0 : _a.forEach((node) => {
+      node.setParentSection(baseTime, duration);
+      track.push(node);
+      track = track.concat(node.generateAllTrack(baseTime, duration));
+    });
+    return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }
   get absoluteStartTime() {
     return __privateGet(this, _absoluteStartTime);
@@ -1483,8 +1499,12 @@ var Text = class extends Element_default {
   effectType;
   effectWordDuration;
   effectWordInterval;
+  styleType;
   textShadow = {};
   textStroke = {};
+  textBackground = {};
+  textFillColor;
+  fillColorIntension;
   constructor(options, type = ElementTypes_default.Text) {
     super(options, type);
     util_default.optionsInject(this, options, {
@@ -1495,7 +1515,8 @@ var Text = class extends Element_default {
       wordSpacing: (v) => Number(util_default.defaultTo(v, 0)),
       lineWrap: (v) => util_default.defaultTo(util_default.booleanParse(v), true),
       effectWordDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
-      effectWordInterval: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
+      effectWordInterval: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      fillColorIntension: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
       fontFamily: (v) => util_default.isUndefined(v) || util_default.isString(v),
       fontSize: (v) => util_default.isFinite(v),
@@ -1509,8 +1530,12 @@ var Text = class extends Element_default {
       effectType: (v) => util_default.isUndefined(v) || util_default.isString(v),
       effectWordDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       effectWordInterval: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      styleType: (v) => util_default.isUndefined(v) || util_default.isString(v),
       textShadow: (v) => util_default.isUndefined(v) || util_default.isObject(v),
-      textStroke: (v) => util_default.isUndefined(v) || util_default.isObject(v)
+      textStroke: (v) => util_default.isUndefined(v) || util_default.isObject(v),
+      textBackground: (v) => util_default.isUndefined(v) || util_default.isObject(v),
+      textFillColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      fillColorIntension: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
     });
   }
   renderXML(parent) {
@@ -1528,6 +1553,7 @@ var Text = class extends Element_default {
     text.att("effectType", this.effectType);
     text.att("effectWordDuration", this.effectWordDuration);
     text.att("effectWordInterval", this.effectWordInterval);
+    text.att("styleType", this.styleType);
     for (let key in this.textShadow) {
       const value = this.textShadow[key];
       text.att(`textShadow-${key}`, value);
@@ -1536,6 +1562,12 @@ var Text = class extends Element_default {
       const value = this.textStroke[key];
       text.att(`textStroke-${key}`, value);
     }
+    for (let key in this.textBackground) {
+      const value = this.textBackground[key];
+      text.att(`textBackground-${key}`, value);
+    }
+    text.att("textFillColor", this.textFillColor);
+    text.att("fillColorIntension", this.fillColorIntension);
   }
   renderOldXML(parent, resources, global) {
     const caption = super.renderOldXML(parent, resources, global);
@@ -1551,6 +1583,7 @@ var Text = class extends Element_default {
     caption.att("effectType", this.effectType);
     caption.att("effectWordDuration", util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0);
     caption.att("effectWordInterval", util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0);
+    caption.att("styleType", this.styleType);
     for (let key in this.textShadow) {
       const value = this.textShadow[key];
       caption.att(`textShadow-${key}`, value);
@@ -1559,6 +1592,12 @@ var Text = class extends Element_default {
       const value = this.textStroke[key];
       caption.att(`textStroke-${key}`, value);
     }
+    for (let key in this.textBackground) {
+      const value = this.textBackground[key];
+      caption.att(`textBackground-${key}`, value);
+    }
+    caption.att("textFillColor", this.textFillColor);
+    caption.att("fillColorIntension", this.fillColorIntension);
     const text = caption.ele("text");
     text.txt(this.value);
   }
@@ -1577,8 +1616,12 @@ var Text = class extends Element_default {
       effectType: this.effectType,
       effectWordDuration: util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0,
       effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0,
+      styleType: this.styleType,
       textShadow: this.textShadow,
-      textStroke: this.textStroke
+      textStroke: this.textStroke,
+      textBackground: this.textBackground,
+      textFillColor: this.textFillColor,
+      fillColorIntension: this.fillColorIntension
     });
   }
   static isInstance(value) {
@@ -2341,6 +2384,7 @@ var _Scene = class {
     this.children.forEach((node) => {
       node.setParentSection(baseTime, this.duration);
       track.push(node);
+      track = track.concat(node.generateAllTrack(baseTime, this.duration));
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }
