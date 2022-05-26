@@ -1,7 +1,7 @@
 import util from '../util';
 import Template from '../Template';
 import Scene from '../Scene';
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, Canvas, SSML, Sticker, Group } from '../elements';
+import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, Canvas, SSML, Sticker, Group, Subtitle } from '../elements';
 
 class OptionsParser {
 
@@ -230,7 +230,12 @@ class OptionsParser {
             case "group":
                 return new Group({
                     ...buildBaseData(options, parentDuration),
-                    children: options.elements?.map((element: any) => this.parseElementOptions(element, parentDuration))
+                    children: (options.children || options.elements)?.map((element: any) => this.parseElementOptions(element, parentDuration))
+                });
+            case "subtitle":
+                return new Subtitle({
+                    ...buildBaseData(options, parentDuration),
+                    children: (options.children || options.elements)?.map((element: any) => this.parseElementOptions(element, parentDuration))
                 });
             default:
                 return new Element({});
@@ -304,7 +309,7 @@ class OptionsParser {
                 fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1000 : undefined,
                 fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1000 : undefined,
             }));
-            board.elements?.forEach((element: any) => sceneChildren.push(this.parseElementOptions(element, duration)));
+            (board.children || board.elements)?.forEach((element: any) => sceneChildren.push(this.parseElementOptions(element, duration)));
             templateChildren.push(new Scene({
                 id,
                 poster,

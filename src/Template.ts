@@ -274,7 +274,7 @@ class Template {
      * @param {Object} options options对象
      * @returns {Template}
      */
-    public static parseOptions = OptionsParser.parseOptions;
+    public static parseOptions = OptionsParser.parseOptions.bind(OptionsParser);
 
     /**
      * 生成所有子元素的轨道

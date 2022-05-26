@@ -786,7 +786,7 @@ var OptionsParser = class {
     };
   }
   static parseElementOptions(options, parentDuration) {
-    var _a;
+    var _a, _b;
     if (util_default.isString(options))
       options = JSON.parse(options);
     function buildBaseData(obj, parentDuration2) {
@@ -948,6 +948,10 @@ var OptionsParser = class {
       case "group":
         return new Group_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
           children: (_a = options.elements) == null ? void 0 : _a.map((element) => this.parseElementOptions(element, parentDuration))
+        }));
+      case "subtitle":
+        return new Subtitle_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          children: (_b = options.elements) == null ? void 0 : _b.map((element) => this.parseElementOptions(element, parentDuration))
         }));
       default:
         return new Element_default({});
@@ -2749,7 +2753,7 @@ __publicField(Template, "parseJSONPreProcessing", Parser_default.parseJSONPrePro
 __publicField(Template, "parseXML", Parser_default.parseXML);
 __publicField(Template, "parseXMLPreProcessing", Parser_default.parseXMLPreProcessing);
 __publicField(Template, "parseOldXML", OldParser_default.parseXML);
-__publicField(Template, "parseOptions", OptionsParser_default.parseOptions);
+__publicField(Template, "parseOptions", OptionsParser_default.parseOptions.bind(OptionsParser_default));
 var Template_default = Template;
 export {
   Scene_default as Scene,
