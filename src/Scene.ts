@@ -274,11 +274,12 @@ class Scene {
      * @returns
      */
     public generateAllTrack(baseTime = 0) {
-        const track = this.children.map((node) => {
+        let track: any = [];
+        this.children.forEach(node => {
             node.setParentSection(baseTime, this.duration as number);
-            return node;
-        }); // 子节点设置父级时间区间
-        return track?.sort((n1, n2) => (n1.absoluteStartTime as number) - (n2.absoluteStartTime as number)); // 根据绝对开始时间排序
+            track.push(node);
+        });
+        return track?.sort((n1: any, n2: any) => (n1.absoluteStartTime as number) - (n2.absoluteStartTime as number)); // 根据绝对开始时间排序
     }
 
     /**

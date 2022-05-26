@@ -22,8 +22,8 @@ interface IElementOptions {
   isBackground?: boolean | string;
   backgroundColor?: string;
   borderStyle?: string;
-  borderColor?: string;
-  borderWidth?: number | string;
+  strokeColor?: string;
+  strokeWidth?: number | string;
   startTime?: number | string;
   endTime?: number | string;
   fixedScale?: boolean | string;

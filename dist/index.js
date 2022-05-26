@@ -470,8 +470,8 @@ var OldParser = class {
         opacity: obj.opacity,
         zIndex: obj.index,
         borderStyle: obj.borderStyle,
-        borderColor: obj.borderColor,
-        borderWidth: obj.borderWidth,
+        strokeColor: obj.strokeColor,
+        strokeWidth: obj.strokeWidth,
         enterEffect: obj.animationIn ? {
           type: obj.animationIn,
           duration: obj.animationInDuration * 1e3
@@ -824,8 +824,8 @@ var OptionsParser = class {
         rotate: obj.rotate,
         zIndex: obj.index,
         borderStyle: obj.borderStyle,
-        borderColor: obj.borderColor,
-        borderWidth: obj.borderWidth,
+        strokeColor: obj.strokeColor,
+        strokeWidth: obj.strokeWidth,
         enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
           type: obj.animationIn.name,
           duration: obj.animationIn.duration * 1e3
@@ -996,8 +996,8 @@ var OptionsParser = class {
         rotate: obj.rotate,
         zIndex: obj.index,
         borderStyle: obj.borderStyle,
-        borderColor: obj.borderColor,
-        borderWidth: obj.borderWidth,
+        strokeColor: obj.strokeColor,
+        strokeWidth: obj.strokeWidth,
         enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
           type: obj.animationIn.name,
           duration: obj.animationIn.duration * 1e3
@@ -1160,8 +1160,8 @@ var _Element = class {
     __publicField(this, "startTime");
     __publicField(this, "endTime");
     __publicField(this, "borderStyle");
-    __publicField(this, "borderColor");
-    __publicField(this, "borderWidth");
+    __publicField(this, "strokeColor");
+    __publicField(this, "strokeWidth");
     __publicField(this, "fixedScale");
     __publicField(this, "trackId");
     __publicField(this, "value");
@@ -1180,7 +1180,7 @@ var _Element = class {
       opacity: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       scaleWidth: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       scaleHeight: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
-      borderWidth: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      strokeWidth: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       startTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       endTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       fixedScale: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
@@ -1206,8 +1206,8 @@ var _Element = class {
       exitEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       stayEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       borderStyle: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      borderColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      borderWidth: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      strokeColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      strokeWidth: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       isBackground: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       startTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
@@ -1242,8 +1242,8 @@ var _Element = class {
       "stayEffect-duration": (_r = (_q = this.stayEffect) == null ? void 0 : _q.duration) != null ? _r : void 0,
       "stayEffect-path": (_u = (_t = (_s = this.stayEffect) == null ? void 0 : _s.path) == null ? void 0 : _t.join(",")) != null ? _u : void 0,
       borderStyle: this.borderStyle,
-      borderColor: this.borderColor,
-      borderWidth: this.borderWidth,
+      strokeColor: this.strokeColor,
+      strokeWidth: this.strokeWidth,
       isBackground: this.isBackground,
       backgroundColor: this.backgroundColor,
       startTime: this.startTime,
@@ -1269,8 +1269,8 @@ var _Element = class {
       animationOut: (_e = (_d = this.exitEffect) == null ? void 0 : _d.type) != null ? _e : void 0,
       animationOutDuration: ((_f = this.exitEffect) == null ? void 0 : _f.duration) ? util_default.millisecondsToSenconds(this.exitEffect.duration) : void 0,
       borderStyle: this.borderStyle,
-      borderColor: this.borderColor,
-      borderWidth: this.borderWidth,
+      strokeColor: this.strokeColor,
+      strokeWidth: this.strokeWidth,
       inPoint: util_default.isNumber(this.startTime) ? util_default.millisecondsToSenconds(this.startTime) : void 0,
       outPoint: util_default.isNumber(this.endTime) ? util_default.millisecondsToSenconds(this.endTime) : void 0
     };
@@ -1308,8 +1308,8 @@ var _Element = class {
   }
   toOptions() {
     var _a, _b;
-    const elements = [];
-    this.children.forEach((node) => _Element.isInstance(node) && elements.push(node.toOptions()));
+    const children = [];
+    this.children.forEach((node) => _Element.isInstance(node) && children.push(node.toOptions()));
     return {
       elementType: this.type,
       id: this.id,
@@ -1327,11 +1327,12 @@ var _Element = class {
       opacity: this.opacity,
       index: this.zIndex || 0,
       borderStyle: this.borderStyle,
-      borderColor: this.borderColor,
-      borderWidth: this.borderWidth,
+      strokeColor: this.strokeColor,
+      strokeWidth: this.strokeWidth,
       animationIn: util_default.isNumber(this.startTime) ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { name: "none", delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,
       animationOut: util_default.isNumber(this.endTime) ? ((_b = this.exitEffect) == null ? void 0 : _b.toOptions(this.endTime)) || { name: "none", delay: util_default.millisecondsToSenconds(this.endTime) } : void 0,
-      elements,
+      children,
+      elements: children,
       fillColor: this.backgroundColor
     };
   }
@@ -1342,8 +1343,10 @@ var _Element = class {
     return value instanceof _Element;
   }
   setParentSection(baseTime, duration) {
+    var _a;
     __privateSet(this, _absoluteStartTime, baseTime + (this.startTime || 0));
     __privateSet(this, _absoluteEndTime, baseTime + (this.endTime || duration));
+    (_a = this.children) == null ? void 0 : _a.forEach((node) => node.setParentSection(baseTime, duration));
   }
   get absoluteStartTime() {
     return __privateGet(this, _absoluteStartTime);
@@ -2334,9 +2337,10 @@ var _Scene = class {
     return value instanceof _Scene;
   }
   generateAllTrack(baseTime = 0) {
-    const track = this.children.map((node) => {
+    let track = [];
+    this.children.forEach((node) => {
       node.setParentSection(baseTime, this.duration);
-      return node;
+      track.push(node);
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }

@@ -436,8 +436,8 @@ declare class Element {
     startTime?: number;
     endTime?: number;
     borderStyle?: string;
-    borderColor?: string;
-    borderWidth?: number;
+    strokeColor?: string;
+    strokeWidth?: number;
     fixedScale?: boolean;
     trackId?: string;
     value?: string;
@@ -473,8 +473,8 @@ interface IElementOptions {
     isBackground?: boolean | string;
     backgroundColor?: string;
     borderStyle?: string;
-    borderColor?: string;
-    borderWidth?: number | string;
+    strokeColor?: string;
+    strokeWidth?: number | string;
     startTime?: number | string;
     endTime?: number | string;
     fixedScale?: boolean | string;
@@ -534,7 +534,7 @@ declare class Scene {
     renderOldXML(parent?: any, resources?: any): any;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
-    generateAllTrack(baseTime?: number): Element[];
+    generateAllTrack(baseTime?: number): any;
     get sortedChildren(): Element[];
     get fontFamilys(): string[];
 }

@@ -71,8 +71,8 @@ class Element {
     public startTime?: number; //元素入场时间点
     public endTime?: number; //元素退场时间点
     public borderStyle?: string;  //元素边框样式
-    public borderColor?: string;  //元素边框颜色
-    public borderWidth?: number;  //元素边框宽度
+    public strokeColor?: string;  //元素边框颜色
+    public strokeWidth?: number;  //元素边框宽度
     public fixedScale?: boolean;  //元素固定比例
     public trackId?: string; //元素轨道ID
     public value?: string; //元素值
@@ -93,7 +93,7 @@ class Element {
             opacity: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             scaleWidth: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             scaleHeight: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-            borderWidth: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            strokeWidth: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             startTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             endTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             fixedScale: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
@@ -122,8 +122,8 @@ class Element {
             exitEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
             stayEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
             borderStyle: (v: any) => util.isUndefined(v) || util.isString(v),
-            borderColor: (v: any) => util.isUndefined(v) || util.isString(v),
-            borderWidth: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            strokeColor: (v: any) => util.isUndefined(v) || util.isString(v),
+            strokeWidth: (v: any) => util.isUndefined(v) || util.isFinite(v),
             isBackground: (v: any) => util.isUndefined(v) || util.isBoolean(v),
             backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
             startTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
@@ -164,8 +164,8 @@ class Element {
             'stayEffect-duration': this.stayEffect?.duration ?? undefined,
             'stayEffect-path': this.stayEffect?.path?.join(',') ?? undefined,
             borderStyle: this.borderStyle,
-            borderColor: this.borderColor,
-            borderWidth: this.borderWidth,
+            strokeColor: this.strokeColor,
+            strokeWidth: this.strokeWidth,
             isBackground: this.isBackground,
             backgroundColor: this.backgroundColor,
             startTime: this.startTime,
@@ -191,8 +191,8 @@ class Element {
             animationOut: this.exitEffect?.type ?? undefined,
             animationOutDuration: this.exitEffect?.duration ? util.millisecondsToSenconds(this.exitEffect.duration) : undefined,
             borderStyle: this.borderStyle,
-            borderColor: this.borderColor,
-            borderWidth: this.borderWidth,
+            strokeColor: this.strokeColor,
+            strokeWidth: this.strokeWidth,
             inPoint: util.isNumber(this.startTime) ? util.millisecondsToSenconds(this.startTime) : undefined,
             outPoint: util.isNumber(this.endTime) ? util.millisecondsToSenconds(this.endTime) : undefined,
         };
@@ -240,8 +240,8 @@ class Element {
      * 转换为前端支持的options
      */
     public toOptions(): any {
-        const elements: any[] = [];
-        this.children.forEach((node) => Element.isInstance(node) && elements.push(node.toOptions()));
+        const children: any[] = [];
+        this.children.forEach((node) => Element.isInstance(node) && children.push(node.toOptions()));
         return {
             elementType: this.type,
             id: this.id,
@@ -259,11 +259,12 @@ class Element {
             opacity: this.opacity,
             index: this.zIndex || 0,
             borderStyle: this.borderStyle,
-            borderColor: this.borderColor,
-            borderWidth: this.borderWidth,
+            strokeColor: this.strokeColor,
+            strokeWidth: this.strokeWidth,
             animationIn: util.isNumber(this.startTime) ? (this.enterEffect?.toOptions(this.startTime) || { name: "none", delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
             animationOut: util.isNumber(this.endTime) ? (this.exitEffect?.toOptions(this.endTime) || { name: "none", delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
-            elements,
+            children,
+            elements: children,
             fillColor: this.backgroundColor
         };
     }
@@ -279,6 +280,7 @@ class Element {
     public setParentSection(baseTime: number, duration: number) {
         this.#absoluteStartTime = baseTime + (this.startTime || 0);
         this.#absoluteEndTime = baseTime + (this.endTime || duration);
+        this.children?.forEach((node) => node.setParentSection(baseTime, duration));
     }
 
     public get absoluteStartTime() {
