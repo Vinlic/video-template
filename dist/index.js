@@ -970,11 +970,11 @@ var OptionsParser = class {
         }));
       case "group":
         return new Group_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
-          children: (_a = options.elements) == null ? void 0 : _a.map((element) => this.parseElementOptions(element, parentDuration))
+          children: (_a = options.children || options.elements) == null ? void 0 : _a.map((element) => this.parseElementOptions(element, parentDuration))
         }));
       case "subtitle":
         return new Subtitle_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
-          children: (_b = options.elements) == null ? void 0 : _b.map((element) => this.parseElementOptions(element, parentDuration))
+          children: (_b = options.children || options.elements) == null ? void 0 : _b.map((element) => this.parseElementOptions(element, parentDuration))
         }));
       default:
         return new Element_default({});
@@ -1044,7 +1044,7 @@ var OptionsParser = class {
         fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1e3 : void 0,
         fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1e3 : void 0
       })));
-      (_a = board.elements) == null ? void 0 : _a.forEach((element) => sceneChildren.push(this.parseElementOptions(element, duration)));
+      (_a = board.children || board.elements) == null ? void 0 : _a.forEach((element) => sceneChildren.push(this.parseElementOptions(element, duration)));
       templateChildren.push(new Scene_default({
         id,
         poster,
