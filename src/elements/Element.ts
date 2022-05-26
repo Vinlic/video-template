@@ -5,6 +5,7 @@ import ElementTypes from '../enums/ElementTypes';
 
 import util from '../util';
 import ElementFactory from '../ElementFactory';
+import { OptionsParser } from '../parsers';
 
 class Effect {
     public type = ''; //动效类
@@ -233,6 +234,8 @@ class Element {
         return element;
     }
 
+    public static parseOptions = OptionsParser.parseElementOptions.bind(OptionsParser);
+
     /**
      * 转换为前端支持的options
      */
@@ -258,8 +261,8 @@ class Element {
             borderStyle: this.borderStyle,
             borderColor: this.borderColor,
             borderWidth: this.borderWidth,
-            animationIn: util.isNumber(this.startTime) ? (this.enterEffect?.toOptions(this.startTime) || { delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
-            animationOut: util.isNumber(this.endTime) ? (this.exitEffect?.toOptions(this.endTime) || { delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
+            animationIn: util.isNumber(this.startTime) ? (this.enterEffect?.toOptions(this.startTime) || { name: "none", delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
+            animationOut: util.isNumber(this.endTime) ? (this.exitEffect?.toOptions(this.endTime) || { name: "none", delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
             elements,
             fillColor: this.backgroundColor
         };

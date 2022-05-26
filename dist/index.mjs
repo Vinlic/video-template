@@ -129,7 +129,7 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
 });
 
 // src/Scene.ts
-import { create } from "xmlbuilder2";
+import { create as create3 } from "xmlbuilder2";
 
 // src/enums/ElementTypes.ts
 var ElementTypes = /* @__PURE__ */ ((ElementTypes2) => {
@@ -169,6 +169,919 @@ __export(elements_exports, {
   Voice: () => Voice_default,
   Vtuber: () => Vtuber_default
 });
+
+// src/parsers/Parser.ts
+import { create } from "xmlbuilder2";
+import { XMLParser } from "fast-xml-parser";
+var xmlParser = new XMLParser({
+  allowBooleanAttributes: true,
+  ignoreAttributes: false,
+  attributeNamePrefix: "",
+  preserveOrder: true,
+  parseTagValue: false,
+  stopNodes: ["template.scene.voice.ssml"]
+});
+var Parser = class {
+  static toXML(_template, pretty = false) {
+    const root = create({ version: "1.0" });
+    const template = root.ele("template", {
+      version: _template.version,
+      id: _template.id,
+      name: _template.name,
+      mode: _template.mode,
+      poster: _template.poster,
+      actuator: _template.actuator,
+      width: _template.width,
+      height: _template.height,
+      aspectRatio: _template.aspectRatio,
+      fps: _template.fps,
+      crf: _template.crf,
+      videoCodec: _template.videoCodec,
+      videoBitrate: _template.videoBitrate,
+      pixelFormat: _template.pixelFormat,
+      frameQuality: _template.frameQuality,
+      duration: _template.duration,
+      format: _template.format,
+      volume: _template.volume,
+      audioCodec: _template.audioCodec,
+      sampleRate: _template.sampleRate,
+      audioBitrate: _template.audioBitrate,
+      backgroundColor: _template.backgroundColor,
+      captureTime: _template.captureTime,
+      createTime: _template.createTime,
+      updateTime: _template.updateTime,
+      buildBy: _template.buildBy
+    });
+    _template.children.forEach((node) => node.renderXML(template));
+    return template.end({ prettyPrint: pretty });
+  }
+  static toBuffer(tempalte) {
+    return Buffer.from(tempalte.toXML());
+  }
+  static parseJSON(content, data = {}, vars = {}) {
+    return new Template_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
+  }
+  static async parseJSONPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+    const object = util_default.isString(content) ? JSON.parse(content) : content;
+    if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
+      const result = await dataProcessor(object.dataSrc);
+      util_default.isObject(result) && util_default.assign(data, result);
+    }
+    if (util_default.isFunction(varsProcessor) && util_default.isString(object.varsSrc)) {
+      const result = await varsProcessor(object.varsSrc);
+      util_default.isObject(result) && util_default.assign(data, result);
+    }
+    return new Template_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
+  }
+  static parseXML(content, data = {}, vars = {}) {
+    let xmlObject, varsObject, dataObject;
+    xmlParser.parse(content).forEach((o) => {
+      if (o.template)
+        xmlObject = o;
+      if (o.vars)
+        varsObject = o;
+      if (o.data)
+        dataObject = o;
+    });
+    if (!xmlObject)
+      throw new Error("template xml invalid");
+    function parse(obj, target = {}) {
+      const type = Object.keys(obj)[0];
+      target.type = type;
+      for (let key in obj[":@"]) {
+        const value = obj[":@"][key];
+        let index;
+        if (key === "for-index")
+          key = "forIndex";
+        else if (key === "for-item")
+          key = "forItem";
+        else if ((index = key.indexOf("-")) != -1) {
+          const pkey = key.substring(0, index);
+          const ckey = key.substring(index + 1, key.length);
+          if (!target[pkey])
+            target[pkey] = {};
+          target[pkey][ckey] = value;
+          continue;
+        }
+        target[key] = value;
+      }
+      target.children = [];
+      obj[type].forEach((v) => {
+        if (v["#text"])
+          return target.value = v["#text"];
+        const result = parse(v, {});
+        result && target.children.push(result);
+      });
+      return target;
+    }
+    const completeObject = parse(xmlObject);
+    const _vars = {};
+    const _data = {};
+    if (varsObject || dataObject) {
+      let processing = function(obj, target) {
+        obj.children.forEach((o) => {
+          if (!target[o.type])
+            target[o.type] = {};
+          if (o.value)
+            target[o.type] = o.value;
+          processing(o, target[o.type]);
+        });
+      };
+      varsObject && processing(parse(varsObject), _vars);
+      dataObject && processing(parse(dataObject), _data);
+    }
+    return new Template_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
+  }
+  static async parseXMLPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+    let xmlObject, varsObject, dataObject;
+    xmlParser.parse(content).forEach((o) => {
+      if (o.template)
+        xmlObject = o;
+      if (o.vars)
+        varsObject = o;
+      if (o.data)
+        dataObject = o;
+    });
+    if (!xmlObject)
+      throw new Error("template xml invalid");
+    function parse(obj, target = {}) {
+      const type = Object.keys(obj)[0];
+      target.type = type;
+      for (let key in obj[":@"]) {
+        const value = obj[":@"][key];
+        let index;
+        if (key === "for-index")
+          key = "forIndex";
+        else if (key === "for-item")
+          key = "forItem";
+        else if ((index = key.indexOf("-")) != -1) {
+          const pkey = key.substring(0, index);
+          const ckey = key.substring(index + 1, key.length);
+          if (!target[pkey])
+            target[pkey] = {};
+          target[pkey][ckey] = value;
+          continue;
+        }
+        target[key] = value;
+      }
+      target.children = [];
+      obj[type].forEach((v) => {
+        if (v["#text"])
+          return target.value = v["#text"];
+        const result = parse(v, {});
+        result && target.children.push(result);
+      });
+      return target;
+    }
+    const completeObject = parse(xmlObject);
+    const _vars = {};
+    const _data = {};
+    if (varsObject || dataObject) {
+      let processing = function(obj, target) {
+        obj.children.forEach((o) => {
+          if (!target[o.type])
+            target[o.type] = {};
+          if (o.value)
+            target[o.type] = o.value;
+          processing(o, target[o.type]);
+        });
+      };
+      varsObject && processing(parse(varsObject), _vars);
+      dataObject && processing(parse(dataObject), _data);
+    }
+    if (dataObject == null ? void 0 : dataObject[":@"]) {
+      const attrs = dataObject[":@"];
+      if (util_default.isFunction(dataProcessor) && attrs.source) {
+        const result = await dataProcessor(attrs.source);
+        util_default.isObject(result) && util_default.assign(data, result);
+      }
+    }
+    if (varsObject == null ? void 0 : varsObject[":@"]) {
+      const attrs = varsObject[":@"];
+      if (util_default.isFunction(varsProcessor) && attrs.source) {
+        const result = await dataProcessor(attrs.source);
+        util_default.isObject(result) && util_default.assign(vars, result);
+      }
+    }
+    return new Template_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
+  }
+};
+var Parser_default = Parser;
+
+// src/parsers/OldParser.ts
+import { create as create2 } from "xmlbuilder2";
+import { XMLParser as XMLParser2 } from "fast-xml-parser";
+var xmlParser2 = new XMLParser2({
+  allowBooleanAttributes: true,
+  ignoreAttributes: false,
+  attributeNamePrefix: "",
+  preserveOrder: true,
+  parseTagValue: false,
+  stopNodes: ["template.scene.voice.ssml"]
+});
+var OldParser = class {
+  static toXML(template, pretty = false) {
+    const root = create2({ version: "1.0" });
+    const project = root.ele("project", {
+      version: "1.0.0",
+      id: template.id,
+      name: template.name,
+      actuator: template.actuator
+    });
+    const resources = project.ele("projRes");
+    resources.map = {};
+    const global = project.ele("global", {
+      videoSize: template.aspectRatio,
+      videoWidth: template.width,
+      videoHeight: template.height,
+      poster: template.poster,
+      fps: template.fps,
+      captureTime: !util_default.isUndefined(template.captureTime) ? template.captureTime / 1e3 : void 0,
+      videoBitrate: 2097152,
+      audioBitrate: 131072
+    });
+    if (template.backgroundColor) {
+      global.ele("bgblock", {
+        id: util_default.uniqid(),
+        inPoint: 0,
+        fillColor: template.backgroundColor
+      });
+    }
+    const storyBoards = project.ele("storyBoards");
+    template.children.forEach((node) => node.renderOldXML(storyBoards, resources, global));
+    return project.end({ prettyPrint: pretty });
+  }
+  static toBuffer(template) {
+    return Buffer.from(this.toXML(template));
+  }
+  static parseXML(content, data = {}, vars = {}) {
+    const xmlObject = xmlParser2.parse(content);
+    function merge(obj, target = {}) {
+      Object.assign(target, obj[":@"]);
+      const key = Object.keys(obj).filter((k) => k != ":@")[0];
+      target.key = key;
+      if (key === "#text")
+        return obj[key];
+      const items = obj[key];
+      target.children = items.map((v) => v && merge(v, {}));
+      return target;
+    }
+    const rawObject = merge(xmlObject[1] || xmlObject[0]);
+    const {
+      type,
+      name,
+      actuator,
+      compile,
+      children: [projRes, global, storyBoards]
+    } = rawObject;
+    const resourceMap = {};
+    projRes.children.forEach((resource) => resourceMap[resource.id] = resource);
+    function buildBaseData(obj, parentDuration) {
+      return {
+        id: obj.id,
+        name: obj.name,
+        x: obj.scaleX,
+        y: obj.scaleY,
+        width: obj.width,
+        height: obj.height,
+        opacity: obj.opacity,
+        zIndex: obj.index,
+        borderStyle: obj.borderStyle,
+        borderColor: obj.borderColor,
+        borderWidth: obj.borderWidth,
+        enterEffect: obj.animationIn ? {
+          type: obj.animationIn,
+          duration: obj.animationInDuration * 1e3
+        } : void 0,
+        exitEffect: obj.animationOut ? {
+          type: obj.animationOut,
+          duration: obj.animationOutDuration * 1e3
+        } : void 0,
+        backgroundColor: obj.fillColor || void 0,
+        startTime: Number(obj.inPoint) ? Number(obj.inPoint) * 1e3 : 0,
+        endTime: Number(obj.outPoint) ? Number(obj.outPoint) * 1e3 : parentDuration ? parentDuration * 1e3 : void 0
+      };
+    }
+    const templateChildren = [];
+    let templateBackgroundColor;
+    global.children.forEach((tag) => {
+      switch (tag.key) {
+        case "bgblock":
+          templateBackgroundColor = tag.fillColor;
+          break;
+        case "bgimg":
+          templateChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
+            x: 0,
+            y: 0,
+            width: global.videoWidth,
+            height: global.videoHeight,
+            endTime: void 0,
+            isBackground: true,
+            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : void 0
+          })));
+          break;
+        case "bgmusic":
+          templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
+            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : void 0,
+            volume: tag.volume,
+            duration: tag.duration ? tag.duration * 1e3 : void 0,
+            seekStart: tag.seekStart ? tag.seekStart * 1e3 : void 0,
+            seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0,
+            muted: tag.muted,
+            loop: tag.loop,
+            isBackground: true,
+            fadeInDuration: tag.inPoint ? tag.inPoint * 1e3 : void 0,
+            fadeOutDuration: tag.outPoint ? tag.outPoint * 1e3 : void 0
+          })));
+          break;
+        case "bgvideo":
+          templateChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
+            x: 0,
+            y: 0,
+            width: global.videoWidth,
+            height: global.videoHeight,
+            poster: tag.poster,
+            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : void 0,
+            duration: tag.duration ? tag.duration * 1e3 : void 0,
+            volume: tag.volume,
+            muted: tag.muted,
+            loop: tag.loop,
+            endTime: void 0,
+            isBackground: true,
+            seekStart: tag.seekStart ? tag.seekStart * 1e3 : void 0,
+            seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0,
+            demuxSrc: tag.demuxSrc
+          })));
+          break;
+      }
+    });
+    storyBoards.children.forEach((board) => {
+      const { id, poster, duration } = board;
+      const sceneChildren = [];
+      let sceneBackgroundColor;
+      let transition;
+      board.children.forEach((data2) => {
+        switch (data2.key) {
+          case "bgblock":
+            sceneBackgroundColor = data2.fillColor;
+            break;
+          case "bgimg":
+            sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(data2, duration)), {
+              x: 0,
+              y: 0,
+              width: global.videoWidth,
+              height: global.videoHeight,
+              endTime: void 0,
+              isBackground: true,
+              src: resourceMap[data2.resId] ? resourceMap[data2.resId].resPath : void 0
+            })));
+            break;
+          case "bgvideo":
+            sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(data2, duration)), {
+              x: 0,
+              y: 0,
+              width: global.videoWidth,
+              height: global.videoHeight,
+              poster: data2.poster,
+              src: resourceMap[data2.resId] ? resourceMap[data2.resId].resPath : void 0,
+              duration: data2.duration ? data2.duration * 1e3 : void 0,
+              volume: data2.volume,
+              muted: data2.muted,
+              loop: data2.loop,
+              endTime: void 0,
+              isBackground: true,
+              seekStart: data2.seekStart ? data2.seekStart * 1e3 : void 0,
+              seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0
+            })));
+            break;
+          case "transition":
+            transition = {
+              type: data2.name,
+              duration: data2.duration * 1e3
+            };
+            break;
+          case "captions":
+            data2.children.forEach((caption) => {
+              var _a;
+              return sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(caption, duration)), {
+                value: (_a = caption.children[0]) == null ? void 0 : _a.children.join("\n"),
+                fontFamily: caption.fontFamily ? caption.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
+                fontSize: caption.fontSize,
+                fontColor: caption.fontColor,
+                fontWeight: caption.bold ? 700 : void 0,
+                fontStyle: caption.italic ? "italic" : void 0,
+                lineHeight: parseFloat((Number(caption.lineHeight) / Number(caption.fontSize)).toFixed(3)),
+                wordSpacing: caption.wordSpacing,
+                textAlign: caption.textAlign,
+                effectType: caption.effectType,
+                effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1e3 : void 0,
+                effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1e3 : void 0,
+                textShadow: caption.textShadow,
+                textStroke: caption.textStroke
+              })));
+            });
+            break;
+          case "resources":
+            data2.children.forEach((tag) => {
+              if (!resourceMap[tag.resId])
+                return;
+              const { type: type2, resPath } = resourceMap[tag.resId];
+              let element;
+              switch (type2) {
+                case "img":
+                case "gif":
+                  element = new Image_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
+                    crop: tag.cropStyle ? {
+                      style: tag.cropStyle === "circle" ? "circle" : "rect",
+                      x: tag.cropX,
+                      y: tag.cropY,
+                      width: tag.cropWidth,
+                      height: tag.cropHeight
+                    } : void 0,
+                    src: resPath,
+                    loop: tag.loop,
+                    dynamic: resPath.indexOf(".gif") !== -1 ? true : type2 === "gif"
+                  }));
+                  break;
+                case "video":
+                  element = new Video_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
+                    poster: data2.poster,
+                    src: resPath,
+                    crop: tag.cropStyle ? {
+                      style: tag.cropStyle === "circle" ? "circle" : "rect",
+                      x: tag.cropX,
+                      y: tag.cropY,
+                      width: tag.cropWidth,
+                      height: tag.cropHeight
+                    } : void 0,
+                    duration: data2.duration ? data2.duration * 1e3 : void 0,
+                    volume: data2.volume,
+                    muted: data2.muted,
+                    loop: data2.loop,
+                    seekStart: data2.seekStart ? data2.seekStart * 1e3 : void 0,
+                    seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0,
+                    demuxSrc: data2.demuxSrc
+                  }));
+                  break;
+                case "sound":
+                  element = new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
+                    src: resPath,
+                    duration: data2.duration,
+                    volume: data2.volume,
+                    muted: data2.muted,
+                    loop: data2.loop,
+                    seekStart: data2.seekStart ? data2.seekStart * 1e3 : void 0,
+                    seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0,
+                    fadeInDuration: data2.inPoint ? data2.inPoint * 1e3 : void 0,
+                    fadeOutDuration: data2.outPoint ? data2.outPoint * 1e3 : void 0
+                  }));
+              }
+              element && sceneChildren.push(element);
+            });
+            break;
+          case "dynDataCharts":
+            data2.children.forEach((chart) => sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(chart, duration)), {
+              chartId: chart.chartId,
+              poster: chart.poster,
+              duration: !util_default.isUndefined(chart.duration) ? chart.duration * 1e3 : void 0,
+              configSrc: chart.optionsPath,
+              dataSrc: chart.dataPath
+            }))));
+            break;
+          case "textToSounds":
+            data2.children.forEach((voice) => {
+              var _a;
+              return sceneChildren.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(voice, duration)), {
+                src: resourceMap[voice.resId] ? resourceMap[voice.resId].resPath : void 0,
+                volume: voice.volume,
+                seekStart: voice.seekStart ? voice.seekStart * 1e3 : void 0,
+                seekEnd: voice.seekEnd ? voice.seekEnd * 1e3 : void 0,
+                loop: voice.loop,
+                muted: voice.muted,
+                provider: voice.provider,
+                children: voice.children[0] ? [
+                  new SSML_default({
+                    value: (_a = voice.children[0]) == null ? void 0 : _a.children[0]
+                  })
+                ] : [
+                  new SSML_default({
+                    value: create2({
+                      speak: {
+                        "@provider": voice.provider,
+                        voice: {
+                          "@name": voice.voice,
+                          prosody: {
+                            "@contenteditable": true,
+                            "@rate": Number(voice.speechRate) === 0 ? 1 : voice.speechRate,
+                            p: voice.text
+                          }
+                        }
+                      }
+                    }).end()
+                  })
+                ],
+                text: voice.text,
+                declaimer: voice.voice,
+                speechRate: Number(voice.speechRate) === 0 ? 1 : voice.speechRate,
+                pitchRate: util_default.isFinite(Number(voice.pitchRate)) ? Number(voice.pitchRate) + 1 : void 0
+              })));
+            });
+            break;
+          case "vtubers":
+            data2.children.forEach((vtuber) => sceneChildren.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(vtuber, duration)), {
+              poster: vtuber.poster,
+              src: resourceMap[vtuber.resId] ? resourceMap[vtuber.resId].resPath : void 0,
+              provider: vtuber.provider,
+              text: vtuber.text,
+              solution: vtuber.solution,
+              declaimer: vtuber.declaimer,
+              cutoutColor: vtuber.cutoutColor,
+              duration: vtuber.duration ? vtuber.duration * 1e3 : void 0,
+              volume: vtuber.volume,
+              muted: vtuber.muted,
+              loop: vtuber.loop,
+              seekStart: vtuber.seekStart ? vtuber.seekStart * 1e3 : void 0,
+              seekEnd: vtuber.seekEnd ? vtuber.seekEnd * 1e3 : void 0,
+              demuxSrc: vtuber.demuxSrc
+            }))));
+        }
+      });
+      templateChildren.push(new Scene_default({
+        id,
+        poster,
+        width: global.videoWidth,
+        height: global.videoHeight,
+        aspectRatio: global.videoSize,
+        duration: duration * 1e3,
+        backgroundColor: sceneBackgroundColor,
+        transition,
+        filter: void 0,
+        children: sceneChildren
+      }));
+    });
+    return new Template_default({
+      mode: type || "scene",
+      name,
+      poster: global.poster,
+      actuator,
+      width: global.videoWidth,
+      height: global.videoHeight,
+      aspectRatio: global.videoSize,
+      backgroundColor: templateBackgroundColor,
+      captureTime: util_default.isFinite(Number(global.captureTime)) ? global.captureTime * 1e3 : void 0,
+      fps: global.fps,
+      compile,
+      children: templateChildren
+    }, data, vars);
+  }
+};
+var OldParser_default = OldParser;
+
+// src/parsers/OptionsParser.ts
+var OptionsParser = class {
+  static toOptions(template) {
+    let globalImage;
+    let globalVideo;
+    let globalAudio;
+    const children = [];
+    template.children.forEach((node) => {
+      if (Element_default.isInstance(node)) {
+        node = node;
+        if (node.isBackground) {
+          switch (node.type) {
+            case "image":
+              globalImage = node;
+              break;
+            case "video":
+              globalVideo = node;
+              break;
+            case "audio":
+              globalAudio = node;
+              break;
+          }
+        }
+      } else
+        children.push(node);
+    });
+    const storyBoards = [];
+    children.forEach((node) => storyBoards.push(node.toOptions()));
+    return {
+      id: template.id,
+      name: template.name,
+      actuator: template.actuator,
+      videoSize: template.aspectRatio,
+      videoWidth: template.width,
+      videoHeight: template.height,
+      poster: template.poster,
+      fps: template.fps,
+      captureTime: !util_default.isUndefined(template.captureTime) ? template.captureTime / 1e3 : void 0,
+      duration: util_default.millisecondsToSenconds(template.duration),
+      videoBitrate: template.videoBitrate,
+      audioBitrate: template.audioBitrate,
+      bgColor: { id: util_default.uniqid(), fillColor: template.backgroundColor },
+      bgImage: globalImage ? globalImage.toOptions() : void 0,
+      bgVideo: globalVideo ? globalVideo.toOptions() : void 0,
+      bgMusic: globalAudio ? globalAudio.toOptions() : void 0,
+      storyboards: storyBoards
+    };
+  }
+  static parseElementOptions(options, parentDuration) {
+    var _a;
+    if (util_default.isString(options))
+      options = JSON.parse(options);
+    function buildBaseData(obj, parentDuration2) {
+      return {
+        id: obj.id,
+        name: obj.name || void 0,
+        x: obj.left,
+        y: obj.top,
+        width: obj.width,
+        height: obj.height,
+        opacity: obj.opacity,
+        rotate: obj.rotate,
+        zIndex: obj.index,
+        borderStyle: obj.borderStyle,
+        borderColor: obj.borderColor,
+        borderWidth: obj.borderWidth,
+        enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
+          type: obj.animationIn.name,
+          duration: obj.animationIn.duration * 1e3
+        } : void 0,
+        exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
+          type: obj.animationOut.name,
+          duration: obj.animationOut.duration * 1e3
+        } : void 0,
+        backgroundColor: obj.fillColor,
+        startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1e3 : 0,
+        endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration2 ? parentDuration2 * 1e3 : void 0
+      };
+    }
+    switch (options.elementType) {
+      case "image":
+        return new Image_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          crop: options.crop ? {
+            style: options.crop.style,
+            x: options.crop.left,
+            y: options.crop.top,
+            width: options.crop.width,
+            height: options.crop.height,
+            clipType: options.crop.clipType,
+            clipStyle: options.crop.clipStyle
+          } : void 0,
+          src: options.src,
+          loop: options.loop,
+          dynamic: options.src.indexOf(".gif") !== -1
+        }));
+      case "sticker":
+        return new Sticker_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          src: options.src,
+          loop: options.loop,
+          drawType: options.drawType,
+          editable: options.editable,
+          distortable: options.distortable
+        }));
+      case "text":
+        return new Text_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          width: options.width || options.renderWidth || 0,
+          height: options.height || options.renderHeight || 0,
+          value: options.content,
+          fontFamily: options.fontFamily ? options.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
+          fontSize: options.fontSize,
+          fontColor: options.fontColor,
+          fontWeight: options.bold,
+          fontStyle: options.italic === "italic" ? "italic" : void 0,
+          lineHeight: parseFloat((Number(options.lineHeight) / Number(options.fontSize)).toFixed(3)),
+          wordSpacing: options.wordSpacig,
+          textAlign: options.textAlign,
+          effectType: options.effectType,
+          effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1e3 : void 0,
+          effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1e3 : void 0,
+          textShadow: options.textShadow,
+          textStroke: options.textStroke
+        }));
+      case "audio":
+        return new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          src: options.src,
+          duration: options.duration ? options.duration * 1e3 : void 0,
+          volume: options.volume,
+          muted: options.muted,
+          loop: options.loop,
+          seekStart: options.seekStart ? options.seekStart * 1e3 : void 0,
+          seekEnd: options.seekEnd ? options.seekEnd * 1e3 : void 0,
+          fadeInDuration: options.fadeInDuration ? options.fadeInDuration * 1e3 : void 0,
+          fadeOutDuration: options.fadeOutDuration ? options.fadeOutDuration * 1e3 : void 0
+        }));
+      case "voice":
+        return new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          src: options.src,
+          duration: options.duration ? options.duration * 1e3 : void 0,
+          volume: options.volume,
+          seekStart: options.seekStart ? options.seekStart * 1e3 : void 0,
+          seekEnd: options.seekEnd ? options.seekEnd * 1e3 : void 0,
+          loop: options.loop,
+          muted: options.muted,
+          provider: options.provider,
+          children: options.ssml ? [
+            new SSML_default({
+              value: options.ssml
+            })
+          ] : [],
+          text: options.text,
+          declaimer: options.voice,
+          speechRate: options.playbackRate ? options.playbackRate : void 0,
+          pitchRate: options.pitchRate ? Number(options.pitchRate) + 1 : void 0
+        }));
+      case "video":
+        return new Video_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          poster: options.poster,
+          src: options.src,
+          crop: options.crop ? {
+            style: options.crop.style,
+            x: options.crop.left,
+            y: options.crop.top,
+            width: options.crop.width,
+            height: options.crop.height,
+            clipType: options.crop.clipType,
+            clipStyle: options.crop.clipStyle
+          } : void 0,
+          duration: options.duration ? options.duration * 1e3 : void 0,
+          volume: options.volume,
+          muted: options.muted,
+          loop: options.loop,
+          seekStart: options.seekStart ? options.seekStart * 1e3 : void 0,
+          seekEnd: options.seekEnd ? options.seekEnd * 1e3 : void 0,
+          demuxSrc: options.demuxSrc
+        }));
+      case "chart":
+        return new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          chartId: options.chartId,
+          poster: options.poster,
+          duration: !util_default.isUndefined(options.duration) ? options.duration * 1e3 : void 0,
+          configSrc: options.optionsPath,
+          dataSrc: options.dataPath
+        }));
+      case "canvas":
+        return new Canvas_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          chartId: options.chartId,
+          poster: options.poster,
+          duration: !util_default.isUndefined(options.duration) ? options.duration * 1e3 : void 0,
+          configSrc: options.optionPath,
+          dataSrc: options.dataPath
+        }));
+      case "vtuber":
+        return new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          poster: options.poster,
+          src: options.src,
+          provider: options.provider,
+          text: options.text,
+          solution: options.solution,
+          declaimer: options.declaimer,
+          cutoutColor: options.cutoutColor,
+          duration: options.duration ? options.duration * 1e3 : void 0,
+          volume: options.volume,
+          muted: options.muted,
+          loop: options.loop,
+          seekStart: options.seekStart ? options.seekStart * 1e3 : void 0,
+          seekEnd: options.seekEnd ? options.seekEnd * 1e3 : void 0,
+          demuxSrc: options.demuxSrc
+        }));
+      case "group":
+        return new Group_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+          children: (_a = options.elements) == null ? void 0 : _a.map((element) => this.parseElementOptions(element, parentDuration))
+        }));
+      default:
+        return new Element_default({});
+    }
+  }
+  static parseOptions(options) {
+    if (util_default.isString(options))
+      options = JSON.parse(options);
+    const templateChildren = [];
+    function buildBaseData(obj, parentDuration) {
+      return {
+        id: obj.id,
+        name: obj.name || void 0,
+        x: obj.left,
+        y: obj.top,
+        width: obj.width,
+        height: obj.height,
+        opacity: obj.opacity,
+        rotate: obj.rotate,
+        zIndex: obj.index,
+        borderStyle: obj.borderStyle,
+        borderColor: obj.borderColor,
+        borderWidth: obj.borderWidth,
+        enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
+          type: obj.animationIn.name,
+          duration: obj.animationIn.duration * 1e3
+        } : void 0,
+        exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
+          type: obj.animationOut.name,
+          duration: obj.animationOut.duration * 1e3
+        } : void 0,
+        backgroundColor: obj.fillColor,
+        startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1e3 : 0,
+        endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration ? parentDuration * 1e3 : void 0
+      };
+    }
+    options == null ? void 0 : options.storyboards.forEach((board) => {
+      var _a;
+      const { id, poster, duration } = board;
+      const sceneChildren = [];
+      board.bgImage && sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgImage, duration)), {
+        endTime: void 0,
+        isBackground: true,
+        src: board.bgImage.src
+      })));
+      board.bgVideo && sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgVideo, duration)), {
+        poster: board.bgVideo.poster,
+        src: board.bgVideo.src,
+        duration: board.bgVideo.duration ? board.bgVideo.duration * 1e3 : void 0,
+        volume: board.bgVideo.volume,
+        muted: board.bgVideo.muted,
+        loop: board.bgVideo.loop,
+        endTime: void 0,
+        isBackground: true,
+        seekStart: board.bgVideo.seekStart ? board.bgVideo.seekStart * 1e3 : void 0,
+        seekEnd: board.bgVideo.seekEnd ? board.bgVideo.seekEnd * 1e3 : void 0
+      })));
+      board.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgMusic, duration)), {
+        src: board.bgMusic.src,
+        volume: board.bgMusic.volume,
+        duration: board.bgMusic.duration ? board.bgMusic.duration * 1e3 : void 0,
+        seekStart: board.bgMusic.seekStart ? board.bgMusic.seekStart * 1e3 : void 0,
+        seekEnd: board.bgMusic.seekEnd ? board.bgMusic.seekEnd * 1e3 : void 0,
+        muted: board.bgMusic.muted,
+        loop: board.bgMusic.loop,
+        isBackground: true,
+        fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1e3 : void 0,
+        fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1e3 : void 0
+      })));
+      (_a = board.elements) == null ? void 0 : _a.forEach((element) => sceneChildren.push(this.parseElementOptions(element, duration)));
+      templateChildren.push(new Scene_default({
+        id,
+        poster,
+        width: options.videoWidth,
+        height: options.videoHeight,
+        aspectRatio: options.videoSize,
+        duration: duration * 1e3,
+        backgroundColor: board.bgColor ? board.bgColor.fillColor : void 0,
+        transition: board.transition ? {
+          type: board.transition.name,
+          duration: board.transition.duration * 1e3
+        } : void 0,
+        filter: void 0,
+        children: sceneChildren
+      }));
+    });
+    options.bgImage && templateChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgImage)), {
+      endTime: void 0,
+      isBackground: true,
+      src: options.bgImage.src
+    })));
+    options.bgVideo && templateChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgVideo)), {
+      poster: options.bgVideo.poster,
+      src: options.bgVideo.src,
+      duration: options.bgVideo.duration ? options.bgVideo.duration * 1e3 : void 0,
+      volume: options.bgVideo.volume,
+      muted: options.bgVideo.muted,
+      loop: options.bgVideo.loop,
+      endTime: void 0,
+      isBackground: true,
+      seekStart: options.bgVideo.seekStart ? options.bgVideo.seekStart * 1e3 : void 0,
+      seekEnd: options.bgVideo.seekEnd ? options.bgVideo.seekEnd * 1e3 : void 0
+    })));
+    options.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgMusic)), {
+      src: options.bgMusic.src,
+      volume: options.bgMusic.volume,
+      duration: options.bgMusic.duration ? options.bgMusic.duration * 1e3 : void 0,
+      seekStart: options.bgMusic.seekStart ? options.bgMusic.seekStart * 1e3 : void 0,
+      seekEnd: options.bgMusic.seekEnd ? options.bgMusic.seekEnd * 1e3 : void 0,
+      muted: options.bgMusic.muted,
+      loop: options.bgMusic.loop,
+      isBackground: true,
+      fadeInDuration: options.bgMusic.fadeInDuration ? options.bgMusic.fadeInDuration * 1e3 : void 0,
+      fadeOutDuration: options.bgMusic.fadeOutDuration ? options.bgMusic.fadeOutDuration * 1e3 : void 0
+    })));
+    return new Template_default({
+      id: options.id,
+      name: options.name,
+      actuator: options.actuator || void 0,
+      fps: options.fps,
+      poster: options.poster,
+      width: options.videoWidth,
+      height: options.videoHeight,
+      aspectRatio: options.videoSize,
+      videoBitrate: `${options.videoBitrate}`,
+      audioBitrate: `${options.audioBitrate}`,
+      backgroundColor: options.bgColor ? options.bgColor.fillColor || void 0 : void 0,
+      captureTime: util_default.isFinite(options.captureTime) ? options.captureTime * 1e3 : void 0,
+      compile: options.compile,
+      children: templateChildren
+    });
+  }
+};
+var OptionsParser_default = OptionsParser;
 
 // src/elements/Element.ts
 var Effect = class {
@@ -219,6 +1132,7 @@ var _Element = class {
     __publicField(this, "backgroundColor");
     __publicField(this, "startTime");
     __publicField(this, "endTime");
+    __publicField(this, "borderStyle");
     __publicField(this, "borderColor");
     __publicField(this, "borderWidth");
     __publicField(this, "fixedScale");
@@ -264,6 +1178,7 @@ var _Element = class {
       enterEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       exitEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       stayEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
+      borderStyle: (v) => util_default.isUndefined(v) || util_default.isString(v),
       borderColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       borderWidth: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       isBackground: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
@@ -299,6 +1214,7 @@ var _Element = class {
       "stayEffect-type": (_p = (_o = this.stayEffect) == null ? void 0 : _o.type) != null ? _p : void 0,
       "stayEffect-duration": (_r = (_q = this.stayEffect) == null ? void 0 : _q.duration) != null ? _r : void 0,
       "stayEffect-path": (_u = (_t = (_s = this.stayEffect) == null ? void 0 : _s.path) == null ? void 0 : _t.join(",")) != null ? _u : void 0,
+      borderStyle: this.borderStyle,
       borderColor: this.borderColor,
       borderWidth: this.borderWidth,
       isBackground: this.isBackground,
@@ -325,6 +1241,7 @@ var _Element = class {
       animationInDuration: ((_c = this.enterEffect) == null ? void 0 : _c.duration) ? util_default.millisecondsToSenconds(this.enterEffect.duration) : void 0,
       animationOut: (_e = (_d = this.exitEffect) == null ? void 0 : _d.type) != null ? _e : void 0,
       animationOutDuration: ((_f = this.exitEffect) == null ? void 0 : _f.duration) ? util_default.millisecondsToSenconds(this.exitEffect.duration) : void 0,
+      borderStyle: this.borderStyle,
       borderColor: this.borderColor,
       borderWidth: this.borderWidth,
       inPoint: util_default.isNumber(this.startTime) ? util_default.millisecondsToSenconds(this.startTime) : void 0,
@@ -382,10 +1299,11 @@ var _Element = class {
       rotate: this.rotate,
       opacity: this.opacity,
       index: this.zIndex || 0,
+      borderStyle: this.borderStyle,
       borderColor: this.borderColor,
       borderWidth: this.borderWidth,
-      animationIn: util_default.isNumber(this.startTime) ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,
-      animationOut: util_default.isNumber(this.endTime) ? ((_b = this.exitEffect) == null ? void 0 : _b.toOptions(this.endTime)) || { delay: util_default.millisecondsToSenconds(this.endTime) } : void 0,
+      animationIn: util_default.isNumber(this.startTime) ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { name: "none", delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,
+      animationOut: util_default.isNumber(this.endTime) ? ((_b = this.exitEffect) == null ? void 0 : _b.toOptions(this.endTime)) || { name: "none", delay: util_default.millisecondsToSenconds(this.endTime) } : void 0,
       elements,
       fillColor: this.backgroundColor
     };
@@ -407,11 +1325,12 @@ var _Element = class {
     return __privateGet(this, _absoluteEndTime);
   }
 };
-var Element = _Element;
+var Element2 = _Element;
 _absoluteStartTime = new WeakMap();
 _absoluteEndTime = new WeakMap();
-__publicField(Element, "Type", ElementTypes_default);
-var Element_default = Element;
+__publicField(Element2, "Type", ElementTypes_default);
+__publicField(Element2, "parseOptions", OptionsParser_default.parseElementOptions.bind(OptionsParser_default));
+var Element_default = Element2;
 
 // src/elements/Media.ts
 var Media = class extends Element_default {
@@ -1413,7 +2332,7 @@ var _Scene = class {
 var Scene = _Scene;
 _createXMLRoot = new WeakSet();
 createXMLRoot_fn = function(tagName = "scene", attributes = {}, headless = true) {
-  const root = headless ? create() : create({ version: "1.0" });
+  const root = headless ? create3() : create3({ version: "1.0" });
   const scene = root.ele(tagName, __spreadValues({
     id: this.id,
     name: this.name,
@@ -1428,898 +2347,6 @@ createXMLRoot_fn = function(tagName = "scene", attributes = {}, headless = true)
 };
 __publicField(Scene, "type", "scene");
 var Scene_default = Scene;
-
-// src/parsers/Parser.ts
-import { create as create2 } from "xmlbuilder2";
-import { XMLParser } from "fast-xml-parser";
-var xmlParser = new XMLParser({
-  allowBooleanAttributes: true,
-  ignoreAttributes: false,
-  attributeNamePrefix: "",
-  preserveOrder: true,
-  parseTagValue: false,
-  stopNodes: ["template.scene.voice.ssml"]
-});
-var Parser = class {
-  static toXML(_template, pretty = false) {
-    const root = create2({ version: "1.0" });
-    const template = root.ele("template", {
-      version: _template.version,
-      id: _template.id,
-      name: _template.name,
-      mode: _template.mode,
-      poster: _template.poster,
-      actuator: _template.actuator,
-      width: _template.width,
-      height: _template.height,
-      aspectRatio: _template.aspectRatio,
-      fps: _template.fps,
-      crf: _template.crf,
-      videoCodec: _template.videoCodec,
-      videoBitrate: _template.videoBitrate,
-      pixelFormat: _template.pixelFormat,
-      frameQuality: _template.frameQuality,
-      duration: _template.duration,
-      format: _template.format,
-      volume: _template.volume,
-      audioCodec: _template.audioCodec,
-      sampleRate: _template.sampleRate,
-      audioBitrate: _template.audioBitrate,
-      backgroundColor: _template.backgroundColor,
-      captureTime: _template.captureTime,
-      createTime: _template.createTime,
-      updateTime: _template.updateTime,
-      buildBy: _template.buildBy
-    });
-    _template.children.forEach((node) => node.renderXML(template));
-    return template.end({ prettyPrint: pretty });
-  }
-  static toBuffer(tempalte) {
-    return Buffer.from(tempalte.toXML());
-  }
-  static parseJSON(content, data = {}, vars = {}) {
-    return new Template_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
-  }
-  static async parseJSONPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
-    const object = util_default.isString(content) ? JSON.parse(content) : content;
-    if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
-      const result = await dataProcessor(object.dataSrc);
-      util_default.isObject(result) && util_default.assign(data, result);
-    }
-    if (util_default.isFunction(varsProcessor) && util_default.isString(object.varsSrc)) {
-      const result = await varsProcessor(object.varsSrc);
-      util_default.isObject(result) && util_default.assign(data, result);
-    }
-    return new Template_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
-  }
-  static parseXML(content, data = {}, vars = {}) {
-    let xmlObject, varsObject, dataObject;
-    xmlParser.parse(content).forEach((o) => {
-      if (o.template)
-        xmlObject = o;
-      if (o.vars)
-        varsObject = o;
-      if (o.data)
-        dataObject = o;
-    });
-    if (!xmlObject)
-      throw new Error("template xml invalid");
-    function parse(obj, target = {}) {
-      const type = Object.keys(obj)[0];
-      target.type = type;
-      for (let key in obj[":@"]) {
-        const value = obj[":@"][key];
-        let index;
-        if (key === "for-index")
-          key = "forIndex";
-        else if (key === "for-item")
-          key = "forItem";
-        else if ((index = key.indexOf("-")) != -1) {
-          const pkey = key.substring(0, index);
-          const ckey = key.substring(index + 1, key.length);
-          if (!target[pkey])
-            target[pkey] = {};
-          target[pkey][ckey] = value;
-          continue;
-        }
-        target[key] = value;
-      }
-      target.children = [];
-      obj[type].forEach((v) => {
-        if (v["#text"])
-          return target.value = v["#text"];
-        const result = parse(v, {});
-        result && target.children.push(result);
-      });
-      return target;
-    }
-    const completeObject = parse(xmlObject);
-    const _vars = {};
-    const _data = {};
-    if (varsObject || dataObject) {
-      let processing = function(obj, target) {
-        obj.children.forEach((o) => {
-          if (!target[o.type])
-            target[o.type] = {};
-          if (o.value)
-            target[o.type] = o.value;
-          processing(o, target[o.type]);
-        });
-      };
-      varsObject && processing(parse(varsObject), _vars);
-      dataObject && processing(parse(dataObject), _data);
-    }
-    return new Template_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
-  }
-  static async parseXMLPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
-    let xmlObject, varsObject, dataObject;
-    xmlParser.parse(content).forEach((o) => {
-      if (o.template)
-        xmlObject = o;
-      if (o.vars)
-        varsObject = o;
-      if (o.data)
-        dataObject = o;
-    });
-    if (!xmlObject)
-      throw new Error("template xml invalid");
-    function parse(obj, target = {}) {
-      const type = Object.keys(obj)[0];
-      target.type = type;
-      for (let key in obj[":@"]) {
-        const value = obj[":@"][key];
-        let index;
-        if (key === "for-index")
-          key = "forIndex";
-        else if (key === "for-item")
-          key = "forItem";
-        else if ((index = key.indexOf("-")) != -1) {
-          const pkey = key.substring(0, index);
-          const ckey = key.substring(index + 1, key.length);
-          if (!target[pkey])
-            target[pkey] = {};
-          target[pkey][ckey] = value;
-          continue;
-        }
-        target[key] = value;
-      }
-      target.children = [];
-      obj[type].forEach((v) => {
-        if (v["#text"])
-          return target.value = v["#text"];
-        const result = parse(v, {});
-        result && target.children.push(result);
-      });
-      return target;
-    }
-    const completeObject = parse(xmlObject);
-    const _vars = {};
-    const _data = {};
-    if (varsObject || dataObject) {
-      let processing = function(obj, target) {
-        obj.children.forEach((o) => {
-          if (!target[o.type])
-            target[o.type] = {};
-          if (o.value)
-            target[o.type] = o.value;
-          processing(o, target[o.type]);
-        });
-      };
-      varsObject && processing(parse(varsObject), _vars);
-      dataObject && processing(parse(dataObject), _data);
-    }
-    if (dataObject == null ? void 0 : dataObject[":@"]) {
-      const attrs = dataObject[":@"];
-      if (util_default.isFunction(dataProcessor) && attrs.source) {
-        const result = await dataProcessor(attrs.source);
-        util_default.isObject(result) && util_default.assign(data, result);
-      }
-    }
-    if (varsObject == null ? void 0 : varsObject[":@"]) {
-      const attrs = varsObject[":@"];
-      if (util_default.isFunction(varsProcessor) && attrs.source) {
-        const result = await dataProcessor(attrs.source);
-        util_default.isObject(result) && util_default.assign(vars, result);
-      }
-    }
-    return new Template_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
-  }
-};
-var Parser_default = Parser;
-
-// src/parsers/OldParser.ts
-import { create as create3 } from "xmlbuilder2";
-import { XMLParser as XMLParser2 } from "fast-xml-parser";
-var xmlParser2 = new XMLParser2({
-  allowBooleanAttributes: true,
-  ignoreAttributes: false,
-  attributeNamePrefix: "",
-  preserveOrder: true,
-  parseTagValue: false,
-  stopNodes: ["template.scene.voice.ssml"]
-});
-var OldParser = class {
-  static toXML(template, pretty = false) {
-    const root = create3({ version: "1.0" });
-    const project = root.ele("project", {
-      version: "1.0.0",
-      id: template.id,
-      name: template.name,
-      actuator: template.actuator
-    });
-    const resources = project.ele("projRes");
-    resources.map = {};
-    const global = project.ele("global", {
-      videoSize: template.aspectRatio,
-      videoWidth: template.width,
-      videoHeight: template.height,
-      poster: template.poster,
-      fps: template.fps,
-      captureTime: !util_default.isUndefined(template.captureTime) ? template.captureTime / 1e3 : void 0,
-      videoBitrate: 2097152,
-      audioBitrate: 131072
-    });
-    if (template.backgroundColor) {
-      global.ele("bgblock", {
-        id: util_default.uniqid(),
-        inPoint: 0,
-        fillColor: template.backgroundColor
-      });
-    }
-    const storyBoards = project.ele("storyBoards");
-    template.children.forEach((node) => node.renderOldXML(storyBoards, resources, global));
-    return project.end({ prettyPrint: pretty });
-  }
-  static toBuffer(template) {
-    return Buffer.from(this.toXML(template));
-  }
-  static parseXML(content, data = {}, vars = {}) {
-    const xmlObject = xmlParser2.parse(content);
-    function merge(obj, target = {}) {
-      Object.assign(target, obj[":@"]);
-      const key = Object.keys(obj).filter((k) => k != ":@")[0];
-      target.key = key;
-      if (key === "#text")
-        return obj[key];
-      const items = obj[key];
-      target.children = items.map((v) => v && merge(v, {}));
-      return target;
-    }
-    const rawObject = merge(xmlObject[1] || xmlObject[0]);
-    const {
-      type,
-      name,
-      actuator,
-      compile,
-      children: [projRes, global, storyBoards]
-    } = rawObject;
-    const resourceMap = {};
-    projRes.children.forEach((resource) => resourceMap[resource.id] = resource);
-    function buildBaseData(obj, parentDuration) {
-      return {
-        id: obj.id,
-        name: obj.name,
-        x: obj.scaleX,
-        y: obj.scaleY,
-        width: obj.width,
-        height: obj.height,
-        opacity: obj.opacity,
-        zIndex: obj.index,
-        borderColor: obj.borderColor,
-        borderWidth: obj.borderWidth,
-        enterEffect: obj.animationIn ? {
-          type: obj.animationIn,
-          duration: obj.animationInDuration * 1e3
-        } : void 0,
-        exitEffect: obj.animationOut ? {
-          type: obj.animationOut,
-          duration: obj.animationOutDuration * 1e3
-        } : void 0,
-        backgroundColor: obj.fillColor || void 0,
-        startTime: Number(obj.inPoint) ? Number(obj.inPoint) * 1e3 : 0,
-        endTime: Number(obj.outPoint) ? Number(obj.outPoint) * 1e3 : parentDuration ? parentDuration * 1e3 : void 0
-      };
-    }
-    const templateChildren = [];
-    let templateBackgroundColor;
-    global.children.forEach((tag) => {
-      switch (tag.key) {
-        case "bgblock":
-          templateBackgroundColor = tag.fillColor;
-          break;
-        case "bgimg":
-          templateChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
-            x: 0,
-            y: 0,
-            width: global.videoWidth,
-            height: global.videoHeight,
-            endTime: void 0,
-            isBackground: true,
-            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : void 0
-          })));
-          break;
-        case "bgmusic":
-          templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
-            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : void 0,
-            volume: tag.volume,
-            duration: tag.duration ? tag.duration * 1e3 : void 0,
-            seekStart: tag.seekStart ? tag.seekStart * 1e3 : void 0,
-            seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0,
-            muted: tag.muted,
-            loop: tag.loop,
-            isBackground: true,
-            fadeInDuration: tag.inPoint ? tag.inPoint * 1e3 : void 0,
-            fadeOutDuration: tag.outPoint ? tag.outPoint * 1e3 : void 0
-          })));
-          break;
-        case "bgvideo":
-          templateChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(tag)), {
-            x: 0,
-            y: 0,
-            width: global.videoWidth,
-            height: global.videoHeight,
-            poster: tag.poster,
-            src: resourceMap[tag.resId] ? resourceMap[tag.resId].resPath : void 0,
-            duration: tag.duration ? tag.duration * 1e3 : void 0,
-            volume: tag.volume,
-            muted: tag.muted,
-            loop: tag.loop,
-            endTime: void 0,
-            isBackground: true,
-            seekStart: tag.seekStart ? tag.seekStart * 1e3 : void 0,
-            seekEnd: tag.seekEnd ? tag.seekEnd * 1e3 : void 0,
-            demuxSrc: tag.demuxSrc
-          })));
-          break;
-      }
-    });
-    storyBoards.children.forEach((board) => {
-      const { id, poster, duration } = board;
-      const sceneChildren = [];
-      let sceneBackgroundColor;
-      let transition;
-      board.children.forEach((data2) => {
-        switch (data2.key) {
-          case "bgblock":
-            sceneBackgroundColor = data2.fillColor;
-            break;
-          case "bgimg":
-            sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(data2, duration)), {
-              x: 0,
-              y: 0,
-              width: global.videoWidth,
-              height: global.videoHeight,
-              endTime: void 0,
-              isBackground: true,
-              src: resourceMap[data2.resId] ? resourceMap[data2.resId].resPath : void 0
-            })));
-            break;
-          case "bgvideo":
-            sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(data2, duration)), {
-              x: 0,
-              y: 0,
-              width: global.videoWidth,
-              height: global.videoHeight,
-              poster: data2.poster,
-              src: resourceMap[data2.resId] ? resourceMap[data2.resId].resPath : void 0,
-              duration: data2.duration ? data2.duration * 1e3 : void 0,
-              volume: data2.volume,
-              muted: data2.muted,
-              loop: data2.loop,
-              endTime: void 0,
-              isBackground: true,
-              seekStart: data2.seekStart ? data2.seekStart * 1e3 : void 0,
-              seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0
-            })));
-            break;
-          case "transition":
-            transition = {
-              type: data2.name,
-              duration: data2.duration * 1e3
-            };
-            break;
-          case "captions":
-            data2.children.forEach((caption) => {
-              var _a;
-              return sceneChildren.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(caption, duration)), {
-                value: (_a = caption.children[0]) == null ? void 0 : _a.children.join("\n"),
-                fontFamily: caption.fontFamily ? caption.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
-                fontSize: caption.fontSize,
-                fontColor: caption.fontColor,
-                fontWeight: caption.bold ? 700 : void 0,
-                fontStyle: caption.italic ? "italic" : void 0,
-                lineHeight: parseFloat((Number(caption.lineHeight) / Number(caption.fontSize)).toFixed(3)),
-                wordSpacing: caption.wordSpacing,
-                textAlign: caption.textAlign,
-                effectType: caption.effectType,
-                effectWordDuration: caption.effectWordDuration ? caption.effectWordDuration * 1e3 : void 0,
-                effectWordInterval: caption.effectWordInterval ? caption.effectWordInterval * 1e3 : void 0,
-                textShadow: caption.textShadow,
-                textStroke: caption.textStroke
-              })));
-            });
-            break;
-          case "resources":
-            data2.children.forEach((tag) => {
-              if (!resourceMap[tag.resId])
-                return;
-              const { type: type2, resPath } = resourceMap[tag.resId];
-              let element;
-              switch (type2) {
-                case "img":
-                case "gif":
-                  element = new Image_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
-                    crop: tag.cropStyle ? {
-                      style: tag.cropStyle === "circle" ? "circle" : "rect",
-                      x: tag.cropX,
-                      y: tag.cropY,
-                      width: tag.cropWidth,
-                      height: tag.cropHeight
-                    } : void 0,
-                    src: resPath,
-                    loop: tag.loop,
-                    dynamic: resPath.indexOf(".gif") !== -1 ? true : type2 === "gif"
-                  }));
-                  break;
-                case "video":
-                  element = new Video_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
-                    poster: data2.poster,
-                    src: resPath,
-                    crop: tag.cropStyle ? {
-                      style: tag.cropStyle === "circle" ? "circle" : "rect",
-                      x: tag.cropX,
-                      y: tag.cropY,
-                      width: tag.cropWidth,
-                      height: tag.cropHeight
-                    } : void 0,
-                    duration: data2.duration ? data2.duration * 1e3 : void 0,
-                    volume: data2.volume,
-                    muted: data2.muted,
-                    loop: data2.loop,
-                    seekStart: data2.seekStart ? data2.seekStart * 1e3 : void 0,
-                    seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0,
-                    demuxSrc: data2.demuxSrc
-                  }));
-                  break;
-                case "sound":
-                  element = new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(tag, duration)), {
-                    src: resPath,
-                    duration: data2.duration,
-                    volume: data2.volume,
-                    muted: data2.muted,
-                    loop: data2.loop,
-                    seekStart: data2.seekStart ? data2.seekStart * 1e3 : void 0,
-                    seekEnd: data2.seekEnd ? data2.seekEnd * 1e3 : void 0,
-                    fadeInDuration: data2.inPoint ? data2.inPoint * 1e3 : void 0,
-                    fadeOutDuration: data2.outPoint ? data2.outPoint * 1e3 : void 0
-                  }));
-              }
-              element && sceneChildren.push(element);
-            });
-            break;
-          case "dynDataCharts":
-            data2.children.forEach((chart) => sceneChildren.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(chart, duration)), {
-              chartId: chart.chartId,
-              poster: chart.poster,
-              duration: !util_default.isUndefined(chart.duration) ? chart.duration * 1e3 : void 0,
-              configSrc: chart.optionsPath,
-              dataSrc: chart.dataPath
-            }))));
-            break;
-          case "textToSounds":
-            data2.children.forEach((voice) => {
-              var _a;
-              return sceneChildren.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(voice, duration)), {
-                src: resourceMap[voice.resId] ? resourceMap[voice.resId].resPath : void 0,
-                volume: voice.volume,
-                seekStart: voice.seekStart ? voice.seekStart * 1e3 : void 0,
-                seekEnd: voice.seekEnd ? voice.seekEnd * 1e3 : void 0,
-                loop: voice.loop,
-                muted: voice.muted,
-                provider: voice.provider,
-                children: voice.children[0] ? [
-                  new SSML_default({
-                    value: (_a = voice.children[0]) == null ? void 0 : _a.children[0]
-                  })
-                ] : [
-                  new SSML_default({
-                    value: create3({
-                      speak: {
-                        "@provider": voice.provider,
-                        voice: {
-                          "@name": voice.voice,
-                          prosody: {
-                            "@contenteditable": true,
-                            "@rate": Number(voice.speechRate) === 0 ? 1 : voice.speechRate,
-                            p: voice.text
-                          }
-                        }
-                      }
-                    }).end()
-                  })
-                ],
-                text: voice.text,
-                declaimer: voice.voice,
-                speechRate: Number(voice.speechRate) === 0 ? 1 : voice.speechRate,
-                pitchRate: util_default.isFinite(Number(voice.pitchRate)) ? Number(voice.pitchRate) + 1 : void 0
-              })));
-            });
-            break;
-          case "vtubers":
-            data2.children.forEach((vtuber) => sceneChildren.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(vtuber, duration)), {
-              poster: vtuber.poster,
-              src: resourceMap[vtuber.resId] ? resourceMap[vtuber.resId].resPath : void 0,
-              provider: vtuber.provider,
-              text: vtuber.text,
-              solution: vtuber.solution,
-              declaimer: vtuber.declaimer,
-              cutoutColor: vtuber.cutoutColor,
-              duration: vtuber.duration ? vtuber.duration * 1e3 : void 0,
-              volume: vtuber.volume,
-              muted: vtuber.muted,
-              loop: vtuber.loop,
-              seekStart: vtuber.seekStart ? vtuber.seekStart * 1e3 : void 0,
-              seekEnd: vtuber.seekEnd ? vtuber.seekEnd * 1e3 : void 0,
-              demuxSrc: vtuber.demuxSrc
-            }))));
-        }
-      });
-      templateChildren.push(new Scene_default({
-        id,
-        poster,
-        width: global.videoWidth,
-        height: global.videoHeight,
-        aspectRatio: global.videoSize,
-        duration: duration * 1e3,
-        backgroundColor: sceneBackgroundColor,
-        transition,
-        filter: void 0,
-        children: sceneChildren
-      }));
-    });
-    return new Template_default({
-      mode: type || "scene",
-      name,
-      poster: global.poster,
-      actuator,
-      width: global.videoWidth,
-      height: global.videoHeight,
-      aspectRatio: global.videoSize,
-      backgroundColor: templateBackgroundColor,
-      captureTime: util_default.isFinite(Number(global.captureTime)) ? global.captureTime * 1e3 : void 0,
-      fps: global.fps,
-      compile,
-      children: templateChildren
-    }, data, vars);
-  }
-};
-var OldParser_default = OldParser;
-
-// src/parsers/OptionsParser.ts
-var OptionsParser = class {
-  static toOptions(template) {
-    let globalImage;
-    let globalVideo;
-    let globalAudio;
-    const children = [];
-    template.children.forEach((node) => {
-      if (Element_default.isInstance(node)) {
-        node = node;
-        if (node.isBackground) {
-          switch (node.type) {
-            case "image":
-              globalImage = node;
-              break;
-            case "video":
-              globalVideo = node;
-              break;
-            case "audio":
-              globalAudio = node;
-              break;
-          }
-        }
-      } else
-        children.push(node);
-    });
-    const storyBoards = [];
-    children.forEach((node) => storyBoards.push(node.toOptions()));
-    return {
-      id: template.id,
-      name: template.name,
-      actuator: template.actuator,
-      videoSize: template.aspectRatio,
-      videoWidth: template.width,
-      videoHeight: template.height,
-      poster: template.poster,
-      fps: template.fps,
-      captureTime: !util_default.isUndefined(template.captureTime) ? template.captureTime / 1e3 : void 0,
-      duration: util_default.millisecondsToSenconds(template.duration),
-      videoBitrate: template.videoBitrate,
-      audioBitrate: template.audioBitrate,
-      bgColor: { id: util_default.uniqid(), fillColor: template.backgroundColor },
-      bgImage: globalImage ? globalImage.toOptions() : void 0,
-      bgVideo: globalVideo ? globalVideo.toOptions() : void 0,
-      bgMusic: globalAudio ? globalAudio.toOptions() : void 0,
-      storyboards: storyBoards
-    };
-  }
-  static parseOptions(options) {
-    if (util_default.isString(options))
-      options = JSON.parse(options);
-    const templateChildren = [];
-    function buildBaseData(obj, parentDuration) {
-      return {
-        id: obj.id,
-        name: obj.name || void 0,
-        x: obj.left,
-        y: obj.top,
-        width: obj.width,
-        height: obj.height,
-        opacity: obj.opacity,
-        rotate: obj.rotate,
-        zIndex: obj.index,
-        borderColor: obj.borderColor,
-        borderWidth: obj.borderWidth,
-        enterEffect: obj.animationIn && obj.animationIn.name !== "none" ? {
-          type: obj.animationIn.name,
-          duration: obj.animationIn.duration * 1e3
-        } : void 0,
-        exitEffect: obj.animationOut && obj.animationOut.name !== "none" ? {
-          type: obj.animationOut.name,
-          duration: obj.animationOut.duration * 1e3
-        } : void 0,
-        backgroundColor: obj.fillColor,
-        startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1e3 : 0,
-        endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration ? parentDuration * 1e3 : void 0
-      };
-    }
-    options == null ? void 0 : options.storyboards.forEach((board) => {
-      const { id, poster, duration } = board;
-      const sceneChildren = [];
-      board.bgImage && sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgImage, duration)), {
-        endTime: void 0,
-        isBackground: true,
-        src: board.bgImage.src
-      })));
-      board.bgVideo && sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgVideo, duration)), {
-        poster: board.bgVideo.poster,
-        src: board.bgVideo.src,
-        duration: board.bgVideo.duration ? board.bgVideo.duration * 1e3 : void 0,
-        volume: board.bgVideo.volume,
-        muted: board.bgVideo.muted,
-        loop: board.bgVideo.loop,
-        endTime: void 0,
-        isBackground: true,
-        seekStart: board.bgVideo.seekStart ? board.bgVideo.seekStart * 1e3 : void 0,
-        seekEnd: board.bgVideo.seekEnd ? board.bgVideo.seekEnd * 1e3 : void 0
-      })));
-      board.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgMusic, duration)), {
-        src: board.bgMusic.src,
-        volume: board.bgMusic.volume,
-        duration: board.bgMusic.duration ? board.bgMusic.duration * 1e3 : void 0,
-        seekStart: board.bgMusic.seekStart ? board.bgMusic.seekStart * 1e3 : void 0,
-        seekEnd: board.bgMusic.seekEnd ? board.bgMusic.seekEnd * 1e3 : void 0,
-        muted: board.bgMusic.muted,
-        loop: board.bgMusic.loop,
-        isBackground: true,
-        fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1e3 : void 0,
-        fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1e3 : void 0
-      })));
-      function elementsPush(element, target) {
-        element == null ? void 0 : element.elements.forEach((element2) => {
-          switch (element2.elementType) {
-            case "image":
-              target.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                crop: element2.crop ? {
-                  style: element2.crop.style,
-                  x: element2.crop.left,
-                  y: element2.crop.top,
-                  width: element2.crop.width,
-                  height: element2.crop.height,
-                  clipType: element2.crop.clipType,
-                  clipStyle: element2.crop.clipStyle
-                } : void 0,
-                src: element2.src,
-                loop: element2.loop,
-                dynamic: element2.src.indexOf(".gif") !== -1
-              })));
-              break;
-            case "sticker":
-              target.push(new Sticker_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                src: element2.src,
-                loop: element2.loop,
-                drawType: element2.drawType,
-                editable: element2.editable,
-                distortable: element2.distortable
-              })));
-              break;
-            case "text":
-              target.push(new Text_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                width: element2.width || element2.renderWidth || 0,
-                height: element2.height || element2.renderHeight || 0,
-                value: element2.content,
-                fontFamily: element2.fontFamily ? element2.fontFamily.replace(/\.ttf|\.otf$/, "") : void 0,
-                fontSize: element2.fontSize,
-                fontColor: element2.fontColor,
-                fontWeight: element2.bold,
-                fontStyle: element2.italic === "italic" ? "italic" : void 0,
-                lineHeight: parseFloat((Number(element2.lineHeight) / Number(element2.fontSize)).toFixed(3)),
-                wordSpacing: element2.wordSpacig,
-                textAlign: element2.textAlign,
-                effectType: element2.effectType,
-                effectWordDuration: element2.effectWordDuration ? element2.effectWordDuration * 1e3 : void 0,
-                effectWordInterval: element2.effectWordInterval ? element2.effectWordInterval * 1e3 : void 0,
-                textShadow: element2.textShadow,
-                textStroke: element2.textStroke
-              })));
-              break;
-            case "audio":
-              target.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                src: element2.src,
-                duration: element2.duration ? element2.duration * 1e3 : void 0,
-                volume: element2.volume,
-                muted: element2.muted,
-                loop: element2.loop,
-                seekStart: element2.seekStart ? element2.seekStart * 1e3 : void 0,
-                seekEnd: element2.seekEnd ? element2.seekEnd * 1e3 : void 0,
-                fadeInDuration: element2.fadeInDuration ? element2.fadeInDuration * 1e3 : void 0,
-                fadeOutDuration: element2.fadeOutDuration ? element2.fadeOutDuration * 1e3 : void 0
-              })));
-              break;
-            case "voice":
-              target.push(new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                src: element2.src,
-                duration: element2.duration ? element2.duration * 1e3 : void 0,
-                volume: element2.volume,
-                seekStart: element2.seekStart ? element2.seekStart * 1e3 : void 0,
-                seekEnd: element2.seekEnd ? element2.seekEnd * 1e3 : void 0,
-                loop: element2.loop,
-                muted: element2.muted,
-                provider: element2.provider,
-                children: element2.ssml ? [
-                  new SSML_default({
-                    value: element2.ssml
-                  })
-                ] : [],
-                text: element2.text,
-                declaimer: element2.voice,
-                speechRate: element2.playbackRate ? element2.playbackRate : void 0,
-                pitchRate: element2.pitchRate ? Number(element2.pitchRate) + 1 : void 0
-              })));
-              break;
-            case "video":
-              target.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                poster: element2.poster,
-                src: element2.src,
-                crop: element2.crop ? {
-                  style: element2.crop.style,
-                  x: element2.crop.left,
-                  y: element2.crop.top,
-                  width: element2.crop.width,
-                  height: element2.crop.height,
-                  clipType: element2.crop.clipType,
-                  clipStyle: element2.crop.clipStyle
-                } : void 0,
-                duration: element2.duration ? element2.duration * 1e3 : void 0,
-                volume: element2.volume,
-                muted: element2.muted,
-                loop: element2.loop,
-                seekStart: element2.seekStart ? element2.seekStart * 1e3 : void 0,
-                seekEnd: element2.seekEnd ? element2.seekEnd * 1e3 : void 0,
-                demuxSrc: element2.demuxSrc
-              })));
-              break;
-            case "chart":
-              target.push(new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                chartId: element2.chartId,
-                poster: element2.poster,
-                duration: !util_default.isUndefined(element2.duration) ? element2.duration * 1e3 : void 0,
-                configSrc: element2.optionsPath,
-                dataSrc: element2.dataPath
-              })));
-              break;
-            case "canvas":
-              target.push(new Canvas_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                chartId: element2.chartId,
-                poster: element2.poster,
-                duration: !util_default.isUndefined(element2.duration) ? element2.duration * 1e3 : void 0,
-                configSrc: element2.optionPath,
-                dataSrc: element2.dataPath
-              })));
-              break;
-            case "vtuber":
-              target.push(new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                poster: element2.poster,
-                src: element2.src,
-                provider: element2.provider,
-                text: element2.text,
-                solution: element2.solution,
-                declaimer: element2.declaimer,
-                cutoutColor: element2.cutoutColor,
-                duration: element2.duration ? element2.duration * 1e3 : void 0,
-                volume: element2.volume,
-                muted: element2.muted,
-                loop: element2.loop,
-                seekStart: element2.seekStart ? element2.seekStart * 1e3 : void 0,
-                seekEnd: element2.seekEnd ? element2.seekEnd * 1e3 : void 0,
-                demuxSrc: element2.demuxSrc
-              })));
-              break;
-            case "group":
-              const children = [];
-              elementsPush(element2, children);
-              target.push(new Group_default(__spreadProps(__spreadValues({}, buildBaseData(element2, duration)), {
-                children
-              })));
-              break;
-          }
-        });
-      }
-      elementsPush(board, sceneChildren);
-      templateChildren.push(new Scene_default({
-        id,
-        poster,
-        width: options.videoWidth,
-        height: options.videoHeight,
-        aspectRatio: options.videoSize,
-        duration: duration * 1e3,
-        backgroundColor: board.bgColor ? board.bgColor.fillColor : void 0,
-        transition: board.transition ? {
-          type: board.transition.name,
-          duration: board.transition.duration * 1e3
-        } : void 0,
-        filter: void 0,
-        children: sceneChildren
-      }));
-    });
-    options.bgImage && templateChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgImage)), {
-      endTime: void 0,
-      isBackground: true,
-      src: options.bgImage.src
-    })));
-    options.bgVideo && templateChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgVideo)), {
-      poster: options.bgVideo.poster,
-      src: options.bgVideo.src,
-      duration: options.bgVideo.duration ? options.bgVideo.duration * 1e3 : void 0,
-      volume: options.bgVideo.volume,
-      muted: options.bgVideo.muted,
-      loop: options.bgVideo.loop,
-      endTime: void 0,
-      isBackground: true,
-      seekStart: options.bgVideo.seekStart ? options.bgVideo.seekStart * 1e3 : void 0,
-      seekEnd: options.bgVideo.seekEnd ? options.bgVideo.seekEnd * 1e3 : void 0
-    })));
-    options.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgMusic)), {
-      src: options.bgMusic.src,
-      volume: options.bgMusic.volume,
-      duration: options.bgMusic.duration ? options.bgMusic.duration * 1e3 : void 0,
-      seekStart: options.bgMusic.seekStart ? options.bgMusic.seekStart * 1e3 : void 0,
-      seekEnd: options.bgMusic.seekEnd ? options.bgMusic.seekEnd * 1e3 : void 0,
-      muted: options.bgMusic.muted,
-      loop: options.bgMusic.loop,
-      isBackground: true,
-      fadeInDuration: options.bgMusic.fadeInDuration ? options.bgMusic.fadeInDuration * 1e3 : void 0,
-      fadeOutDuration: options.bgMusic.fadeOutDuration ? options.bgMusic.fadeOutDuration * 1e3 : void 0
-    })));
-    return new Template_default({
-      id: options.id,
-      name: options.name,
-      actuator: options.actuator || void 0,
-      fps: options.fps,
-      poster: options.poster,
-      width: options.videoWidth,
-      height: options.videoHeight,
-      aspectRatio: options.videoSize,
-      videoBitrate: `${options.videoBitrate}`,
-      audioBitrate: `${options.audioBitrate}`,
-      backgroundColor: options.bgColor ? options.bgColor.fillColor || void 0 : void 0,
-      captureTime: util_default.isFinite(options.captureTime) ? options.captureTime * 1e3 : void 0,
-      compile: options.compile,
-      children: templateChildren
-    });
-  }
-};
-var OptionsParser_default = OptionsParser;
 
 // src/Compiler.ts
 var Compiler = class {

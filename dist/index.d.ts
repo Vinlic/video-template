@@ -21,107 +21,23 @@ declare enum ElementTypes {
     SSML = "ssml"
 }
 
-declare class Effect {
-    type: string;
-    duration: number;
-    path?: number[];
-    constructor(options: IEffectOptions);
-    toOptions(startTime?: number): {
-        name: string;
-        delay: number;
-        duration: number;
-        path: number[] | undefined;
-    };
-    static isInstance(value: any): boolean;
-}
-declare class Element {
-    #private;
-    static Type: typeof ElementTypes;
-    type: ElementTypes;
-    id: string;
-    name?: string;
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    zIndex?: number;
-    rotate?: number;
-    opacity?: number;
-    scaleWidth?: number;
-    scaleHeight?: number;
-    enterEffect?: Effect;
-    exitEffect?: Effect;
-    stayEffect?: Effect;
-    isBackground?: boolean;
-    backgroundColor?: string;
-    startTime?: number;
-    endTime?: number;
-    borderColor?: string;
-    borderWidth?: number;
-    fixedScale?: boolean;
-    trackId?: string;
-    value?: string;
-    children: Element[];
-    constructor(options: IElementOptions, type?: ElementTypes);
-    renderXML(parent: any): any;
-    renderOldXML(parent: any, resources?: any, global?: any): any;
-    toOptions(): any;
-    static isId(value: any): boolean;
-    static isInstance(value: any): boolean;
-    setParentSection(baseTime: number, duration: number): void;
-    get absoluteStartTime(): number | undefined;
-    get absoluteEndTime(): number | undefined;
+declare class Parser {
+    static toXML(_template: Template, pretty?: boolean): string;
+    static toBuffer(tempalte: Template): Buffer;
+    static parseJSON(content: any, data?: {}, vars?: {}): Template;
+    static parseJSONPreProcessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
+    static parseXML(content: string, data?: {}, vars?: {}): Template;
+    static parseXMLPreProcessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
 }
 
-interface IElementOptions {
-    type?: ElementTypes;
-    id?: string;
-    name?: string;
-    x?: number | string;
-    y?: number | string;
-    width?: number | string;
-    height?: number | string;
-    zIndex?: number | string;
-    rotate?: number | string;
-    opacity?: number | string;
-    scaleWidth?: number | string;
-    scaleHeight?: number | string;
-    enterEffect?: IEffectOptions;
-    exitEffect?: IEffectOptions;
-    stayEffect?: IEffectOptions;
-    isBackground?: boolean | string;
-    backgroundColor?: string;
-    borderColor?: string;
-    borderWidth?: number | string;
-    startTime?: number | string;
-    endTime?: number | string;
-    fixedScale?: boolean | string;
-    trackId?: string;
-    value?: string;
-    children?: (Element | IElementOptions)[];
+declare class OldParser {
+    static toXML(template: Template, pretty?: boolean): string;
+    static toBuffer(template: Template): Buffer;
+    static parseXML(content: string, data?: {}, vars?: {}): Template;
 }
 
 interface IFilterOptions {
     type?: string;
-}
-
-interface ITransitionOptions {
-    type?: string;
-    duration?: number | string;
-}
-
-interface ISceneOptions {
-    id?: string;
-    name?: string;
-    poster?: string;
-    width?: number | string;
-    height?: number | string;
-    aspectRatio?: string;
-    duration?: number | string;
-    backgroundColor?: string;
-    transition?: ITransitionOptions;
-    children?: (Element | IElementOptions)[];
-    filter?: IFilterOptions;
 }
 
 interface IMediaOptions extends IElementOptions {
@@ -478,6 +394,114 @@ declare namespace index {
   };
 }
 
+declare class OptionsParser {
+    static toOptions(template: Template): any;
+    static parseElementOptions(options: any, parentDuration?: number): Element;
+    static parseOptions(options: any): Template;
+}
+
+declare class Effect {
+    type: string;
+    duration: number;
+    path?: number[];
+    constructor(options: IEffectOptions);
+    toOptions(startTime?: number): {
+        name: string;
+        delay: number;
+        duration: number;
+        path: number[] | undefined;
+    };
+    static isInstance(value: any): boolean;
+}
+declare class Element {
+    #private;
+    static Type: typeof ElementTypes;
+    type: ElementTypes;
+    id: string;
+    name?: string;
+    x?: number;
+    y?: number;
+    width?: number;
+    height?: number;
+    zIndex?: number;
+    rotate?: number;
+    opacity?: number;
+    scaleWidth?: number;
+    scaleHeight?: number;
+    enterEffect?: Effect;
+    exitEffect?: Effect;
+    stayEffect?: Effect;
+    isBackground?: boolean;
+    backgroundColor?: string;
+    startTime?: number;
+    endTime?: number;
+    borderStyle?: string;
+    borderColor?: string;
+    borderWidth?: number;
+    fixedScale?: boolean;
+    trackId?: string;
+    value?: string;
+    children: Element[];
+    constructor(options: IElementOptions, type?: ElementTypes);
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources?: any, global?: any): any;
+    static parseOptions: typeof OptionsParser.parseElementOptions;
+    toOptions(): any;
+    static isId(value: any): boolean;
+    static isInstance(value: any): boolean;
+    setParentSection(baseTime: number, duration: number): void;
+    get absoluteStartTime(): number | undefined;
+    get absoluteEndTime(): number | undefined;
+}
+
+interface IElementOptions {
+    type?: ElementTypes;
+    id?: string;
+    name?: string;
+    x?: number | string;
+    y?: number | string;
+    width?: number | string;
+    height?: number | string;
+    zIndex?: number | string;
+    rotate?: number | string;
+    opacity?: number | string;
+    scaleWidth?: number | string;
+    scaleHeight?: number | string;
+    enterEffect?: IEffectOptions;
+    exitEffect?: IEffectOptions;
+    stayEffect?: IEffectOptions;
+    isBackground?: boolean | string;
+    backgroundColor?: string;
+    borderStyle?: string;
+    borderColor?: string;
+    borderWidth?: number | string;
+    startTime?: number | string;
+    endTime?: number | string;
+    fixedScale?: boolean | string;
+    trackId?: string;
+    value?: string;
+    children?: (Element | IElementOptions)[];
+}
+
+interface ITransitionOptions {
+    type?: string;
+    duration?: number | string;
+}
+
+interface ISceneOptions {
+    id?: string;
+    name?: string;
+    poster?: string;
+    width?: number | string;
+    height?: number | string;
+    aspectRatio?: string;
+    duration?: number | string;
+    backgroundColor?: string;
+    transition?: ITransitionOptions;
+    children?: (Element | IElementOptions)[];
+    filter?: IFilterOptions;
+}
+
 declare class Transition {
     type: string;
     duration: number;
@@ -544,26 +568,6 @@ interface ITemplateOptions {
     buildBy?: string;
     compile?: boolean;
     children?: (Scene | Element | ISceneOptions | IElementOptions)[];
-}
-
-declare class Parser {
-    static toXML(_template: Template, pretty?: boolean): string;
-    static toBuffer(tempalte: Template): Buffer;
-    static parseJSON(content: any, data?: {}, vars?: {}): Template;
-    static parseJSONPreProcessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
-    static parseXML(content: string, data?: {}, vars?: {}): Template;
-    static parseXMLPreProcessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
-}
-
-declare class OldParser {
-    static toXML(template: Template, pretty?: boolean): string;
-    static toBuffer(template: Template): Buffer;
-    static parseXML(content: string, data?: {}, vars?: {}): Template;
-}
-
-declare class OptionsParser {
-    static toOptions(template: Template): any;
-    static parseOptions(options: any): Template;
 }
 
 declare class Template {

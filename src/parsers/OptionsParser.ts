@@ -13,7 +13,7 @@ class OptionsParser {
         template.children.forEach(node => {
             if (Element.isInstance(node)) {
                 node = node as Element;
-                if(node.isBackground) {
+                if (node.isBackground) {
                     switch (node.type) {
                         case 'image':
                             globalImage = node;
@@ -58,8 +58,187 @@ class OptionsParser {
         };
     }
 
+    public static parseElementOptions(options: any, parentDuration?: number): Element {
+        if (util.isString(options))
+            options = JSON.parse(options);
+        function buildBaseData(obj: any, parentDuration?: number) {
+            return {
+                id: obj.id,
+                name: obj.name || undefined,
+                x: obj.left,
+                y: obj.top,
+                width: obj.width,
+                height: obj.height,
+                opacity: obj.opacity,
+                rotate: obj.rotate,
+                zIndex: obj.index,
+                borderStyle: obj.borderStyle,
+                borderColor: obj.borderColor,
+                borderWidth: obj.borderWidth,
+                enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
+                    type: obj.animationIn.name,
+                    duration: obj.animationIn.duration * 1000
+                } : undefined,
+                exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
+                    type: obj.animationOut.name,
+                    duration: obj.animationOut.duration * 1000,
+                } : undefined,
+                backgroundColor: obj.fillColor,
+                startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1000 : 0,
+                endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1000 :
+                    (parentDuration ? parentDuration * 1000 : undefined)
+            };
+        }
+        switch (options.elementType) {
+            case "image":
+                return new Image({
+                    ...buildBaseData(options, parentDuration),
+                    crop: options.crop ? {
+                        style: options.crop.style,
+                        x: options.crop.left,
+                        y: options.crop.top,
+                        width: options.crop.width,
+                        height: options.crop.height,
+                        clipType: options.crop.clipType,
+                        clipStyle: options.crop.clipStyle
+                    } : undefined,
+                    src: options.src,
+                    loop: options.loop,
+                    dynamic: options.src.indexOf('.gif') !== -1,
+                });
+            case "sticker":
+                return new Sticker({
+                    ...buildBaseData(options, parentDuration),
+                    src: options.src,
+                    loop: options.loop,
+                    drawType: options.drawType,
+                    editable: options.editable,
+                    distortable: options.distortable
+                });
+            case "text":
+                return new Text({
+                    ...buildBaseData(options, parentDuration),
+                    width: options.width || options.renderWidth || 0,
+                    height: options.height || options.renderHeight || 0,
+                    value: options.content,
+                    fontFamily: options.fontFamily ? options.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
+                    fontSize: options.fontSize,
+                    fontColor: options.fontColor,
+                    fontWeight: options.bold,
+                    fontStyle: options.italic === "italic" ? "italic" : undefined,
+                    lineHeight: parseFloat((Number(options.lineHeight) / Number(options.fontSize)).toFixed(3)),
+                    wordSpacing: options.wordSpacig,
+                    textAlign: options.textAlign,
+                    effectType: options.effectType,
+                    effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1000 : undefined,
+                    effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1000 : undefined,
+                    textShadow: options.textShadow,
+                    textStroke: options.textStroke,
+                });
+            case "audio":
+                return new Audio({
+                    ...buildBaseData(options, parentDuration),
+                    src: options.src,
+                    duration: options.duration ? options.duration * 1000 : undefined,
+                    volume: options.volume,
+                    muted: options.muted,
+                    loop: options.loop,
+                    seekStart: options.seekStart ? options.seekStart * 1000 : undefined,
+                    seekEnd: options.seekEnd ? options.seekEnd * 1000 : undefined,
+                    fadeInDuration: options.fadeInDuration ? options.fadeInDuration * 1000 : undefined,
+                    fadeOutDuration: options.fadeOutDuration ? options.fadeOutDuration * 1000 : undefined,
+                });
+            case "voice":
+                return new Voice({
+                    ...buildBaseData(options, parentDuration),
+                    src: options.src,
+                    duration: options.duration ? options.duration * 1000 : undefined,
+                    volume: options.volume,
+                    seekStart: options.seekStart ? options.seekStart * 1000 : undefined,
+                    seekEnd: options.seekEnd ? options.seekEnd * 1000 : undefined,
+                    loop: options.loop,
+                    muted: options.muted,
+                    provider: options.provider,
+                    children: options.ssml ? [
+                        new SSML({
+                            value: options.ssml,
+                        }),
+                    ] : [],
+                    text: options.text,
+                    declaimer: options.voice,
+                    speechRate: options.playbackRate ? options.playbackRate : undefined,
+                    pitchRate: options.pitchRate ? Number(options.pitchRate) + 1 : undefined,
+                });
+            case "video":
+                return new Video({
+                    ...buildBaseData(options, parentDuration),
+                    poster: options.poster,
+                    src: options.src,
+                    crop: options.crop ? {
+                        style: options.crop.style,
+                        x: options.crop.left,
+                        y: options.crop.top,
+                        width: options.crop.width,
+                        height: options.crop.height,
+                        clipType: options.crop.clipType,
+                        clipStyle: options.crop.clipStyle
+                    } : undefined,
+                    duration: options.duration ? options.duration * 1000 : undefined,
+                    volume: options.volume,
+                    muted: options.muted,
+                    loop: options.loop,
+                    seekStart: options.seekStart ? options.seekStart * 1000 : undefined,
+                    seekEnd: options.seekEnd ? options.seekEnd * 1000 : undefined,
+                    demuxSrc: options.demuxSrc
+                });
+            case "chart":
+                return new Chart({
+                    ...buildBaseData(options, parentDuration),
+                    chartId: options.chartId,
+                    poster: options.poster,
+                    duration: !util.isUndefined(options.duration) ? options.duration * 1000 : undefined,
+                    configSrc: options.optionsPath,
+                    dataSrc: options.dataPath,
+                });
+            case "canvas":
+                return new Canvas({
+                    ...buildBaseData(options, parentDuration),
+                    chartId: options.chartId,
+                    poster: options.poster,
+                    duration: !util.isUndefined(options.duration) ? options.duration * 1000 : undefined,
+                    configSrc: options.optionPath,
+                    dataSrc: options.dataPath,
+                });
+            case "vtuber":
+                return new Vtuber({
+                    ...buildBaseData(options, parentDuration),
+                    poster: options.poster,
+                    src: options.src,
+                    provider: options.provider,
+                    text: options.text,
+                    solution: options.solution,
+                    declaimer: options.declaimer,
+                    cutoutColor: options.cutoutColor,
+                    duration: options.duration ? options.duration * 1000 : undefined,
+                    volume: options.volume,
+                    muted: options.muted,
+                    loop: options.loop,
+                    seekStart: options.seekStart ? options.seekStart * 1000 : undefined,
+                    seekEnd: options.seekEnd ? options.seekEnd * 1000 : undefined,
+                    demuxSrc: options.demuxSrc
+                });
+            case "group":
+                return new Group({
+                    ...buildBaseData(options, parentDuration),
+                    children: options.elements?.map((element: any) => this.parseElementOptions(element, parentDuration))
+                });
+            default:
+                return new Element({});
+        }
+    }
+
     public static parseOptions(options: any) {
-        if(util.isString(options))
+        if (util.isString(options))
             options = JSON.parse(options);
         const templateChildren: (Scene | Element)[] = [];
         function buildBaseData(obj: any, parentDuration?: number) {
@@ -76,18 +255,18 @@ class OptionsParser {
                 borderStyle: obj.borderStyle,
                 borderColor: obj.borderColor,
                 borderWidth: obj.borderWidth,
-                enterEffect: obj.animationIn && obj.animationIn.name !== "none" ? {
+                enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
                     type: obj.animationIn.name,
                     duration: obj.animationIn.duration * 1000
                 } : undefined,
-                exitEffect: obj.animationOut && obj.animationOut.name !== "none" ? {
+                exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
                     type: obj.animationOut.name,
                     duration: obj.animationOut.duration * 1000,
                 } : undefined,
                 backgroundColor: obj.fillColor,
                 startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1000 : 0,
-                endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1000 : 
-                (parentDuration ? parentDuration * 1000 : undefined)
+                endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1000 :
+                    (parentDuration ? parentDuration * 1000 : undefined)
             };
         }
         options?.storyboards.forEach((board: any) => {
@@ -125,167 +304,7 @@ class OptionsParser {
                 fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1000 : undefined,
                 fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1000 : undefined,
             }));
-            function elementsPush(element: any, target: any[]) {
-                element?.elements.forEach((element: any) => {
-                    switch (element.elementType) {
-                        case "image":
-                            target.push(new Image({
-                                ...buildBaseData(element, duration),
-                                crop: element.crop ? {
-                                    style: element.crop.style,
-                                    x: element.crop.left,
-                                    y: element.crop.top,
-                                    width: element.crop.width,
-                                    height: element.crop.height,
-                                    clipType: element.crop.clipType,
-                                    clipStyle: element.crop.clipStyle
-                                } : undefined,
-                                src: element.src,
-                                loop: element.loop,
-                                dynamic: element.src.indexOf('.gif') !== -1,
-                            }));
-                            break;
-                        case "sticker":
-                            target.push(new Sticker({
-                                ...buildBaseData(element, duration),
-                                src: element.src,
-                                loop: element.loop,
-                                drawType: element.drawType,
-                                editable: element.editable,
-                                distortable: element.distortable
-                            }));
-                            break;
-                        case "text":
-                            target.push(new Text({
-                                ...buildBaseData(element, duration),
-                                width: element.width || element.renderWidth || 0,
-                                height: element.height || element.renderHeight || 0,
-                                value: element.content,
-                                fontFamily: element.fontFamily ? element.fontFamily.replace(/\.ttf|\.otf$/, '') : undefined,
-                                fontSize: element.fontSize,
-                                fontColor: element.fontColor,
-                                fontWeight: element.bold,
-                                fontStyle: element.italic === "italic" ? "italic" : undefined,
-                                lineHeight: parseFloat((Number(element.lineHeight) / Number(element.fontSize)).toFixed(3)),
-                                wordSpacing: element.wordSpacig,
-                                textAlign: element.textAlign,
-                                effectType: element.effectType,
-                                effectWordDuration: element.effectWordDuration ? element.effectWordDuration * 1000 : undefined,
-                                effectWordInterval: element.effectWordInterval ? element.effectWordInterval * 1000 : undefined,
-                                textShadow: element.textShadow,
-                                textStroke: element.textStroke,
-                            }));
-                            break;
-                        case "audio":
-                            target.push(new Audio({
-                                ...buildBaseData(element, duration),
-                                src: element.src,
-                                duration: element.duration ? element.duration * 1000 : undefined,
-                                volume: element.volume,
-                                muted: element.muted,
-                                loop: element.loop,
-                                seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
-                                seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
-                                fadeInDuration: element.fadeInDuration ? element.fadeInDuration * 1000 : undefined,
-                                fadeOutDuration: element.fadeOutDuration ? element.fadeOutDuration * 1000 : undefined,
-                            }));
-                            break;
-                        case "voice":
-                            target.push(new Voice({
-                                ...buildBaseData(element, duration),
-                                src: element.src,
-                                duration: element.duration ? element.duration * 1000 : undefined,
-                                volume: element.volume,
-                                seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
-                                seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
-                                loop: element.loop,
-                                muted: element.muted,
-                                provider: element.provider,
-                                children: element.ssml ? [
-                                    new SSML({
-                                        value: element.ssml,
-                                    }),
-                                ] : [],
-                                text: element.text,
-                                declaimer: element.voice,
-                                speechRate: element.playbackRate ? element.playbackRate : undefined,
-                                pitchRate: element.pitchRate ? Number(element.pitchRate) + 1 : undefined,
-                            }));
-                            break;
-                        case "video":
-                            target.push(new Video({
-                                ...buildBaseData(element, duration),
-                                poster: element.poster,
-                                src: element.src,
-                                crop: element.crop ? {
-                                    style: element.crop.style,
-                                    x: element.crop.left,
-                                    y: element.crop.top,
-                                    width: element.crop.width,
-                                    height: element.crop.height,
-                                    clipType: element.crop.clipType,
-                                    clipStyle: element.crop.clipStyle
-                                } : undefined,
-                                duration: element.duration ? element.duration * 1000 : undefined,
-                                volume: element.volume,
-                                muted: element.muted,
-                                loop: element.loop,
-                                seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
-                                seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
-                                demuxSrc: element.demuxSrc
-                            }));
-                            break;
-                        case "chart":
-                            target.push(new Chart({
-                                ...buildBaseData(element, duration),
-                                chartId: element.chartId,
-                                poster: element.poster,
-                                duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
-                                configSrc: element.optionsPath,
-                                dataSrc: element.dataPath,
-                            }));
-                            break;
-                        case "canvas":
-                            target.push(new Canvas({
-                                ...buildBaseData(element, duration),
-                                chartId: element.chartId,
-                                poster: element.poster,
-                                duration: !util.isUndefined(element.duration) ? element.duration * 1000 : undefined,
-                                configSrc: element.optionPath,
-                                dataSrc: element.dataPath,
-                            }));
-                            break;
-                        case "vtuber":
-                            target.push(new Vtuber({
-                                ...buildBaseData(element, duration),
-                                poster: element.poster,
-                                src: element.src,
-                                provider: element.provider,
-                                text: element.text,
-                                solution: element.solution,
-                                declaimer: element.declaimer,
-                                cutoutColor: element.cutoutColor,
-                                duration: element.duration ? element.duration * 1000 : undefined,
-                                volume: element.volume,
-                                muted: element.muted,
-                                loop: element.loop,
-                                seekStart: element.seekStart ? element.seekStart * 1000 : undefined,
-                                seekEnd: element.seekEnd ? element.seekEnd * 1000 : undefined,
-                                demuxSrc: element.demuxSrc
-                            }));
-                            break;
-                        case "group":
-                            const children: any[] = [];
-                            elementsPush(element, children);
-                            target.push(new Group({
-                                ...buildBaseData(element, duration),
-                                children
-                            }));
-                            break;
-                    }
-                });
-            }
-            elementsPush(board, sceneChildren);
+            board.elements?.forEach((element: any) => sceneChildren.push(this.parseElementOptions(element, duration)));
             templateChildren.push(new Scene({
                 id,
                 poster,
