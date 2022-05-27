@@ -234,12 +234,12 @@ class OptionsParser {
             case "group":
                 return new Group({
                     ...buildBaseData(options, parentDuration),
-                    children: (options.children || options.elements)?.map((element: any) => this.parseElementOptions(element, parentDuration))
+                    children: options.children?.map((element: any) => this.parseElementOptions(element, parentDuration))
                 });
             case "subtitle":
                 return new Subtitle({
                     ...buildBaseData(options, parentDuration),
-                    children: (options.children || options.elements)?.map((element: any) => this.parseElementOptions(element, parentDuration))
+                    children: options.children?.map((element: any) => this.parseElementOptions(element, parentDuration))
                 });
             default:
                 return new Element({});
