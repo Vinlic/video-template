@@ -72,7 +72,7 @@ class OptionsParser {
                 opacity: obj.opacity,
                 rotate: obj.rotate,
                 zIndex: obj.index,
-                borderStyle: obj.borderStyle,
+                strokeStyle: obj.strokeStyle,
                 strokeColor: obj.strokeColor,
                 strokeWidth: obj.strokeWidth,
                 enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
@@ -261,7 +261,7 @@ class OptionsParser {
                 opacity: obj.opacity,
                 rotate: obj.rotate,
                 zIndex: obj.index,
-                borderStyle: obj.borderStyle,
+                strokeStyle: obj.strokeStyle,
                 strokeColor: obj.strokeColor,
                 strokeWidth: obj.strokeWidth,
                 enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {

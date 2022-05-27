@@ -21,7 +21,7 @@ interface IElementOptions {
   stayEffect?: IEffectOptions;
   isBackground?: boolean | string;
   backgroundColor?: string;
-  borderStyle?: string;
+  strokeStyle?: string;
   strokeColor?: string;
   strokeWidth?: number | string;
   startTime?: number | string;

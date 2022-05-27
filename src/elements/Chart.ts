@@ -8,12 +8,7 @@ class Chart extends Canvas {
 
     public constructor(options: IChartOptions) {
         super(options, ElementTypes.Chart);
-        util.optionsInject(
-            this,
-            options,
-            {},
-            {},
-        );
+        util.optionsInject(this, options, {}, {});
     }
 
     /**

@@ -469,7 +469,7 @@ var OldParser = class {
         height: obj.height,
         opacity: obj.opacity,
         zIndex: obj.index,
-        borderStyle: obj.borderStyle,
+        strokeStyle: obj.strokeStyle,
         strokeColor: obj.strokeColor,
         strokeWidth: obj.strokeWidth,
         enterEffect: obj.animationIn ? {
@@ -827,7 +827,7 @@ var OptionsParser = class {
         opacity: obj.opacity,
         rotate: obj.rotate,
         zIndex: obj.index,
-        borderStyle: obj.borderStyle,
+        strokeStyle: obj.strokeStyle,
         strokeColor: obj.strokeColor,
         strokeWidth: obj.strokeWidth,
         enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
@@ -1003,7 +1003,7 @@ var OptionsParser = class {
         opacity: obj.opacity,
         rotate: obj.rotate,
         zIndex: obj.index,
-        borderStyle: obj.borderStyle,
+        strokeStyle: obj.strokeStyle,
         strokeColor: obj.strokeColor,
         strokeWidth: obj.strokeWidth,
         enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
@@ -1167,7 +1167,7 @@ var _Element = class {
     __publicField(this, "backgroundColor");
     __publicField(this, "startTime");
     __publicField(this, "endTime");
-    __publicField(this, "borderStyle");
+    __publicField(this, "strokeStyle");
     __publicField(this, "strokeColor");
     __publicField(this, "strokeWidth");
     __publicField(this, "fixedScale");
@@ -1213,7 +1213,7 @@ var _Element = class {
       enterEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       exitEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
       stayEffect: (v) => util_default.isUndefined(v) || Effect.isInstance(v),
-      borderStyle: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      strokeStyle: (v) => util_default.isUndefined(v) || util_default.isString(v),
       strokeColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       strokeWidth: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       isBackground: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
@@ -1249,7 +1249,7 @@ var _Element = class {
       "stayEffect-type": (_p = (_o = this.stayEffect) == null ? void 0 : _o.type) != null ? _p : void 0,
       "stayEffect-duration": (_r = (_q = this.stayEffect) == null ? void 0 : _q.duration) != null ? _r : void 0,
       "stayEffect-path": (_u = (_t = (_s = this.stayEffect) == null ? void 0 : _s.path) == null ? void 0 : _t.join(",")) != null ? _u : void 0,
-      borderStyle: this.borderStyle,
+      strokeStyle: this.strokeStyle,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
       isBackground: this.isBackground,
@@ -1276,7 +1276,7 @@ var _Element = class {
       animationInDuration: ((_c = this.enterEffect) == null ? void 0 : _c.duration) ? util_default.millisecondsToSenconds(this.enterEffect.duration) : void 0,
       animationOut: (_e = (_d = this.exitEffect) == null ? void 0 : _d.type) != null ? _e : void 0,
       animationOutDuration: ((_f = this.exitEffect) == null ? void 0 : _f.duration) ? util_default.millisecondsToSenconds(this.exitEffect.duration) : void 0,
-      borderStyle: this.borderStyle,
+      strokeStyle: this.strokeStyle,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
       inPoint: util_default.isNumber(this.startTime) ? util_default.millisecondsToSenconds(this.startTime) : void 0,
@@ -1334,7 +1334,7 @@ var _Element = class {
       rotate: this.rotate,
       opacity: this.opacity,
       index: this.zIndex || 0,
-      borderStyle: this.borderStyle,
+      strokeStyle: this.strokeStyle,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
       animationIn: util_default.isNumber(this.startTime) ? ((_a = this.enterEffect) == null ? void 0 : _a.toOptions(this.startTime)) || { name: "none", delay: util_default.millisecondsToSenconds(this.startTime) } : void 0,

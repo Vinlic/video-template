@@ -443,7 +443,7 @@ declare class Element {
     backgroundColor?: string;
     startTime?: number;
     endTime?: number;
-    borderStyle?: string;
+    strokeStyle?: string;
     strokeColor?: string;
     strokeWidth?: number;
     fixedScale?: boolean;
@@ -481,7 +481,7 @@ interface IElementOptions {
     stayEffect?: IEffectOptions;
     isBackground?: boolean | string;
     backgroundColor?: string;
-    borderStyle?: string;
+    strokeStyle?: string;
     strokeColor?: string;
     strokeWidth?: number | string;
     startTime?: number | string;

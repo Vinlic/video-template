@@ -70,7 +70,7 @@ class Element {
     public backgroundColor?: string; //元素背景颜色
     public startTime?: number; //元素入场时间点
     public endTime?: number; //元素退场时间点
-    public borderStyle?: string;  //元素边框样式
+    public strokeStyle?: string;  //元素边框样式
     public strokeColor?: string;  //元素边框颜色
     public strokeWidth?: number;  //元素边框宽度
     public fixedScale?: boolean;  //元素固定比例
@@ -121,7 +121,7 @@ class Element {
             enterEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
             exitEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
             stayEffect: (v: any) => util.isUndefined(v) || Effect.isInstance(v),
-            borderStyle: (v: any) => util.isUndefined(v) || util.isString(v),
+            strokeStyle: (v: any) => util.isUndefined(v) || util.isString(v),
             strokeColor: (v: any) => util.isUndefined(v) || util.isString(v),
             strokeWidth: (v: any) => util.isUndefined(v) || util.isFinite(v),
             isBackground: (v: any) => util.isUndefined(v) || util.isBoolean(v),
@@ -163,7 +163,7 @@ class Element {
             'stayEffect-type': this.stayEffect?.type ?? undefined,
             'stayEffect-duration': this.stayEffect?.duration ?? undefined,
             'stayEffect-path': this.stayEffect?.path?.join(',') ?? undefined,
-            borderStyle: this.borderStyle,
+            strokeStyle: this.strokeStyle,
             strokeColor: this.strokeColor,
             strokeWidth: this.strokeWidth,
             isBackground: this.isBackground,
@@ -190,7 +190,7 @@ class Element {
             animationInDuration: this.enterEffect?.duration ? util.millisecondsToSenconds(this.enterEffect.duration) : undefined,
             animationOut: this.exitEffect?.type ?? undefined,
             animationOutDuration: this.exitEffect?.duration ? util.millisecondsToSenconds(this.exitEffect.duration) : undefined,
-            borderStyle: this.borderStyle,
+            strokeStyle: this.strokeStyle,
             strokeColor: this.strokeColor,
             strokeWidth: this.strokeWidth,
             inPoint: util.isNumber(this.startTime) ? util.millisecondsToSenconds(this.startTime) : undefined,
@@ -258,7 +258,7 @@ class Element {
             rotate: this.rotate,
             opacity: this.opacity,
             index: this.zIndex || 0,
-            borderStyle: this.borderStyle,
+            strokeStyle: this.strokeStyle,
             strokeColor: this.strokeColor,
             strokeWidth: this.strokeWidth,
             animationIn: util.isNumber(this.startTime) ? (this.enterEffect?.toOptions(this.startTime) || { name: "none", delay: util.millisecondsToSenconds(this.startTime) }) : undefined,

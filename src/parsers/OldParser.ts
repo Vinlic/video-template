@@ -89,7 +89,7 @@ class OldParser {
                 height: obj.height,
                 opacity: obj.opacity,
                 zIndex: obj.index,
-                borderStyle: obj.borderStyle,
+                strokeStyle: obj.strokeStyle,
                 strokeColor: obj.strokeColor,
                 strokeWidth: obj.strokeWidth,
                 enterEffect: obj.animationIn ? {
