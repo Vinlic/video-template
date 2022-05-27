@@ -264,6 +264,7 @@ class Element {
             animationIn: util.isNumber(this.startTime) ? (this.enterEffect?.toOptions(this.startTime) || { name: "none", delay: util.millisecondsToSenconds(this.startTime) }) : undefined,
             animationOut: util.isNumber(this.endTime) ? (this.exitEffect?.toOptions(this.endTime) || { name: "none", delay: util.millisecondsToSenconds(this.endTime) }) : undefined,
             children,
+            elements: children,
             fillColor: this.backgroundColor
         };
     }
