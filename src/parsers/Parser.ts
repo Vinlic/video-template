@@ -3,6 +3,8 @@ import { XMLParser } from 'fast-xml-parser';
 
 import util from '../util';
 import Template from '../Template';
+import Scene from '../Scene';
+import ElementFactory from '../ElementFactory';
 
 const xmlParser = new XMLParser({
     allowBooleanAttributes: true, //需要解析布尔值属性
@@ -57,7 +59,7 @@ class Parser {
         return new Template(util.isString(content) ? JSON.parse(content) : content, data, vars);
     }
 
-    public static async parseJSONPreProcessing(content: any, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
+    public static async parseJSONPreprocessing(content: any, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
         const object = util.isString(content) ? JSON.parse(content) : content;
         if (util.isFunction(dataProcessor) && util.isString(object.dataSrc)) {
             const result = await dataProcessor(object.dataSrc);
@@ -70,6 +72,70 @@ class Parser {
         return new Template(object, util.assign(object.data || {}, data), util.assign(object.vars || {}, vars));
     }
 
+    public static parseSceneJSON(content: any, data = {}, vars = {}) {
+        return new Scene(util.isString(content) ? JSON.parse(content) : content, data, vars);
+    }
+
+    public static async parseSceneJSONPreprocessing(content: any, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
+        const object = util.isString(content) ? JSON.parse(content) : content;
+        if (util.isFunction(dataProcessor) && util.isString(object.dataSrc)) {
+            const result = await dataProcessor(object.dataSrc);
+            util.isObject(result) && util.assign(data, result);
+        }
+        if (util.isFunction(varsProcessor) && util.isString(object.varsSrc)) {
+            const result = await varsProcessor(object.varsSrc);
+            util.isObject(result) && util.assign(data, result);
+        }
+        return new Scene(object, util.assign(object.data || {}, data), util.assign(object.vars || {}, vars));
+    }
+
+    public static parseXMLObject(xmlObject: any, dataObject?: any, varsObject?: any, data = {}, vars = {}) {
+        function parse(obj: any, target: any = {}) {
+            const type = Object.keys(obj)[0];
+            target.type = type;
+            for (let key in obj[':@']) {
+                const value = obj[':@'][key];
+                let index;
+                if (key === 'for-index') key = 'forIndex';
+                else if (key === 'for-item') key = 'forItem';
+                else if ((index = key.indexOf('-')) != -1) {
+                    const pkey = key.substring(0, index);
+                    const ckey = key.substring(index + 1, key.length);
+                    if (!target[pkey]) target[pkey] = {};
+                    target[pkey][ckey] = value;
+                    continue;
+                }
+                target[key] = value;
+            }
+            target.children = [];
+            obj[type].forEach((v: any) => {
+                if (v['#text']) return (target.value = v['#text']);
+                const result = parse(v, {});
+                result && target.children.push(result);
+            });
+            return target;
+        }
+        const completeObject = parse(xmlObject);
+        const _vars = {};
+        const _data = {};
+        if (varsObject || dataObject) {
+            function processing(obj: any, target: any) {
+                obj.children.forEach((o: any) => {
+                    if (!target[o.type]) target[o.type] = {};
+                    if (o.value) target[o.type] = o.value;
+                    processing(o, target[o.type]);
+                });
+            }
+            varsObject && processing(parse(varsObject), _vars);
+            dataObject && processing(parse(dataObject), _data);
+        }
+        return {
+            completeObject,
+            data: util.assign(_data, data),
+            vars: util.assign(_vars, vars)
+        };
+    }
+
     public static parseXML(content: string, data = {}, vars = {}) {
         let xmlObject, varsObject, dataObject;
         xmlParser.parse(content).forEach((o: any) => {
@@ -78,49 +144,11 @@ class Parser {
             if (o.data) dataObject = o;
         });
         if (!xmlObject) throw new Error('template xml invalid');
-        function parse(obj: any, target: any = {}) {
-            const type = Object.keys(obj)[0];
-            target.type = type;
-            for (let key in obj[':@']) {
-                const value = obj[':@'][key];
-                let index;
-                if (key === 'for-index') key = 'forIndex';
-                else if (key === 'for-item') key = 'forItem';
-                else if ((index = key.indexOf('-')) != -1) {
-                    const pkey = key.substring(0, index);
-                    const ckey = key.substring(index + 1, key.length);
-                    if (!target[pkey]) target[pkey] = {};
-                    target[pkey][ckey] = value;
-                    continue;
-                }
-                target[key] = value;
-            }
-            target.children = [];
-            obj[type].forEach((v: any) => {
-                if (v['#text']) return (target.value = v['#text']);
-                const result = parse(v, {});
-                result && target.children.push(result);
-            });
-            return target;
-        }
-        const completeObject = parse(xmlObject);
-        const _vars = {};
-        const _data = {};
-        if (varsObject || dataObject) {
-            function processing(obj: any, target: any) {
-                obj.children.forEach((o: any) => {
-                    if (!target[o.type]) target[o.type] = {};
-                    if (o.value) target[o.type] = o.value;
-                    processing(o, target[o.type]);
-                });
-            }
-            varsObject && processing(parse(varsObject), _vars);
-            dataObject && processing(parse(dataObject), _data);
-        }
-        return new Template(completeObject, util.assign(_data, data), util.assign(_vars, vars));
+        const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars);
+        return new Template(completeObject, _data, _vars);
     }
 
-    public static async parseXMLPreProcessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
+    public static async parseXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
         let xmlObject, varsObject, dataObject;
         xmlParser.parse(content).forEach((o: any) => {
             if (o.template) xmlObject = o;
@@ -128,45 +156,6 @@ class Parser {
             if (o.data) dataObject = o;
         });
         if (!xmlObject) throw new Error('template xml invalid');
-        function parse(obj: any, target: any = {}) {
-            const type = Object.keys(obj)[0];
-            target.type = type;
-            for (let key in obj[':@']) {
-                const value = obj[':@'][key];
-                let index;
-                if (key === 'for-index') key = 'forIndex';
-                else if (key === 'for-item') key = 'forItem';
-                else if ((index = key.indexOf('-')) != -1) {
-                    const pkey = key.substring(0, index);
-                    const ckey = key.substring(index + 1, key.length);
-                    if (!target[pkey]) target[pkey] = {};
-                    target[pkey][ckey] = value;
-                    continue;
-                }
-                target[key] = value;
-            }
-            target.children = [];
-            obj[type].forEach((v: any) => {
-                if (v['#text']) return (target.value = v['#text']);
-                const result = parse(v, {});
-                result && target.children.push(result);
-            });
-            return target;
-        }
-        const completeObject = parse(xmlObject);
-        const _vars = {};
-        const _data = {};
-        if (varsObject || dataObject) {
-            function processing(obj: any, target: any) {
-                obj.children.forEach((o: any) => {
-                    if (!target[o.type]) target[o.type] = {};
-                    if (o.value) target[o.type] = o.value;
-                    processing(o, target[o.type]);
-                });
-            }
-            varsObject && processing(parse(varsObject), _vars);
-            dataObject && processing(parse(dataObject), _data);
-        }
         if (dataObject?.[':@']) {
             const attrs = dataObject[':@'] as any;
             if (util.isFunction(dataProcessor) && attrs.source) {
@@ -181,7 +170,57 @@ class Parser {
                 util.isObject(result) && util.assign(vars, result);
             }
         }
-        return new Template(completeObject, util.assign(_data, data), util.assign(_vars, vars));
+        const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
+        return new Template(completeObject, _data, _vars);
+    }
+
+    public static parseSceneXML(content: string, data = {}, vars = {}) {
+        let xmlObject, varsObject, dataObject;
+        xmlParser.parse(content).forEach((o: any) => {
+            if (o.scene) xmlObject = o;
+            if (o.vars) varsObject = o;
+            if (o.data) dataObject = o;
+        });
+        if (!xmlObject) throw new Error('template scene xml invalid');
+        const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
+        return new Scene(completeObject, util.assign(_data, data), util.assign(_vars, vars));
+    }
+
+    public static async parseSceneXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
+        let xmlObject, varsObject, dataObject;
+        xmlParser.parse(content).forEach((o: any) => {
+            if (o.scene) xmlObject = o;
+            if (o.vars) varsObject = o;
+            if (o.data) dataObject = o;
+        });
+        if (!xmlObject) throw new Error('template scene xml invalid');
+        if (dataObject?.[':@']) {
+            const attrs = dataObject[':@'] as any;
+            if (util.isFunction(dataProcessor) && attrs.source) {
+                const result = await dataProcessor(attrs.source);
+                util.isObject(result) && util.assign(data, result);
+            }
+        }
+        if (varsObject?.[':@']) {
+            const attrs = varsObject[':@'] as any;
+            if (util.isFunction(varsProcessor) && attrs.source) {
+                const result = await dataProcessor(attrs.source);
+                util.isObject(result) && util.assign(vars, result);
+            }
+        }
+        const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
+        return new Scene(completeObject, _data, _vars);
+    }
+
+    public static parseElementJSON(content: any) {
+        return ElementFactory.createElement(util.isString(content) ? JSON.parse(content) : content);
+    }
+
+    public static parseElementXML(content: string) {
+        const xmlObject = xmlParser.parse(content)[0];
+        if (!xmlObject) throw new Error('template element xml invalid');
+        const { completeObject } = this.parseXMLObject(xmlObject);
+        return ElementFactory.createElement(completeObject);
     }
 
 }

@@ -35,12 +35,14 @@ class Audio extends Media {
         const audio = super.renderXML(parent);
         audio.att('fadeInDuration', this.fadeInDuration);
         audio.att('fadeOutDuration', this.fadeOutDuration);
+        return audio;
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
         const audio = super.renderOldXML(parent, resources, global);
         util.isNumber(this.fadeInDuration) && audio.att('fadeIn', (this.fadeInDuration as number) / 1000);
         util.isNumber(this.fadeOutDuration) && audio.att('fadeOut', (this.fadeOutDuration as number) / 1000);
+        return audio;
     }
 
     public toOptions() {

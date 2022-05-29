@@ -17,11 +17,11 @@ class Chart extends Canvas {
      * @param {XMLObject} parent 上级节点XML对象
      */
     public renderXML(parent: any) {
-        super.renderXML(parent);
+        return super.renderXML(parent);
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
-        super.renderOldXML(parent, resources, global);
+        return super.renderOldXML(parent, resources, global);
     }
 
     public toOptions() {

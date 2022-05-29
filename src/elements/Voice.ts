@@ -49,6 +49,7 @@ class Voice extends Media {
         voice.att('sampleRate', this.sampleRate);
         voice.att('speechRate', this.speechRate);
         voice.att('pitchRate', this.pitchRate);
+        return voice;
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
@@ -59,6 +60,7 @@ class Voice extends Media {
         voice.att('sampleRate', this.sampleRate);
         voice.att('speechRate', this.speechRate);
         voice.att('pitchRate', this.pitchRate);
+        return voice;
     }
 
     public toOptions() {

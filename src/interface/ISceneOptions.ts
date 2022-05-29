@@ -16,6 +16,7 @@ interface ISceneOptions {
   transition?: ITransitionOptions;
   children?: (Element | IElementOptions)[];
   filter?: IFilterOptions;
+  compile?: boolean | string;
 }
 
 export default ISceneOptions;

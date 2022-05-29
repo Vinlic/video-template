@@ -1,3 +1,5 @@
+import { create } from 'xmlbuilder2';
+
 import IElementOptions from './interface/IElementOptions';
 import IEffectOptions from './interface/IEffectOptions';
 
@@ -5,7 +7,7 @@ import ElementTypes from '../enums/ElementTypes';
 
 import util from '../util';
 import ElementFactory from '../ElementFactory';
-import { OptionsParser } from '../parsers';
+import { Parser, OptionsParser } from '../parsers';
 
 class Effect {
     public type = ''; //动效类
@@ -80,7 +82,7 @@ class Element {
     #absoluteStartTime?: number; //绝对开始时间
     #absoluteEndTime?: number; //绝对结束时间
 
-    public constructor(options: IElementOptions, type = ElementTypes.Element) {
+    public constructor(options: IElementOptions, type = ElementTypes.Element, data = {}, vars = {}) {
         util.optionsInject(this, options, {
             type: (v: any) => util.defaultTo(v, type),
             id: (v: any) => util.defaultTo(Element.isId(v) ? v : undefined, util.uniqid()),
@@ -141,8 +143,8 @@ class Element {
      * @param {XMLObject} parent 上级节点XML对象
      * @returns {XMLObject} 包含基本属性的XML对象
      */
-    public renderXML(parent: any) {
-        const element = parent.ele(this.type, {
+    public renderXML(parent?: any) {
+        const element = (parent || create()).ele(this.type, {
             id: this.id,
             name: this.name,
             x: this.x,
@@ -175,7 +177,7 @@ class Element {
         return element;
     }
 
-    public renderOldXML(parent: any, resources?: any, global?: any) {
+    public renderOldXML(parent?: any, resources?: any, global?: any) {
         const attributes = {
             id: this.id,
             name: this.name,
@@ -216,7 +218,7 @@ class Element {
                 [ElementTypes.Chart]: 'dynDataCharts',
                 [ElementTypes.Canvas]: 'dynDataCharts',
                 [ElementTypes.Vtuber]: 'vtubers',
-            }[this.type as string]) : parent)
+            }[this.type as string]) : (parent || create()))
                 .ele({
                     [ElementTypes.Text]: 'caption',
                     [ElementTypes.Image]: 'resource',
@@ -234,6 +236,64 @@ class Element {
         return element;
     }
 
+    /**
+     * 转换场景模型为XML文档
+     *
+     * @param {Boolean} pretty 是否格式化
+     * @returns {String} XML文档内容
+     */
+     public toXML(pretty = false) {
+        const element = this.renderXML();
+        return element.end({ prettyPrint: pretty });
+    }
+
+    /**
+     * 转换场景模型为过时的XML文档
+     *
+     * @param {Boolean} pretty 是否格式化
+     * @returns {String} XML文档内容
+     */
+    public toOldXML(pretty = false) {
+        const element = this.renderOldXML();
+        return element.end({ prettyPrint: pretty });
+    }
+
+    /**
+     * 通用解析入口
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+     public static parse(content: any) {
+        if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
+        if (util.isBuffer(content)) content = content.toString();
+        if (util.isObject(content)) return ElementFactory.createElement(content);
+        if (util.isString(content)) return Element.parseXML(content);
+        return Element.parseJSON(content);
+    }
+
+    /**
+     * 解析JSON数据为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static parseJSON = Parser.parseElementJSON.bind(Parser);
+
+    /**
+     * 解析XML文档为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static parseXML = Parser.parseElementXML.bind(Parser);
+
+      /**
+     * 解析前端options
+     * 
+     * @param {Object} options options对象
+     * @returns {Template}
+     */
     public static parseOptions = OptionsParser.parseElementOptions.bind(OptionsParser);
 
     /**

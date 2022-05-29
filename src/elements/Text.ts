@@ -94,6 +94,7 @@ class Text extends Element {
         }
         text.att('textFillColor', this.textFillColor);
         text.att('fillColorIntension', this.fillColorIntension);
+        return text;
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
@@ -127,6 +128,7 @@ class Text extends Element {
         caption.att('fillColorIntension', this.fillColorIntension);
         const text = caption.ele('text');
         text.txt(this.value);
+        return text;
     }
 
     public toOptions() {

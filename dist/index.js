@@ -152,7 +152,192 @@ var util_default = __spreadProps(__spreadValues({}, import_lodash.default), {
 });
 
 // src/Scene.ts
-var import_xmlbuilder23 = require("xmlbuilder2");
+var import_xmlbuilder24 = require("xmlbuilder2");
+
+// src/Compiler.ts
+var Compiler = class {
+  static compile(rawData, data = {}, valueMap = {}) {
+    const render = (value, data2 = {}, scope = {}) => {
+      if (util_default.isObject(value)) {
+        if (util_default.isArray(value)) {
+          const _scope = {};
+          let children = [];
+          value.forEach((v) => {
+            const result2 = render(util_default.cloneDeep(v), data2, _scope);
+            if (result2 === null)
+              return;
+            if (util_default.isArray(result2))
+              children = [...children, ...result2];
+            else
+              children.push(result2);
+          });
+          return children;
+        }
+        const attrs = value;
+        const { for: $for, forItem, forIndex, if: $if, elif, else: $else } = attrs;
+        if ($if) {
+          delete attrs.if;
+          const expressions = this.expressionsExtract($if);
+          if (!expressions) {
+            scope.ifFlag = false;
+            return null;
+          }
+          if (expressions.length) {
+            const { expression } = expressions[0];
+            let result2;
+            try {
+              result2 = this.eval(expression, data2, valueMap);
+            } catch {
+            }
+            if (!result2) {
+              scope.ifFlag = false;
+              return null;
+            }
+          }
+          scope.ifFlag = true;
+        } else if (elif) {
+          if (util_default.isUndefined(scope.ifFlag))
+            throw new Error("\u4F7F\u7528elif\u5C5E\u6027\u8282\u70B9\u5FC5\u987B\u5904\u4E8E\u5305\u542Bif\u5C5E\u6027\u8282\u70B9\u7684\u4E0B\u4E00\u4E2A\u8282\u70B9");
+          delete attrs.elif;
+          if (scope.ifFlag) {
+            scope.ifFlag = true;
+            return null;
+          }
+          const expressions = this.expressionsExtract(elif);
+          if (!expressions) {
+            scope.ifFlag = false;
+            return null;
+          }
+          if (!expressions.length) {
+            const { expression } = expressions[0];
+            let result2;
+            try {
+              result2 = this.eval(expression, data2, valueMap);
+            } catch {
+            }
+            if (!result2) {
+              scope.ifFlag = false;
+              return null;
+            }
+          }
+          scope.ifFlag = true;
+        } else if ($else) {
+          if (util_default.isUndefined(scope.ifFlag))
+            throw new Error("\u4F7F\u7528elif\u5C5E\u6027\u8282\u70B9\u5FC5\u987B\u5904\u4E8E\u5305\u542Bif\u5C5E\u6027\u8282\u70B9\u7684\u4E0B\u4E00\u4E2A\u8282\u70B9");
+          delete attrs.else;
+          if (scope.ifFlag) {
+            delete scope.ifFlag;
+            return null;
+          }
+        }
+        if ($for) {
+          delete attrs.for;
+          delete attrs.forIndex;
+          delete attrs.forItem;
+          const expressions = this.expressionsExtract($for);
+          if (!expressions || !expressions.length)
+            return null;
+          const { expression } = expressions[0];
+          let list = [];
+          try {
+            list = this.eval(expression, data2, valueMap);
+          } catch {
+          }
+          if (util_default.isNumber(list)) {
+            const items = [];
+            for (let i = 0; i < list; i++) {
+              items.push(render(value, __spreadProps(__spreadValues({}, data2), {
+                [forIndex || "index"]: i
+              })));
+            }
+            return items;
+          }
+          if (!util_default.isArray(list) || !list.length)
+            return null;
+          return list.map((v, i) => {
+            const item = util_default.cloneDeep(value);
+            return render(item, __spreadProps(__spreadValues({}, data2), {
+              [forIndex || "index"]: i,
+              [forItem || "item"]: v
+            }));
+          });
+        }
+        const result = {};
+        for (const key in value)
+          result[key] = render(attrs[key], data2);
+        return result;
+      } else if (util_default.isString(value)) {
+        const expressions = this.expressionsExtract(value);
+        if (!expressions || !expressions.length)
+          return value;
+        return expressions.reduce((result, expression) => {
+          switch (expression.expression) {
+            case "__UUID__":
+              result = expression.replace(result, util_default.uuid());
+              break;
+            case "__UNIQID__":
+              result = expression.replace(result, util_default.uniqid());
+              break;
+            default:
+              try {
+                result = expression.replace(result, this.eval(expression.expression, data2, valueMap));
+              } catch {
+                result = null;
+              }
+          }
+          return result;
+        }, value);
+      }
+      return value;
+    };
+    return render(rawData, data);
+  }
+  static eval(expression, data = {}, valueMap = {}) {
+    let result;
+    const _data = __spreadValues(__spreadValues({}, data), valueMap);
+    const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
+    try {
+      result = evalFun.bind(_data)();
+    } catch (err) {
+      result = "";
+    }
+    if (util_default.isString(result) && Object.keys(valueMap).length) {
+      const expressions = this.expressionsExtract(result);
+      if (!expressions || !expressions.length)
+        return result;
+      return expressions.reduce((_result, expression2) => {
+        try {
+          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap)));
+        } catch (err) {
+          _result = null;
+        }
+        return _result;
+      }, result);
+    }
+    return result;
+  }
+  static expressionsExtract(value) {
+    if (util_default.isUndefined(value) || value == null)
+      return null;
+    const match = value.toString().match(/(?<={{)[^}]*(?=}})/g);
+    if (!match)
+      return [];
+    const list = match;
+    return Array.from(new Set(list)).map((expression) => {
+      return {
+        expression: expression.replace(/\$\#/g, "{").replace(/\#\$/g, "}"),
+        replace: (oldValue, newValue) => {
+          if (util_default.isUndefined(newValue) || newValue == null)
+            return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), "") || null;
+          if (oldValue == null)
+            return newValue;
+          return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), newValue);
+        }
+      };
+    });
+  }
+};
+var Compiler_default = Compiler;
 
 // src/enums/ElementTypes.ts
 var ElementTypes = /* @__PURE__ */ ((ElementTypes2) => {
@@ -192,6 +377,9 @@ __export(elements_exports, {
   Voice: () => Voice_default,
   Vtuber: () => Vtuber_default
 });
+
+// src/elements/Element.ts
+var import_xmlbuilder23 = require("xmlbuilder2");
 
 // src/parsers/Parser.ts
 var import_xmlbuilder2 = require("xmlbuilder2");
@@ -244,7 +432,7 @@ var Parser = class {
   static parseJSON(content, data = {}, vars = {}) {
     return new Template_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
   }
-  static async parseJSONPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+  static async parseJSONPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
     const object = util_default.isString(content) ? JSON.parse(content) : content;
     if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
       const result = await dataProcessor(object.dataSrc);
@@ -255,6 +443,73 @@ var Parser = class {
       util_default.isObject(result) && util_default.assign(data, result);
     }
     return new Template_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
+  }
+  static parseSceneJSON(content, data = {}, vars = {}) {
+    return new Scene_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
+  }
+  static async parseSceneJSONPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+    const object = util_default.isString(content) ? JSON.parse(content) : content;
+    if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
+      const result = await dataProcessor(object.dataSrc);
+      util_default.isObject(result) && util_default.assign(data, result);
+    }
+    if (util_default.isFunction(varsProcessor) && util_default.isString(object.varsSrc)) {
+      const result = await varsProcessor(object.varsSrc);
+      util_default.isObject(result) && util_default.assign(data, result);
+    }
+    return new Scene_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
+  }
+  static parseXMLObject(xmlObject, dataObject, varsObject, data = {}, vars = {}) {
+    function parse(obj, target = {}) {
+      const type = Object.keys(obj)[0];
+      target.type = type;
+      for (let key in obj[":@"]) {
+        const value = obj[":@"][key];
+        let index;
+        if (key === "for-index")
+          key = "forIndex";
+        else if (key === "for-item")
+          key = "forItem";
+        else if ((index = key.indexOf("-")) != -1) {
+          const pkey = key.substring(0, index);
+          const ckey = key.substring(index + 1, key.length);
+          if (!target[pkey])
+            target[pkey] = {};
+          target[pkey][ckey] = value;
+          continue;
+        }
+        target[key] = value;
+      }
+      target.children = [];
+      obj[type].forEach((v) => {
+        if (v["#text"])
+          return target.value = v["#text"];
+        const result = parse(v, {});
+        result && target.children.push(result);
+      });
+      return target;
+    }
+    const completeObject = parse(xmlObject);
+    const _vars = {};
+    const _data = {};
+    if (varsObject || dataObject) {
+      let processing = function(obj, target) {
+        obj.children.forEach((o) => {
+          if (!target[o.type])
+            target[o.type] = {};
+          if (o.value)
+            target[o.type] = o.value;
+          processing(o, target[o.type]);
+        });
+      };
+      varsObject && processing(parse(varsObject), _vars);
+      dataObject && processing(parse(dataObject), _data);
+    }
+    return {
+      completeObject,
+      data: util_default.assign(_data, data),
+      vars: util_default.assign(_vars, vars)
+    };
   }
   static parseXML(content, data = {}, vars = {}) {
     let xmlObject, varsObject, dataObject;
@@ -268,54 +523,10 @@ var Parser = class {
     });
     if (!xmlObject)
       throw new Error("template xml invalid");
-    function parse(obj, target = {}) {
-      const type = Object.keys(obj)[0];
-      target.type = type;
-      for (let key in obj[":@"]) {
-        const value = obj[":@"][key];
-        let index;
-        if (key === "for-index")
-          key = "forIndex";
-        else if (key === "for-item")
-          key = "forItem";
-        else if ((index = key.indexOf("-")) != -1) {
-          const pkey = key.substring(0, index);
-          const ckey = key.substring(index + 1, key.length);
-          if (!target[pkey])
-            target[pkey] = {};
-          target[pkey][ckey] = value;
-          continue;
-        }
-        target[key] = value;
-      }
-      target.children = [];
-      obj[type].forEach((v) => {
-        if (v["#text"])
-          return target.value = v["#text"];
-        const result = parse(v, {});
-        result && target.children.push(result);
-      });
-      return target;
-    }
-    const completeObject = parse(xmlObject);
-    const _vars = {};
-    const _data = {};
-    if (varsObject || dataObject) {
-      let processing = function(obj, target) {
-        obj.children.forEach((o) => {
-          if (!target[o.type])
-            target[o.type] = {};
-          if (o.value)
-            target[o.type] = o.value;
-          processing(o, target[o.type]);
-        });
-      };
-      varsObject && processing(parse(varsObject), _vars);
-      dataObject && processing(parse(dataObject), _data);
-    }
-    return new Template_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars);
+    return new Template_default(completeObject, _data, _vars);
   }
-  static async parseXMLPreProcessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+  static async parseXMLPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
     let xmlObject, varsObject, dataObject;
     xmlParser.parse(content).forEach((o) => {
       if (o.template)
@@ -327,51 +538,6 @@ var Parser = class {
     });
     if (!xmlObject)
       throw new Error("template xml invalid");
-    function parse(obj, target = {}) {
-      const type = Object.keys(obj)[0];
-      target.type = type;
-      for (let key in obj[":@"]) {
-        const value = obj[":@"][key];
-        let index;
-        if (key === "for-index")
-          key = "forIndex";
-        else if (key === "for-item")
-          key = "forItem";
-        else if ((index = key.indexOf("-")) != -1) {
-          const pkey = key.substring(0, index);
-          const ckey = key.substring(index + 1, key.length);
-          if (!target[pkey])
-            target[pkey] = {};
-          target[pkey][ckey] = value;
-          continue;
-        }
-        target[key] = value;
-      }
-      target.children = [];
-      obj[type].forEach((v) => {
-        if (v["#text"])
-          return target.value = v["#text"];
-        const result = parse(v, {});
-        result && target.children.push(result);
-      });
-      return target;
-    }
-    const completeObject = parse(xmlObject);
-    const _vars = {};
-    const _data = {};
-    if (varsObject || dataObject) {
-      let processing = function(obj, target) {
-        obj.children.forEach((o) => {
-          if (!target[o.type])
-            target[o.type] = {};
-          if (o.value)
-            target[o.type] = o.value;
-          processing(o, target[o.type]);
-        });
-      };
-      varsObject && processing(parse(varsObject), _vars);
-      dataObject && processing(parse(dataObject), _data);
-    }
     if (dataObject == null ? void 0 : dataObject[":@"]) {
       const attrs = dataObject[":@"];
       if (util_default.isFunction(dataProcessor) && attrs.source) {
@@ -386,7 +552,62 @@ var Parser = class {
         util_default.isObject(result) && util_default.assign(vars, result);
       }
     }
-    return new Template_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
+    return new Template_default(completeObject, _data, _vars);
+  }
+  static parseSceneXML(content, data = {}, vars = {}) {
+    let xmlObject, varsObject, dataObject;
+    xmlParser.parse(content).forEach((o) => {
+      if (o.scene)
+        xmlObject = o;
+      if (o.vars)
+        varsObject = o;
+      if (o.data)
+        dataObject = o;
+    });
+    if (!xmlObject)
+      throw new Error("template scene xml invalid");
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
+    return new Scene_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
+  }
+  static async parseSceneXMLPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+    let xmlObject, varsObject, dataObject;
+    xmlParser.parse(content).forEach((o) => {
+      if (o.scene)
+        xmlObject = o;
+      if (o.vars)
+        varsObject = o;
+      if (o.data)
+        dataObject = o;
+    });
+    if (!xmlObject)
+      throw new Error("template scene xml invalid");
+    if (dataObject == null ? void 0 : dataObject[":@"]) {
+      const attrs = dataObject[":@"];
+      if (util_default.isFunction(dataProcessor) && attrs.source) {
+        const result = await dataProcessor(attrs.source);
+        util_default.isObject(result) && util_default.assign(data, result);
+      }
+    }
+    if (varsObject == null ? void 0 : varsObject[":@"]) {
+      const attrs = varsObject[":@"];
+      if (util_default.isFunction(varsProcessor) && attrs.source) {
+        const result = await dataProcessor(attrs.source);
+        util_default.isObject(result) && util_default.assign(vars, result);
+      }
+    }
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
+    return new Scene_default(completeObject, _data, _vars);
+  }
+  static parseElementJSON(content) {
+    return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content);
+  }
+  static parseElementXML(content) {
+    const xmlObject = xmlParser.parse(content)[0];
+    if (!xmlObject)
+      throw new Error("template element xml invalid");
+    const { completeObject } = this.parseXMLObject(xmlObject);
+    return ElementFactory_default.createElement(completeObject);
   }
 };
 var Parser_default = Parser;
@@ -812,40 +1033,40 @@ var OptionsParser = class {
       storyboards: storyBoards
     };
   }
+  static parseBaseOptions(obj, parentDuration) {
+    return {
+      id: obj.id,
+      name: obj.name || void 0,
+      x: obj.left,
+      y: obj.top,
+      width: obj.width,
+      height: obj.height,
+      opacity: obj.opacity,
+      rotate: obj.rotate,
+      zIndex: obj.index,
+      strokeStyle: obj.strokeStyle,
+      strokeColor: obj.strokeColor,
+      strokeWidth: obj.strokeWidth,
+      enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
+        type: obj.animationIn.name,
+        duration: obj.animationIn.duration * 1e3
+      } : void 0,
+      exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
+        type: obj.animationOut.name,
+        duration: obj.animationOut.duration * 1e3
+      } : void 0,
+      backgroundColor: obj.fillColor,
+      startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1e3 : 0,
+      endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration ? parentDuration * 1e3 : void 0
+    };
+  }
   static parseElementOptions(options, parentDuration) {
     var _a, _b;
     if (util_default.isString(options))
       options = JSON.parse(options);
-    function buildBaseData(obj, parentDuration2) {
-      return {
-        id: obj.id,
-        name: obj.name || void 0,
-        x: obj.left,
-        y: obj.top,
-        width: obj.width,
-        height: obj.height,
-        opacity: obj.opacity,
-        rotate: obj.rotate,
-        zIndex: obj.index,
-        strokeStyle: obj.strokeStyle,
-        strokeColor: obj.strokeColor,
-        strokeWidth: obj.strokeWidth,
-        enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
-          type: obj.animationIn.name,
-          duration: obj.animationIn.duration * 1e3
-        } : void 0,
-        exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
-          type: obj.animationOut.name,
-          duration: obj.animationOut.duration * 1e3
-        } : void 0,
-        backgroundColor: obj.fillColor,
-        startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1e3 : 0,
-        endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration2 ? parentDuration2 * 1e3 : void 0
-      };
-    }
     switch (options.elementType) {
       case "image":
-        return new Image_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Image_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           crop: options.crop ? {
             style: options.crop.style,
             x: options.crop.left,
@@ -860,7 +1081,7 @@ var OptionsParser = class {
           dynamic: options.src.indexOf(".gif") !== -1
         }));
       case "sticker":
-        return new Sticker_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Sticker_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           src: options.src,
           loop: options.loop,
           drawType: options.drawType,
@@ -868,7 +1089,7 @@ var OptionsParser = class {
           distortable: options.distortable
         }));
       case "text":
-        return new Text_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Text_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           width: options.width || options.renderWidth || 0,
           height: options.height || options.renderHeight || 0,
           value: options.content,
@@ -891,7 +1112,7 @@ var OptionsParser = class {
           fillColorIntension: options.fillColorIntension
         }));
       case "audio":
-        return new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Audio_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           src: options.src,
           duration: options.duration ? options.duration * 1e3 : void 0,
           volume: options.volume,
@@ -903,7 +1124,7 @@ var OptionsParser = class {
           fadeOutDuration: options.fadeOutDuration ? options.fadeOutDuration * 1e3 : void 0
         }));
       case "voice":
-        return new Voice_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Voice_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           src: options.src,
           duration: options.duration ? options.duration * 1e3 : void 0,
           volume: options.volume,
@@ -923,7 +1144,7 @@ var OptionsParser = class {
           pitchRate: options.pitchRate ? Number(options.pitchRate) + 1 : void 0
         }));
       case "video":
-        return new Video_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Video_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           poster: options.poster,
           src: options.src,
           crop: options.crop ? {
@@ -944,7 +1165,7 @@ var OptionsParser = class {
           demuxSrc: options.demuxSrc
         }));
       case "chart":
-        return new Chart_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Chart_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           chartId: options.chartId,
           poster: options.poster,
           duration: !util_default.isUndefined(options.duration) ? options.duration * 1e3 : void 0,
@@ -952,7 +1173,7 @@ var OptionsParser = class {
           dataSrc: options.dataPath
         }));
       case "canvas":
-        return new Canvas_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Canvas_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           chartId: options.chartId,
           poster: options.poster,
           duration: !util_default.isUndefined(options.duration) ? options.duration * 1e3 : void 0,
@@ -960,7 +1181,7 @@ var OptionsParser = class {
           dataSrc: options.dataPath
         }));
       case "vtuber":
-        return new Vtuber_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Vtuber_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           poster: options.poster,
           src: options.src,
           provider: options.provider,
@@ -977,104 +1198,29 @@ var OptionsParser = class {
           demuxSrc: options.demuxSrc
         }));
       case "group":
-        return new Group_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Group_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           children: (_a = options.children || options.elements) == null ? void 0 : _a.map((element) => this.parseElementOptions(element, parentDuration))
         }));
       case "subtitle":
-        return new Subtitle_default(__spreadProps(__spreadValues({}, buildBaseData(options, parentDuration)), {
+        return new Subtitle_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           children: (_b = options.children || options.elements) == null ? void 0 : _b.map((element) => this.parseElementOptions(element, parentDuration))
         }));
       default:
         return new Element_default({});
     }
   }
-  static parseOptions(options) {
+  static parseSceneOptions(options) {
+    var _a;
     if (util_default.isString(options))
       options = JSON.parse(options);
-    const templateChildren = [];
-    function buildBaseData(obj, parentDuration) {
-      return {
-        id: obj.id,
-        name: obj.name || void 0,
-        x: obj.left,
-        y: obj.top,
-        width: obj.width,
-        height: obj.height,
-        opacity: obj.opacity,
-        rotate: obj.rotate,
-        zIndex: obj.index,
-        strokeStyle: obj.strokeStyle,
-        strokeColor: obj.strokeColor,
-        strokeWidth: obj.strokeWidth,
-        enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
-          type: obj.animationIn.name,
-          duration: obj.animationIn.duration * 1e3
-        } : void 0,
-        exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
-          type: obj.animationOut.name,
-          duration: obj.animationOut.duration * 1e3
-        } : void 0,
-        backgroundColor: obj.fillColor,
-        startTime: obj.animationIn && obj.animationIn.delay > 0 ? obj.animationIn.delay * 1e3 : 0,
-        endTime: obj.animationOut && obj.animationOut.delay > 0 ? obj.animationOut.delay * 1e3 : parentDuration ? parentDuration * 1e3 : void 0
-      };
-    }
-    options == null ? void 0 : options.storyboards.forEach((board) => {
-      var _a;
-      const { id, poster, duration } = board;
-      const sceneChildren = [];
-      board.bgImage && sceneChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgImage, duration)), {
-        endTime: void 0,
-        isBackground: true,
-        src: board.bgImage.src
-      })));
-      board.bgVideo && sceneChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgVideo, duration)), {
-        poster: board.bgVideo.poster,
-        src: board.bgVideo.src,
-        duration: board.bgVideo.duration ? board.bgVideo.duration * 1e3 : void 0,
-        volume: board.bgVideo.volume,
-        muted: board.bgVideo.muted,
-        loop: board.bgVideo.loop,
-        endTime: void 0,
-        isBackground: true,
-        seekStart: board.bgVideo.seekStart ? board.bgVideo.seekStart * 1e3 : void 0,
-        seekEnd: board.bgVideo.seekEnd ? board.bgVideo.seekEnd * 1e3 : void 0
-      })));
-      board.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(board.bgMusic, duration)), {
-        src: board.bgMusic.src,
-        volume: board.bgMusic.volume,
-        duration: board.bgMusic.duration ? board.bgMusic.duration * 1e3 : void 0,
-        seekStart: board.bgMusic.seekStart ? board.bgMusic.seekStart * 1e3 : void 0,
-        seekEnd: board.bgMusic.seekEnd ? board.bgMusic.seekEnd * 1e3 : void 0,
-        muted: board.bgMusic.muted,
-        loop: board.bgMusic.loop,
-        isBackground: true,
-        fadeInDuration: board.bgMusic.fadeInDuration ? board.bgMusic.fadeInDuration * 1e3 : void 0,
-        fadeOutDuration: board.bgMusic.fadeOutDuration ? board.bgMusic.fadeOutDuration * 1e3 : void 0
-      })));
-      (_a = board.children || board.elements) == null ? void 0 : _a.forEach((element) => sceneChildren.push(this.parseElementOptions(element, duration)));
-      templateChildren.push(new Scene_default({
-        id,
-        poster,
-        width: options.videoWidth,
-        height: options.videoHeight,
-        aspectRatio: options.videoSize,
-        duration: duration * 1e3,
-        backgroundColor: board.bgColor ? board.bgColor.fillColor : void 0,
-        transition: board.transition ? {
-          type: board.transition.name,
-          duration: board.transition.duration * 1e3
-        } : void 0,
-        filter: void 0,
-        children: sceneChildren
-      }));
-    });
-    options.bgImage && templateChildren.push(new Image_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgImage)), {
+    const children = [];
+    const { id, poster, duration } = options;
+    options.bgImage && children.push(new Image_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgImage, duration)), {
       endTime: void 0,
       isBackground: true,
       src: options.bgImage.src
     })));
-    options.bgVideo && templateChildren.push(new Video_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgVideo)), {
+    options.bgVideo && children.push(new Video_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgVideo, duration)), {
       poster: options.bgVideo.poster,
       src: options.bgVideo.src,
       duration: options.bgVideo.duration ? options.bgVideo.duration * 1e3 : void 0,
@@ -1086,7 +1232,59 @@ var OptionsParser = class {
       seekStart: options.bgVideo.seekStart ? options.bgVideo.seekStart * 1e3 : void 0,
       seekEnd: options.bgVideo.seekEnd ? options.bgVideo.seekEnd * 1e3 : void 0
     })));
-    options.bgMusic && templateChildren.push(new Audio_default(__spreadProps(__spreadValues({}, buildBaseData(options.bgMusic)), {
+    options.bgMusic && children.push(new Audio_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgMusic, duration)), {
+      src: options.bgMusic.src,
+      volume: options.bgMusic.volume,
+      duration: options.bgMusic.duration ? options.bgMusic.duration * 1e3 : void 0,
+      seekStart: options.bgMusic.seekStart ? options.bgMusic.seekStart * 1e3 : void 0,
+      seekEnd: options.bgMusic.seekEnd ? options.bgMusic.seekEnd * 1e3 : void 0,
+      muted: options.bgMusic.muted,
+      loop: options.bgMusic.loop,
+      isBackground: true,
+      fadeInDuration: options.bgMusic.fadeInDuration ? options.bgMusic.fadeInDuration * 1e3 : void 0,
+      fadeOutDuration: options.bgMusic.fadeOutDuration ? options.bgMusic.fadeOutDuration * 1e3 : void 0
+    })));
+    (_a = options.children || options.elements) == null ? void 0 : _a.forEach((element) => children.push(this.parseElementOptions(element, duration)));
+    return new Scene_default({
+      id,
+      poster,
+      width: options.videoWidth,
+      height: options.videoHeight,
+      aspectRatio: options.videoSize,
+      duration: duration * 1e3,
+      backgroundColor: options.bgColor ? options.bgColor.fillColor : void 0,
+      transition: options.transition ? {
+        type: options.transition.name,
+        duration: options.transition.duration * 1e3
+      } : void 0,
+      filter: void 0,
+      compile: options.compile,
+      children
+    });
+  }
+  static parseOptions(options) {
+    if (util_default.isString(options))
+      options = JSON.parse(options);
+    const children = [];
+    options == null ? void 0 : options.storyboards.map((board) => children.push(this.parseSceneOptions(board)));
+    options.bgImage && children.push(new Image_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgImage)), {
+      endTime: void 0,
+      isBackground: true,
+      src: options.bgImage.src
+    })));
+    options.bgVideo && children.push(new Video_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgVideo)), {
+      poster: options.bgVideo.poster,
+      src: options.bgVideo.src,
+      duration: options.bgVideo.duration ? options.bgVideo.duration * 1e3 : void 0,
+      volume: options.bgVideo.volume,
+      muted: options.bgVideo.muted,
+      loop: options.bgVideo.loop,
+      endTime: void 0,
+      isBackground: true,
+      seekStart: options.bgVideo.seekStart ? options.bgVideo.seekStart * 1e3 : void 0,
+      seekEnd: options.bgVideo.seekEnd ? options.bgVideo.seekEnd * 1e3 : void 0
+    })));
+    options.bgMusic && children.push(new Audio_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgMusic)), {
       src: options.bgMusic.src,
       volume: options.bgMusic.volume,
       duration: options.bgMusic.duration ? options.bgMusic.duration * 1e3 : void 0,
@@ -1112,7 +1310,7 @@ var OptionsParser = class {
       backgroundColor: options.bgColor ? options.bgColor.fillColor || void 0 : void 0,
       captureTime: util_default.isFinite(options.captureTime) ? options.captureTime * 1e3 : void 0,
       compile: options.compile,
-      children: templateChildren
+      children
     });
   }
 };
@@ -1147,7 +1345,7 @@ var Effect = class {
 };
 var _absoluteStartTime, _absoluteEndTime;
 var _Element = class {
-  constructor(options, type = ElementTypes_default.Element) {
+  constructor(options, type = ElementTypes_default.Element, data = {}, vars = {}) {
     __publicField(this, "type", ElementTypes_default.Element);
     __publicField(this, "id", "");
     __publicField(this, "name");
@@ -1196,7 +1394,7 @@ var _Element = class {
       exitEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       stayEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       isBackground: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
-      children: (datas) => util_default.isArray(datas) ? datas.map((data) => _Element.isInstance(data) ? data : ElementFactory_default.createElement(data)) : []
+      children: (datas) => util_default.isArray(datas) ? datas.map((data2) => _Element.isInstance(data2) ? data2 : ElementFactory_default.createElement(data2)) : []
     }, {
       type: (v) => util_default.isString(v),
       id: (v) => _Element.isId(v),
@@ -1228,7 +1426,7 @@ var _Element = class {
   }
   renderXML(parent) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v;
-    const element = parent.ele(this.type, {
+    const element = (parent || (0, import_xmlbuilder23.create)()).ele(this.type, {
       id: this.id,
       name: this.name,
       x: this.x,
@@ -1299,7 +1497,7 @@ var _Element = class {
         [ElementTypes_default.Chart]: "dynDataCharts",
         [ElementTypes_default.Canvas]: "dynDataCharts",
         [ElementTypes_default.Vtuber]: "vtubers"
-      }[this.type]) : parent).ele({
+      }[this.type]) : parent || (0, import_xmlbuilder23.create)()).ele({
         [ElementTypes_default.Text]: "caption",
         [ElementTypes_default.Image]: "resource",
         [ElementTypes_default.Audio]: "resource",
@@ -1313,6 +1511,25 @@ var _Element = class {
     }
     (_g = this.children) == null ? void 0 : _g.forEach((node) => _Element.isInstance(node) && node.renderOldXML(element, resources, global));
     return element;
+  }
+  toXML(pretty = false) {
+    const element = this.renderXML();
+    return element.end({ prettyPrint: pretty });
+  }
+  toOldXML(pretty = false) {
+    const element = this.renderOldXML();
+    return element.end({ prettyPrint: pretty });
+  }
+  static parse(content) {
+    if (!util_default.isString(content) && !util_default.isObject(content))
+      throw new TypeError("content must be an string or object");
+    if (util_default.isBuffer(content))
+      content = content.toString();
+    if (util_default.isObject(content))
+      return ElementFactory_default.createElement(content);
+    if (util_default.isString(content))
+      return _Element.parseXML(content);
+    return _Element.parseJSON(content);
   }
   toOptions() {
     var _a, _b;
@@ -1375,6 +1592,8 @@ var Element2 = _Element;
 _absoluteStartTime = new WeakMap();
 _absoluteEndTime = new WeakMap();
 __publicField(Element2, "Type", ElementTypes_default);
+__publicField(Element2, "parseJSON", Parser_default.parseElementJSON.bind(Parser_default));
+__publicField(Element2, "parseXML", Parser_default.parseElementXML.bind(Parser_default));
 __publicField(Element2, "parseOptions", OptionsParser_default.parseElementOptions.bind(OptionsParser_default));
 var Element_default = Element2;
 
@@ -1568,6 +1787,7 @@ var Text = class extends Element_default {
     }
     text.att("textFillColor", this.textFillColor);
     text.att("fillColorIntension", this.fillColorIntension);
+    return text;
   }
   renderOldXML(parent, resources, global) {
     const caption = super.renderOldXML(parent, resources, global);
@@ -1600,6 +1820,7 @@ var Text = class extends Element_default {
     caption.att("fillColorIntension", this.fillColorIntension);
     const text = caption.ele("text");
     text.txt(this.value);
+    return text;
   }
   toOptions() {
     const parentOptions = super.toOptions();
@@ -1790,11 +2011,13 @@ var Audio = class extends Media_default {
     const audio = super.renderXML(parent);
     audio.att("fadeInDuration", this.fadeInDuration);
     audio.att("fadeOutDuration", this.fadeOutDuration);
+    return audio;
   }
   renderOldXML(parent, resources, global) {
     const audio = super.renderOldXML(parent, resources, global);
     util_default.isNumber(this.fadeInDuration) && audio.att("fadeIn", this.fadeInDuration / 1e3);
     util_default.isNumber(this.fadeOutDuration) && audio.att("fadeOut", this.fadeOutDuration / 1e3);
+    return audio;
   }
   toOptions() {
     const parentOptions = super.toOptions();
@@ -1829,10 +2052,12 @@ var SSML = class extends Element_default {
   renderXML(parent) {
     const ssml = super.renderXML(parent);
     this.value && ssml.ele(this.value);
+    return ssml;
   }
   renderOldXML(parent, resources, global) {
     const ssml = super.renderOldXML(parent, resources, global);
     this.value && ssml.txt(this.value);
+    return ssml;
   }
   static isInstance(value) {
     return value instanceof SSML;
@@ -1875,6 +2100,7 @@ var _Voice = class extends Media_default {
     voice.att("sampleRate", this.sampleRate);
     voice.att("speechRate", this.speechRate);
     voice.att("pitchRate", this.pitchRate);
+    return voice;
   }
   renderOldXML(parent, resources, global) {
     const voice = super.renderOldXML(parent, resources, global);
@@ -1884,6 +2110,7 @@ var _Voice = class extends Media_default {
     voice.att("sampleRate", this.sampleRate);
     voice.att("speechRate", this.speechRate);
     voice.att("pitchRate", this.pitchRate);
+    return voice;
   }
   toOptions() {
     const parentOptions = super.toOptions();
@@ -1943,6 +2170,7 @@ var Video = class extends Media_default {
       video.att("crop-clipStyle", this.crop.clipStyle);
     }
     video.att("demuxSrc", this.demuxSrc);
+    return video;
   }
   renderOldXML(parent, resources, global) {
     const video = super.renderOldXML(parent, resources, global);
@@ -1956,6 +2184,7 @@ var Video = class extends Media_default {
       video.att("clipStyle", this.crop.clipStyle);
     }
     video.att("demuxSrc", this.demuxSrc);
+    return video;
   }
   toOptions() {
     const parentOptions = super.toOptions();
@@ -2006,6 +2235,7 @@ var _Vtuber = class extends Media_default {
     vtuber.att("declaimer", this.declaimer);
     vtuber.att("cutoutColor", this.cutoutColor);
     vtuber.att("demuxSrc", this.demuxSrc);
+    return vtuber;
   }
   renderOldXML(parent, resources, global) {
     const vtuber = super.renderOldXML(parent, resources, global);
@@ -2015,6 +2245,7 @@ var _Vtuber = class extends Media_default {
     vtuber.att("declaimer", this.declaimer);
     vtuber.att("cutoutColor", this.cutoutColor);
     vtuber.att("demuxSrc", this.demuxSrc);
+    return vtuber;
   }
   toOptions() {
     const parentOptions = super.toOptions();
@@ -2095,10 +2326,10 @@ var Chart = class extends Canvas_default {
     util_default.optionsInject(this, options, {}, {});
   }
   renderXML(parent) {
-    super.renderXML(parent);
+    return super.renderXML(parent);
   }
   renderOldXML(parent, resources, global) {
-    super.renderOldXML(parent, resources, global);
+    return super.renderOldXML(parent, resources, global);
   }
   toOptions() {
     const parentOptions = super.toOptions();
@@ -2242,7 +2473,7 @@ var Transition = class {
 };
 var _createXMLRoot, createXMLRoot_fn;
 var _Scene = class {
-  constructor(options) {
+  constructor(options, data = {}, vars = {}) {
     __privateAdd(this, _createXMLRoot);
     __publicField(this, "type", "");
     __publicField(this, "id", "");
@@ -2258,6 +2489,7 @@ var _Scene = class {
     __publicField(this, "children", []);
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
+    options.compile && (options = Compiler_default.compile(options, data, vars));
     util_default.optionsInject(this, options, {
       type: () => "scene",
       id: (v) => util_default.defaultTo(_Scene.isId(v) ? v : void 0, util_default.uniqid()),
@@ -2265,7 +2497,7 @@ var _Scene = class {
       height: (v) => Number(v),
       duration: (v) => Number(v),
       transition: (v) => v && new Transition(v),
-      children: (datas) => util_default.isArray(datas) ? datas.map((data) => Element_default.isInstance(data) ? data : ElementFactory_default.createElement(data)) : []
+      children: (datas) => util_default.isArray(datas) ? datas.map((data2) => Element_default.isInstance(data2) ? data2 : ElementFactory_default.createElement(data2)) : []
     }, {
       type: (v) => v === "scene",
       id: (v) => _Scene.isId(v),
@@ -2373,6 +2605,28 @@ var _Scene = class {
     (_a = this.transition) == null ? void 0 : _a.renderOldXML(board);
     return board;
   }
+  static parse(content, data, vars) {
+    if (!util_default.isString(content) && !util_default.isObject(content))
+      throw new TypeError("content must be an string or object");
+    if (util_default.isBuffer(content))
+      content = content.toString();
+    if (util_default.isObject(content))
+      return new _Scene(content);
+    if (util_default.isString(content))
+      return _Scene.parseXML(content, data, vars);
+    return _Scene.parseJSON(content, data, vars);
+  }
+  static async parseAndProcessing(content, data, vars, dataProcessor, varsProcessor) {
+    if (!util_default.isString(content) && !util_default.isObject(content))
+      throw new TypeError("content must be an string or object");
+    if (util_default.isBuffer(content))
+      content = content.toString();
+    if (util_default.isObject(content))
+      return new _Scene(content);
+    if (util_default.isString(content))
+      return _Scene.parseXMLPreprocessing(content, data, vars, dataProcessor, varsProcessor);
+    return _Scene.parseJSONPreprocessing(content, data, vars, dataProcessor, varsProcessor);
+  }
   static isId(value) {
     return util_default.isString(value) && /^[a-zA-Z0-9]{16}$/.test(value);
   }
@@ -2407,7 +2661,7 @@ var _Scene = class {
 var Scene = _Scene;
 _createXMLRoot = new WeakSet();
 createXMLRoot_fn = function(tagName = "scene", attributes = {}, headless = true) {
-  const root = headless ? (0, import_xmlbuilder23.create)() : (0, import_xmlbuilder23.create)({ version: "1.0" });
+  const root = headless ? (0, import_xmlbuilder24.create)() : (0, import_xmlbuilder24.create)({ version: "1.0" });
   const scene = root.ele(tagName, __spreadValues({
     id: this.id,
     name: this.name,
@@ -2421,192 +2675,12 @@ createXMLRoot_fn = function(tagName = "scene", attributes = {}, headless = true)
   return scene;
 };
 __publicField(Scene, "type", "scene");
+__publicField(Scene, "parseJSON", Parser_default.parseSceneJSON.bind(Parser_default));
+__publicField(Scene, "parseJSONPreprocessing", Parser_default.parseSceneJSONPreprocessing.bind(Parser_default));
+__publicField(Scene, "parseXML", Parser_default.parseSceneXML.bind(Parser_default));
+__publicField(Scene, "parseXMLPreprocessing", Parser_default.parseSceneXMLPreprocessing.bind(Parser_default));
+__publicField(Scene, "parseOptions", OptionsParser_default.parseSceneOptions.bind(OptionsParser_default));
 var Scene_default = Scene;
-
-// src/Compiler.ts
-var Compiler = class {
-  static compile(rawData, data = {}, valueMap = {}) {
-    const render = (value, data2 = {}, scope = {}) => {
-      if (util_default.isObject(value)) {
-        if (util_default.isArray(value)) {
-          const _scope = {};
-          let children = [];
-          value.forEach((v) => {
-            const result2 = render(util_default.cloneDeep(v), data2, _scope);
-            if (result2 === null)
-              return;
-            if (util_default.isArray(result2))
-              children = [...children, ...result2];
-            else
-              children.push(result2);
-          });
-          return children;
-        }
-        const attrs = value;
-        const { for: $for, forItem, forIndex, if: $if, elif, else: $else } = attrs;
-        if ($if) {
-          delete attrs.if;
-          const expressions = this.expressionsExtract($if);
-          if (!expressions) {
-            scope.ifFlag = false;
-            return null;
-          }
-          if (expressions.length) {
-            const { expression } = expressions[0];
-            let result2;
-            try {
-              result2 = this.eval(expression, data2, valueMap);
-            } catch {
-            }
-            if (!result2) {
-              scope.ifFlag = false;
-              return null;
-            }
-          }
-          scope.ifFlag = true;
-        } else if (elif) {
-          if (util_default.isUndefined(scope.ifFlag))
-            throw new Error("\u4F7F\u7528elif\u5C5E\u6027\u8282\u70B9\u5FC5\u987B\u5904\u4E8E\u5305\u542Bif\u5C5E\u6027\u8282\u70B9\u7684\u4E0B\u4E00\u4E2A\u8282\u70B9");
-          delete attrs.elif;
-          if (scope.ifFlag) {
-            scope.ifFlag = true;
-            return null;
-          }
-          const expressions = this.expressionsExtract(elif);
-          if (!expressions) {
-            scope.ifFlag = false;
-            return null;
-          }
-          if (!expressions.length) {
-            const { expression } = expressions[0];
-            let result2;
-            try {
-              result2 = this.eval(expression, data2, valueMap);
-            } catch {
-            }
-            if (!result2) {
-              scope.ifFlag = false;
-              return null;
-            }
-          }
-          scope.ifFlag = true;
-        } else if ($else) {
-          if (util_default.isUndefined(scope.ifFlag))
-            throw new Error("\u4F7F\u7528elif\u5C5E\u6027\u8282\u70B9\u5FC5\u987B\u5904\u4E8E\u5305\u542Bif\u5C5E\u6027\u8282\u70B9\u7684\u4E0B\u4E00\u4E2A\u8282\u70B9");
-          delete attrs.else;
-          if (scope.ifFlag) {
-            delete scope.ifFlag;
-            return null;
-          }
-        }
-        if ($for) {
-          delete attrs.for;
-          delete attrs.forIndex;
-          delete attrs.forItem;
-          const expressions = this.expressionsExtract($for);
-          if (!expressions || !expressions.length)
-            return null;
-          const { expression } = expressions[0];
-          let list = [];
-          try {
-            list = this.eval(expression, data2, valueMap);
-          } catch {
-          }
-          if (util_default.isNumber(list)) {
-            const items = [];
-            for (let i = 0; i < list; i++) {
-              items.push(render(value, __spreadProps(__spreadValues({}, data2), {
-                [forIndex || "index"]: i
-              })));
-            }
-            return items;
-          }
-          if (!util_default.isArray(list) || !list.length)
-            return null;
-          return list.map((v, i) => {
-            const item = util_default.cloneDeep(value);
-            return render(item, __spreadProps(__spreadValues({}, data2), {
-              [forIndex || "index"]: i,
-              [forItem || "item"]: v
-            }));
-          });
-        }
-        const result = {};
-        for (const key in value)
-          result[key] = render(attrs[key], data2);
-        return result;
-      } else if (util_default.isString(value)) {
-        const expressions = this.expressionsExtract(value);
-        if (!expressions || !expressions.length)
-          return value;
-        return expressions.reduce((result, expression) => {
-          switch (expression.expression) {
-            case "__UUID__":
-              result = expression.replace(result, util_default.uuid());
-              break;
-            case "__UNIQID__":
-              result = expression.replace(result, util_default.uniqid());
-              break;
-            default:
-              try {
-                result = expression.replace(result, this.eval(expression.expression, data2, valueMap));
-              } catch {
-                result = null;
-              }
-          }
-          return result;
-        }, value);
-      }
-      return value;
-    };
-    return render(rawData, data);
-  }
-  static eval(expression, data = {}, valueMap = {}) {
-    let result;
-    const _data = __spreadValues(__spreadValues({}, data), valueMap);
-    const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
-    try {
-      result = evalFun.bind(_data)();
-    } catch (err) {
-      result = "";
-    }
-    if (util_default.isString(result) && Object.keys(valueMap).length) {
-      const expressions = this.expressionsExtract(result);
-      if (!expressions || !expressions.length)
-        return result;
-      return expressions.reduce((_result, expression2) => {
-        try {
-          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap)));
-        } catch (err) {
-          _result = null;
-        }
-        return _result;
-      }, result);
-    }
-    return result;
-  }
-  static expressionsExtract(value) {
-    if (util_default.isUndefined(value) || value == null)
-      return null;
-    const match = value.toString().match(/(?<={{)[^}]*(?=}})/g);
-    if (!match)
-      return [];
-    const list = match;
-    return Array.from(new Set(list)).map((expression) => {
-      return {
-        expression: expression.replace(/\$\#/g, "{").replace(/\#\$/g, "}"),
-        replace: (oldValue, newValue) => {
-          if (util_default.isUndefined(newValue) || newValue == null)
-            return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), "") || null;
-          if (oldValue == null)
-            return newValue;
-          return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), newValue);
-        }
-      };
-    });
-  }
-};
-var Compiler_default = Compiler;
 
 // src/Template.ts
 var _Template = class {
@@ -2636,7 +2710,6 @@ var _Template = class {
   createTime = 0;
   updateTime = 0;
   buildBy = "";
-  compile = false;
   children = [];
   constructor(options, data = {}, vars = {}) {
     options.compile && (options = Compiler_default.compile(options, data, vars));
@@ -2655,7 +2728,6 @@ var _Template = class {
       createTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
       updateTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
       buildBy: (v) => util_default.defaultTo(v, "system"),
-      compile: (v) => util_default.booleanParse(util_default.defaultTo(v, false)),
       children: (datas) => util_default.isArray(datas) ? datas.map((data2) => {
         if (Scene_default.isInstance(data2) || Element_default.isInstance(data2))
           return data2;
@@ -2691,7 +2763,6 @@ var _Template = class {
       createTime: (v) => util_default.isUnixTimestamp(v),
       updateTime: (v) => util_default.isUnixTimestamp(v),
       buildBy: (v) => util_default.isString(v),
-      compile: (v) => util_default.isBoolean(v),
       children: (v) => util_default.isArray(v)
     });
   }
@@ -2764,11 +2835,11 @@ var _Template = class {
     if (util_default.isObject(content))
       return new _Template(content);
     if (/\<template/.test(content))
-      return await _Template.parseXMLPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+      return await _Template.parseXMLPreprocessing(content, data, vars, dataProcessor, varsProcessor);
     else if (/\<project/.test(content))
       return _Template.parseOldXML(content, data, vars);
     else
-      return await _Template.parseJSONPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+      return await _Template.parseJSONPreprocessing(content, data, vars, dataProcessor, varsProcessor);
   }
   generateAllTrack() {
     let track = [];
@@ -2819,11 +2890,11 @@ var _Template = class {
 };
 var Template = _Template;
 __publicField(Template, "type", "template");
-__publicField(Template, "parseJSON", Parser_default.parseJSON);
-__publicField(Template, "parseJSONPreProcessing", Parser_default.parseJSONPreProcessing);
-__publicField(Template, "parseXML", Parser_default.parseXML);
-__publicField(Template, "parseXMLPreProcessing", Parser_default.parseXMLPreProcessing);
-__publicField(Template, "parseOldXML", OldParser_default.parseXML);
+__publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
+__publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
+__publicField(Template, "parseXML", Parser_default.parseXML.bind(Parser_default));
+__publicField(Template, "parseXMLPreprocessing", Parser_default.parseXMLPreprocessing.bind(Parser_default));
+__publicField(Template, "parseOldXML", OldParser_default.parseXML.bind(OldParser_default));
 __publicField(Template, "parseOptions", OptionsParser_default.parseOptions.bind(OptionsParser_default));
 var Template_default = Template;
 // Annotate the CommonJS export names for ESM import in node:

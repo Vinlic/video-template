@@ -17,11 +17,13 @@ class SSML extends Element {
   public renderXML(parent: any) {
     const ssml = super.renderXML(parent);
     this.value && ssml.ele(this.value);
+    return ssml;
   }
 
   public renderOldXML(parent: any, resources: any, global: any) {
     const ssml = super.renderOldXML(parent, resources, global);
     this.value && ssml.txt(this.value);
+    return ssml;
   }
 
   public static isInstance(value: any) {

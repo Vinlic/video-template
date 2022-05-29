@@ -4,7 +4,9 @@ import ISceneOptions from './interface/ISceneOptions';
 import ITransitionOptions from './interface/ITransitionOptions';
 import IFilterOptions from './elements/interface/IFilterOptions';
 
+import Compiler from './Compiler';
 import ElementFactory from './ElementFactory';
+import { Parser, OptionsParser } from './parsers';
 import { Element, Text } from './elements';
 import util from './util';
 
@@ -69,8 +71,9 @@ class Scene {
     public filter?: IFilterOptions; // 场景滤镜
     public children: Element[] = []; // 场景子节点
 
-    public constructor(options: ISceneOptions) {
+    public constructor(options: ISceneOptions, data = {}, vars = {}) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
+        options.compile && (options = Compiler.compile(options, data, vars)); //如果模板属性包含compile则对模板进行编译处理
         util.optionsInject(
             this,
             options,
@@ -246,6 +249,74 @@ class Scene {
         });
         return scene;
     }
+
+    /**
+     * 通用解析入口
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+      public static parse(content: any, data?: object, vars?: object) {
+        if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
+        if (util.isBuffer(content)) content = content.toString();
+        if (util.isObject(content)) return new Scene(content);
+        if (util.isString(content)) return Scene.parseXML(content, data, vars);
+        return Scene.parseJSON(content, data, vars);
+    }
+
+    /**
+     * 解析入口同时处理数据
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+     public static async parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
+        if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
+        if (util.isBuffer(content)) content = content.toString();
+        if (util.isObject(content)) return new Scene(content);
+        if (util.isString(content)) return Scene.parseXMLPreprocessing(content, data, vars, dataProcessor, varsProcessor);
+        return Scene.parseJSONPreprocessing(content, data, vars, dataProcessor, varsProcessor);
+    }
+
+    /**
+     * 解析JSON数据为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static parseJSON = Parser.parseSceneJSON.bind(Parser);
+
+    /**
+     * 解析JSON数据为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+     public static parseJSONPreprocessing = Parser.parseSceneJSONPreprocessing.bind(Parser);
+
+    /**
+     * 解析XML文档为模型
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static parseXML = Parser.parseSceneXML.bind(Parser);
+
+    /**
+     * 解析XML文档为模型并预处理
+     *
+     * @param {String} content
+     * @returns {Template}
+     */
+    public static parseXMLPreprocessing = Parser.parseSceneXMLPreprocessing.bind(Parser);
+
+      /**
+     * 解析前端options
+     * 
+     * @param {Object} options options对象
+     * @returns {Template}
+     */
+    public static parseOptions = OptionsParser.parseSceneOptions.bind(OptionsParser);
 
     /**
      * 是否为场景ID

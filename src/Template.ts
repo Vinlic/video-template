@@ -35,7 +35,6 @@ class Template {
     public createTime = 0; //模板创建时间
     public updateTime = 0; //模板最后更新时间
     public buildBy = ''; //模板从何处构建
-    public compile = false; //模板是否需要编译
     public children: (Scene | Element)[] = []; //模板子节点
 
     public constructor(options: ITemplateOptions, data = {}, vars = {}) {
@@ -58,7 +57,6 @@ class Template {
                 createTime: (v: any) => Number(util.defaultTo(v, util.unixTimestamp())),
                 updateTime: (v: any) => Number(util.defaultTo(v, util.unixTimestamp())),
                 buildBy: (v: any) => util.defaultTo(v, 'system'),
-                compile: (v: any) => util.booleanParse(util.defaultTo(v, false)),
                 children: (datas: any) =>
                     util.isArray(datas)
                         ? datas.map((data) => {
@@ -95,7 +93,6 @@ class Template {
                 createTime: (v: any) => util.isUnixTimestamp(v),
                 updateTime: (v: any) => util.isUnixTimestamp(v),
                 buildBy: (v: any) => util.isString(v),
-                compile: (v: any) => util.isBoolean(v),
                 children: (v: any) => util.isArray(v),
             },
         );
@@ -221,9 +218,9 @@ class Template {
         if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
         if (util.isBuffer(content)) content = content.toString();
         if (util.isObject(content)) return new Template(content);
-        if (/\<template/.test(content)) return await Template.parseXMLPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+        if (/\<template/.test(content)) return await Template.parseXMLPreprocessing(content, data, vars, dataProcessor, varsProcessor);
         else if (/\<project/.test(content)) return Template.parseOldXML(content, data, vars);
-        else return await Template.parseJSONPreProcessing(content, data, vars, dataProcessor, varsProcessor);
+        else return await Template.parseJSONPreprocessing(content, data, vars, dataProcessor, varsProcessor);
     }
 
     /**
@@ -232,7 +229,7 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-    public static parseJSON = Parser.parseJSON;
+    public static parseJSON = Parser.parseJSON.bind(Parser);
 
     /**
      * 解析JSON数据为模型
@@ -240,7 +237,7 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-     public static parseJSONPreProcessing = Parser.parseJSONPreProcessing;
+     public static parseJSONPreprocessing = Parser.parseJSONPreprocessing.bind(Parser);
 
     /**
      * 解析XML文档为模型
@@ -248,7 +245,7 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-    public static parseXML = Parser.parseXML;
+    public static parseXML = Parser.parseXML.bind(Parser);
 
     /**
      * 解析XML文档为模型并预处理
@@ -256,7 +253,7 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-    public static parseXMLPreProcessing = Parser.parseXMLPreProcessing;
+    public static parseXMLPreprocessing = Parser.parseXMLPreprocessing.bind(Parser);
 
     /**
      * 解析过时的XML文档为模型
@@ -266,7 +263,7 @@ class Template {
      * @param {Object} vars 变量对象
      * @returns {Template}
      */
-    public static parseOldXML = OldParser.parseXML;
+    public static parseOldXML = OldParser.parseXML.bind(OldParser);
 
     /**
      * 解析前端options

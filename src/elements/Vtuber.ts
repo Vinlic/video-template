@@ -46,6 +46,7 @@ class Vtuber extends Media {
     vtuber.att('declaimer', this.declaimer);
     vtuber.att('cutoutColor', this.cutoutColor);
     vtuber.att("demuxSrc", this.demuxSrc);
+    return vtuber;
   }
 
   public renderOldXML(parent: any, resources: any, global: any) {
@@ -56,6 +57,7 @@ class Vtuber extends Media {
     vtuber.att('declaimer', this.declaimer);
     vtuber.att('cutoutColor', this.cutoutColor);
     vtuber.att("demuxSrc", this.demuxSrc);
+    return vtuber;
   }
 
   public toOptions() {

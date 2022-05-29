@@ -39,6 +39,7 @@ class Video extends Media {
             video.att('crop-clipStyle', this.crop.clipStyle);
         }
         video.att("demuxSrc", this.demuxSrc);
+        return video;
     }
 
     public renderOldXML(parent: any, resources: any, global: any) {
@@ -53,6 +54,7 @@ class Video extends Media {
             video.att('clipStyle', this.crop.clipStyle);
         }
         video.att("demuxSrc", this.demuxSrc);
+        return video;
     }
 
     public toOptions() {

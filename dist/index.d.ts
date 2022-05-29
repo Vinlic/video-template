@@ -21,19 +21,9 @@ declare enum ElementTypes {
     SSML = "ssml"
 }
 
-declare class Parser {
-    static toXML(_template: Template, pretty?: boolean): string;
-    static toBuffer(tempalte: Template): Buffer;
-    static parseJSON(content: any, data?: {}, vars?: {}): Template;
-    static parseJSONPreProcessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
-    static parseXML(content: string, data?: {}, vars?: {}): Template;
-    static parseXMLPreProcessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
-}
-
-declare class OldParser {
-    static toXML(template: Template, pretty?: boolean): string;
-    static toBuffer(template: Template): Buffer;
-    static parseXML(content: string, data?: {}, vars?: {}): Template;
+interface ITransitionOptions {
+    type?: string;
+    duration?: number | string;
 }
 
 interface IFilterOptions {
@@ -116,8 +106,8 @@ declare class Text extends Element {
     textFillColor?: string;
     fillColorIntension?: number;
     constructor(options: ITextOptions, type?: ElementTypes);
-    renderXML(parent: any): void;
-    renderOldXML(parent: any, resources: any, global: any): void;
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
     static isInstance(value: any): boolean;
 }
@@ -194,8 +184,8 @@ declare class Audio extends Media {
     fadeInDuration?: number;
     fadeOutDuration?: number;
     constructor(options: IAudioOptions);
-    renderXML(parent: any): void;
-    renderOldXML(parent: any, resources: any, global: any): void;
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
     static isInstance(value: any): boolean;
 }
@@ -229,8 +219,8 @@ declare class Voice extends Media {
     pitchRate?: number;
     enableSubtitle?: boolean;
     constructor(options: IVoiceOptions);
-    renderXML(parent: any): void;
-    renderOldXML(parent: any, resources: any, global: any): void;
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
     private generateSSML;
     get ssml(): string | null | undefined;
@@ -246,8 +236,8 @@ declare class Video extends Media {
     crop?: Crop;
     demuxSrc?: string;
     constructor(options: IVideoOptions);
-    renderXML(parent: any): void;
-    renderOldXML(parent: any, resources: any, global: any): void;
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
     static isInstance(value: any): boolean;
 }
@@ -276,8 +266,8 @@ declare class Vtuber extends Media {
     cutoutColor?: string;
     demuxSrc?: string;
     constructor(options: IVtuberOptions);
-    renderXML(parent: any): void;
-    renderOldXML(parent: any, resources: any, global: any): void;
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
     static isInstance(value: any): boolean;
 }
@@ -308,8 +298,8 @@ declare class Canvas extends Element {
 
 declare class Chart extends Canvas {
     constructor(options: IChartOptions);
-    renderXML(parent: any): void;
-    renderOldXML(parent: any, resources: any, global: any): void;
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
     static isInstance(value: any): boolean;
 }
@@ -350,8 +340,8 @@ declare type ISSMLOptions = IElementOptions;
 
 declare class SSML extends Element {
     constructor(options: ISSMLOptions);
-    renderXML(parent: any): void;
-    renderOldXML(parent: any, resources: any, global: any): void;
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
     static isInstance(value: any): boolean;
 }
 
@@ -402,9 +392,105 @@ declare namespace index {
   };
 }
 
+declare class Transition {
+    type: string;
+    duration: number;
+    constructor(options: ITransitionOptions);
+    renderXML(scene: any): void;
+    renderOldXML(scene: any): void;
+    static isInstance(value: any): boolean;
+}
+declare class Scene {
+    #private;
+    static readonly type = "scene";
+    type: string;
+    id: string;
+    name?: string;
+    poster?: string;
+    width: number;
+    height: number;
+    aspectRatio: string;
+    duration: number;
+    backgroundColor?: string;
+    transition?: Transition;
+    filter?: IFilterOptions;
+    children: Element[];
+    constructor(options: ISceneOptions, data?: {}, vars?: {});
+    appendChild(node: Element): void;
+    toXML(pretty?: boolean): any;
+    toOldXML(pretty?: boolean): any;
+    toOptions(): any;
+    renderXML(parent?: any): any;
+    renderOldXML(parent?: any, resources?: any): any;
+    static parse(content: any, data?: object, vars?: object): Scene;
+    static parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any): Promise<Scene>;
+    static parseJSON: typeof Parser.parseSceneJSON;
+    static parseJSONPreprocessing: typeof Parser.parseSceneJSONPreprocessing;
+    static parseXML: typeof Parser.parseSceneXML;
+    static parseXMLPreprocessing: typeof Parser.parseSceneXMLPreprocessing;
+    static parseOptions: typeof OptionsParser.parseSceneOptions;
+    static isId(value: any): boolean;
+    static isInstance(value: any): boolean;
+    generateAllTrack(baseTime?: number): any;
+    get sortedChildren(): Element[];
+    get fontFamilys(): string[];
+}
+
+declare class Parser {
+    static toXML(_template: Template, pretty?: boolean): string;
+    static toBuffer(tempalte: Template): Buffer;
+    static parseJSON(content: any, data?: {}, vars?: {}): Template;
+    static parseJSONPreprocessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
+    static parseSceneJSON(content: any, data?: {}, vars?: {}): Scene;
+    static parseSceneJSONPreprocessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Scene>;
+    static parseXMLObject(xmlObject: any, dataObject?: any, varsObject?: any, data?: {}, vars?: {}): {
+        completeObject: any;
+        data: {};
+        vars: {};
+    };
+    static parseXML(content: string, data?: {}, vars?: {}): Template;
+    static parseXMLPreprocessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
+    static parseSceneXML(content: string, data?: {}, vars?: {}): Scene;
+    static parseSceneXMLPreprocessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Scene>;
+    static parseElementJSON(content: any): Element;
+    static parseElementXML(content: string): Element;
+}
+
+declare class OldParser {
+    static toXML(template: Template, pretty?: boolean): string;
+    static toBuffer(template: Template): Buffer;
+    static parseXML(content: string, data?: {}, vars?: {}): Template;
+}
+
 declare class OptionsParser {
     static toOptions(template: Template): any;
+    static parseBaseOptions(obj: any, parentDuration?: number): {
+        id: any;
+        name: any;
+        x: any;
+        y: any;
+        width: any;
+        height: any;
+        opacity: any;
+        rotate: any;
+        zIndex: any;
+        strokeStyle: any;
+        strokeColor: any;
+        strokeWidth: any;
+        enterEffect: {
+            type: any;
+            duration: number;
+        } | undefined;
+        exitEffect: {
+            type: any;
+            duration: number;
+        } | undefined;
+        backgroundColor: any;
+        startTime: number;
+        endTime: number | undefined;
+    };
     static parseElementOptions(options: any, parentDuration?: number): Element;
+    static parseSceneOptions(options: any): Scene;
     static parseOptions(options: any): Template;
 }
 
@@ -450,9 +536,14 @@ declare class Element {
     trackId?: string;
     value?: string;
     children: Element[];
-    constructor(options: IElementOptions, type?: ElementTypes);
-    renderXML(parent: any): any;
-    renderOldXML(parent: any, resources?: any, global?: any): any;
+    constructor(options: IElementOptions, type?: ElementTypes, data?: {}, vars?: {});
+    renderXML(parent?: any): any;
+    renderOldXML(parent?: any, resources?: any, global?: any): any;
+    toXML(pretty?: boolean): any;
+    toOldXML(pretty?: boolean): any;
+    static parse(content: any): Element;
+    static parseJSON: typeof Parser.parseElementJSON;
+    static parseXML: typeof Parser.parseElementXML;
     static parseOptions: typeof OptionsParser.parseElementOptions;
     toOptions(): any;
     static isId(value: any): boolean;
@@ -492,11 +583,6 @@ interface IElementOptions {
     children?: (Element | IElementOptions)[];
 }
 
-interface ITransitionOptions {
-    type?: string;
-    duration?: number | string;
-}
-
 interface ISceneOptions {
     id?: string;
     name?: string;
@@ -509,43 +595,7 @@ interface ISceneOptions {
     transition?: ITransitionOptions;
     children?: (Element | IElementOptions)[];
     filter?: IFilterOptions;
-}
-
-declare class Transition {
-    type: string;
-    duration: number;
-    constructor(options: ITransitionOptions);
-    renderXML(scene: any): void;
-    renderOldXML(scene: any): void;
-    static isInstance(value: any): boolean;
-}
-declare class Scene {
-    #private;
-    static readonly type = "scene";
-    type: string;
-    id: string;
-    name?: string;
-    poster?: string;
-    width: number;
-    height: number;
-    aspectRatio: string;
-    duration: number;
-    backgroundColor?: string;
-    transition?: Transition;
-    filter?: IFilterOptions;
-    children: Element[];
-    constructor(options: ISceneOptions);
-    appendChild(node: Element): void;
-    toXML(pretty?: boolean): any;
-    toOldXML(pretty?: boolean): any;
-    toOptions(): any;
-    renderXML(parent?: any): any;
-    renderOldXML(parent?: any, resources?: any): any;
-    static isId(value: any): boolean;
-    static isInstance(value: any): boolean;
-    generateAllTrack(baseTime?: number): any;
-    get sortedChildren(): Element[];
-    get fontFamilys(): string[];
+    compile?: boolean | string;
 }
 
 interface ITemplateOptions {
@@ -607,7 +657,6 @@ declare class Template {
     createTime: number;
     updateTime: number;
     buildBy: string;
-    compile: boolean;
     children: (Scene | Element)[];
     constructor(options: ITemplateOptions, data?: {}, vars?: {});
     scenesSplice(start: number, end: number): void;
@@ -624,9 +673,9 @@ declare class Template {
     static parse(content: any, data?: object, vars?: object): Template;
     static parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any): Promise<Template>;
     static parseJSON: typeof Parser.parseJSON;
-    static parseJSONPreProcessing: typeof Parser.parseJSONPreProcessing;
+    static parseJSONPreprocessing: typeof Parser.parseJSONPreprocessing;
     static parseXML: typeof Parser.parseXML;
-    static parseXMLPreProcessing: typeof Parser.parseXMLPreProcessing;
+    static parseXMLPreprocessing: typeof Parser.parseXMLPreprocessing;
     static parseOldXML: typeof OldParser.parseXML;
     static parseOptions: typeof OptionsParser.parseOptions;
     generateAllTrack(): any;
