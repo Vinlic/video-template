@@ -5,8 +5,8 @@ import Element from './Element';
 
 class Group extends Element {
 
-    public constructor(options: IGroupOptions) {
-        super(options, ElementTypes.Group);
+    public constructor(options: IGroupOptions, type = ElementTypes.Group, ...values: any[]) {
+        super(options, type, ...values);
     }
 
     public static isInstance(value: any) {

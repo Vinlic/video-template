@@ -25,8 +25,8 @@ class Text extends Element {
     public textFillColor?: string;  //文本填充色
     public fillColorIntension?: number;  //文本填充色强度
 
-    public constructor(options: ITextOptions, type = ElementTypes.Text) {
-        super(options, type);
+    public constructor(options: ITextOptions, type = ElementTypes.Text, ...values: any[]) {
+        super(options, type, ...values);
         util.optionsInject(this, options, {
             fontSize: (v: any) => Number(util.defaultTo(v, 32)),
             fontWeight: (v: any) => Number(util.defaultTo(v, 400)),

@@ -29,6 +29,7 @@ interface IElementOptions {
   fixedScale?: boolean | string;
   trackId?: string;
   value?: string;
+  compile?: boolean | string;
   children?: (Element | IElementOptions)[];
 }
 

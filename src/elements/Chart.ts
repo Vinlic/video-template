@@ -6,8 +6,8 @@ import util from '../util';
 
 class Chart extends Canvas {
 
-    public constructor(options: IChartOptions) {
-        super(options, ElementTypes.Chart);
+    public constructor(options: IChartOptions, type = ElementTypes.Chart, ...values: any[]) {
+        super(options, type, ...values);
         util.optionsInject(this, options, {}, {});
     }
 

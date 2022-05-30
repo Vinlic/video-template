@@ -58,7 +58,7 @@ declare class Media extends Element {
     playbackRate?: number;
     filter?: IFilterOptions;
     muted: boolean;
-    constructor(options: IMediaOptions, type?: ElementTypes);
+    constructor(options: IMediaOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -105,7 +105,7 @@ declare class Text extends Element {
     textBackground: any;
     textFillColor?: string;
     fillColorIntension?: number;
-    constructor(options: ITextOptions, type?: ElementTypes);
+    constructor(options: ITextOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -168,7 +168,7 @@ declare class Image extends Element {
     loop?: boolean;
     dynamic?: boolean;
     filter?: IFilterOptions;
-    constructor(options: IImageOptions, type?: ElementTypes);
+    constructor(options: IImageOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -183,7 +183,7 @@ interface IAudioOptions extends IMediaOptions {
 declare class Audio extends Media {
     fadeInDuration?: number;
     fadeOutDuration?: number;
-    constructor(options: IAudioOptions);
+    constructor(options: IAudioOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -218,7 +218,7 @@ declare class Voice extends Media {
     speechRate?: number;
     pitchRate?: number;
     enableSubtitle?: boolean;
-    constructor(options: IVoiceOptions);
+    constructor(options: IVoiceOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -235,7 +235,7 @@ interface IVideoOptions extends IMediaOptions {
 declare class Video extends Media {
     crop?: Crop;
     demuxSrc?: string;
-    constructor(options: IVideoOptions);
+    constructor(options: IVideoOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -265,7 +265,7 @@ declare class Vtuber extends Media {
     declaimer?: string;
     cutoutColor?: string;
     demuxSrc?: string;
-    constructor(options: IVtuberOptions);
+    constructor(options: IVtuberOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -289,7 +289,7 @@ declare class Canvas extends Element {
     dataSrc: string;
     duration?: number;
     poster?: string;
-    constructor(options: ICanvasOptions, type?: ElementTypes);
+    constructor(options: ICanvasOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -297,7 +297,7 @@ declare class Canvas extends Element {
 }
 
 declare class Chart extends Canvas {
-    constructor(options: IChartOptions);
+    constructor(options: IChartOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -308,7 +308,7 @@ interface IGroupOptions extends IElementOptions {
 }
 
 declare class Group extends Element {
-    constructor(options: IGroupOptions);
+    constructor(options: IGroupOptions, type?: ElementTypes, ...values: any[]);
     static isInstance(value: any): boolean;
 }
 
@@ -322,7 +322,7 @@ declare class Sticker extends Image {
     drawType?: string;
     editable?: boolean;
     distortable?: boolean;
-    constructor(options: IStickerOptions);
+    constructor(options: IStickerOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
@@ -332,14 +332,14 @@ declare class Sticker extends Image {
 declare type ISubtitleOptions = ITextOptions;
 
 declare class Subtitle extends Text {
-    constructor(options: ISubtitleOptions);
+    constructor(options: ISubtitleOptions, type?: ElementTypes, ...values: any[]);
     static isInstance(value: any): boolean;
 }
 
 declare type ISSMLOptions = IElementOptions;
 
 declare class SSML extends Element {
-    constructor(options: ISSMLOptions);
+    constructor(options: ISSMLOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     static isInstance(value: any): boolean;
@@ -452,8 +452,8 @@ declare class Parser {
     static parseXMLPreprocessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
     static parseSceneXML(content: string, data?: {}, vars?: {}): Scene;
     static parseSceneXMLPreprocessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Scene>;
-    static parseElementJSON(content: any): Element;
-    static parseElementXML(content: string): Element;
+    static parseElementJSON(content: any, data?: {}, vars?: {}): Element;
+    static parseElementXML(content: string, data?: {}, vars?: {}): Element;
 }
 
 declare class OldParser {
@@ -541,7 +541,7 @@ declare class Element {
     renderOldXML(parent?: any, resources?: any, global?: any): any;
     toXML(pretty?: boolean): any;
     toOldXML(pretty?: boolean): any;
-    static parse(content: any): Element;
+    static parse(content: any, data?: {}, vars?: {}): Element;
     static parseJSON: typeof Parser.parseElementJSON;
     static parseXML: typeof Parser.parseElementXML;
     static parseOptions: typeof OptionsParser.parseElementOptions;
@@ -580,6 +580,7 @@ interface IElementOptions {
     fixedScale?: boolean | string;
     trackId?: string;
     value?: string;
+    compile?: boolean | string;
     children?: (Element | IElementOptions)[];
 }
 

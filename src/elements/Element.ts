@@ -6,6 +6,7 @@ import IEffectOptions from './interface/IEffectOptions';
 import ElementTypes from '../enums/ElementTypes';
 
 import util from '../util';
+import Compiler from '../Compiler';
 import ElementFactory from '../ElementFactory';
 import { Parser, OptionsParser } from '../parsers';
 
@@ -83,6 +84,8 @@ class Element {
     #absoluteEndTime?: number; //绝对结束时间
 
     public constructor(options: IElementOptions, type = ElementTypes.Element, data = {}, vars = {}) {
+        if (!util.isObject(options)) throw new TypeError('options must be an Object');
+        options.compile && (options = Compiler.compile(options, data, vars)); //如果模板属性包含compile则对模板进行编译处理
         util.optionsInject(this, options, {
             type: (v: any) => util.defaultTo(v, type),
             id: (v: any) => util.defaultTo(Element.isId(v) ? v : undefined, util.uniqid()),
@@ -105,7 +108,7 @@ class Element {
             isBackground: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
             children: (datas: IElementOptions[]) =>
                 util.isArray(datas)
-                    ? datas.map((data) => (Element.isInstance(data) ? data : ElementFactory.createElement(data)))
+                    ? datas.map(options => (Element.isInstance(options) ? options : ElementFactory.createElement(options, data, vars)))
                     : [], //实例化子节点
         }, {
             type: (v: any) => util.isString(v),
@@ -264,12 +267,12 @@ class Element {
      * @param {String} content
      * @returns {Template}
      */
-     public static parse(content: any) {
+     public static parse(content: any, data = {}, vars = {}) {
         if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
         if (util.isBuffer(content)) content = content.toString();
-        if (util.isObject(content)) return ElementFactory.createElement(content);
-        if (util.isString(content)) return Element.parseXML(content);
-        return Element.parseJSON(content);
+        if (util.isObject(content)) return ElementFactory.createElement(content, data, vars);
+        if (util.isString(content)) return Element.parseXML(content, data, vars);
+        return Element.parseJSON(content, data, vars);
     }
 
     /**

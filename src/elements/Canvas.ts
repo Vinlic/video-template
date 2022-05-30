@@ -11,8 +11,8 @@ class Canvas extends Element {
     public duration?: number; //画布播放时长
     public poster?: string;  //画布封面图
 
-    public constructor(options: ICanvasOptions, type: ElementTypes = ElementTypes.Canvas) {
-        super(options, type);
+    public constructor(options: ICanvasOptions, type: ElementTypes = ElementTypes.Canvas, ...values: any[]) {
+        super(options, type, ...values);
         util.optionsInject(this, options, {
             duration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
         }, {

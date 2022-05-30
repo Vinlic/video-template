@@ -18,9 +18,9 @@ class Voice extends Media {
     public pitchRate?: number; // 发音人语调
     public enableSubtitle?: boolean;  //是否开启字幕，即将废弃
 
-    public constructor(options: IVoiceOptions) {
+    public constructor(options: IVoiceOptions, type = ElementTypes.Voice, ...values: any[]) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
-        super(options, ElementTypes.Voice);
+        super(options, type, ...values);
         util.optionsInject(this, options, {
             provider: (v: any) => util.defaultTo(v, VoiceProviders.Aliyun),
             speechRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,

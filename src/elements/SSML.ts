@@ -5,8 +5,8 @@ import ElementTypes from '../enums/ElementTypes';
 import Element from './Element';
 
 class SSML extends Element {
-  public constructor(options: ISSMLOptions) {
-    super(options, ElementTypes.SSML);
+  public constructor(options: ISSMLOptions, type = ElementTypes.SSML, ...values: any[]) {
+    super(options, type, ...values);
   }
 
   /**

@@ -212,15 +212,15 @@ class Parser {
         return new Scene(completeObject, _data, _vars);
     }
 
-    public static parseElementJSON(content: any) {
-        return ElementFactory.createElement(util.isString(content) ? JSON.parse(content) : content);
+    public static parseElementJSON(content: any, data = {}, vars = {}) {
+        return ElementFactory.createElement(util.isString(content) ? JSON.parse(content) : content, data, vars);
     }
 
-    public static parseElementXML(content: string) {
+    public static parseElementXML(content: string, data = {}, vars = {}) {
         const xmlObject = xmlParser.parse(content)[0];
         if (!xmlObject) throw new Error('template element xml invalid');
         const { completeObject } = this.parseXMLObject(xmlObject);
-        return ElementFactory.createElement(completeObject);
+        return ElementFactory.createElement(completeObject, data, vars);
     }
 
 }

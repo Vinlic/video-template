@@ -11,8 +11,8 @@ class Sticker extends Image {
     public editable?: boolean;  //贴图样式是否可编辑
     public distortable?: boolean;  //贴图是否可变形
 
-    public constructor(options: IStickerOptions) {
-        super(options, ElementTypes.Sticker);
+    public constructor(options: IStickerOptions, type = ElementTypes.Sticker, ...values: any[]) {
+        super(options, type, ...values);
         util.optionsInject(this, options, {
             editable: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
             distortable: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,

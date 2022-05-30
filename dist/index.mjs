@@ -576,15 +576,15 @@ var Parser = class {
     const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
     return new Scene_default(completeObject, _data, _vars);
   }
-  static parseElementJSON(content) {
-    return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content);
+  static parseElementJSON(content, data = {}, vars = {}) {
+    return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
   }
-  static parseElementXML(content) {
+  static parseElementXML(content, data = {}, vars = {}) {
     const xmlObject = xmlParser.parse(content)[0];
     if (!xmlObject)
       throw new Error("template element xml invalid");
     const { completeObject } = this.parseXMLObject(xmlObject);
-    return ElementFactory_default.createElement(completeObject);
+    return ElementFactory_default.createElement(completeObject, data, vars);
   }
 };
 var Parser_default = Parser;
@@ -1351,6 +1351,9 @@ var _Element = class {
     __publicField(this, "children", []);
     __privateAdd(this, _absoluteStartTime, void 0);
     __privateAdd(this, _absoluteEndTime, void 0);
+    if (!util_default.isObject(options))
+      throw new TypeError("options must be an Object");
+    options.compile && (options = Compiler_default.compile(options, data, vars));
     util_default.optionsInject(this, options, {
       type: (v) => util_default.defaultTo(v, type),
       id: (v) => util_default.defaultTo(_Element.isId(v) ? v : void 0, util_default.uniqid()),
@@ -1371,7 +1374,7 @@ var _Element = class {
       exitEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       stayEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       isBackground: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
-      children: (datas) => util_default.isArray(datas) ? datas.map((data2) => _Element.isInstance(data2) ? data2 : ElementFactory_default.createElement(data2)) : []
+      children: (datas) => util_default.isArray(datas) ? datas.map((options2) => _Element.isInstance(options2) ? options2 : ElementFactory_default.createElement(options2, data, vars)) : []
     }, {
       type: (v) => util_default.isString(v),
       id: (v) => _Element.isId(v),
@@ -1497,16 +1500,16 @@ var _Element = class {
     const element = this.renderOldXML();
     return element.end({ prettyPrint: pretty });
   }
-  static parse(content) {
+  static parse(content, data = {}, vars = {}) {
     if (!util_default.isString(content) && !util_default.isObject(content))
       throw new TypeError("content must be an string or object");
     if (util_default.isBuffer(content))
       content = content.toString();
     if (util_default.isObject(content))
-      return ElementFactory_default.createElement(content);
+      return ElementFactory_default.createElement(content, data, vars);
     if (util_default.isString(content))
-      return _Element.parseXML(content);
-    return _Element.parseJSON(content);
+      return _Element.parseXML(content, data, vars);
+    return _Element.parseJSON(content, data, vars);
   }
   toOptions() {
     var _a, _b;
@@ -1588,8 +1591,8 @@ var Media = class extends Element_default {
   playbackRate;
   filter;
   muted = false;
-  constructor(options, type = ElementTypes_default.Media) {
-    super(options, type);
+  constructor(options, type = ElementTypes_default.Media, ...values) {
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {
       loop: (v) => util_default.booleanParse(util_default.defaultTo(v, false)),
       volume: (v) => Number(util_default.defaultTo(v, 1)),
@@ -1701,8 +1704,8 @@ var Text = class extends Element_default {
   textBackground = {};
   textFillColor;
   fillColorIntension;
-  constructor(options, type = ElementTypes_default.Text) {
-    super(options, type);
+  constructor(options, type = ElementTypes_default.Text, ...values) {
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {
       fontSize: (v) => Number(util_default.defaultTo(v, 32)),
       fontWeight: (v) => Number(util_default.defaultTo(v, 400)),
@@ -1888,8 +1891,8 @@ var _Image = class extends Element_default {
   loop;
   dynamic;
   filter;
-  constructor(options, type = ElementTypes_default.Image) {
-    super(options, type);
+  constructor(options, type = ElementTypes_default.Image, ...values) {
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {
       mode: (v) => util_default.defaultTo(v, ImageModes_default.ScaleToFill),
       crop: (v) => v && new Crop_default(v),
@@ -1972,10 +1975,10 @@ var Image_default = Image;
 var Audio = class extends Media_default {
   fadeInDuration;
   fadeOutDuration;
-  constructor(options) {
+  constructor(options, type = ElementTypes_default.Audio, ...values) {
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
-    super(options, ElementTypes_default.Audio);
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {
       fadeInDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       fadeOutDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
@@ -2023,8 +2026,8 @@ var VoiceProviders_default = VoiceProviders;
 
 // src/elements/SSML.ts
 var SSML = class extends Element_default {
-  constructor(options) {
-    super(options, ElementTypes_default.SSML);
+  constructor(options, type = ElementTypes_default.SSML, ...values) {
+    super(options, type, ...values);
   }
   renderXML(parent) {
     const ssml = super.renderXML(parent);
@@ -2051,10 +2054,10 @@ var _Voice = class extends Media_default {
   speechRate;
   pitchRate;
   enableSubtitle;
-  constructor(options) {
+  constructor(options, type = ElementTypes_default.Voice, ...values) {
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
-    super(options, ElementTypes_default.Voice);
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {
       provider: (v) => util_default.defaultTo(v, VoiceProviders_default.Aliyun),
       speechRate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
@@ -2124,8 +2127,8 @@ var Voice_default = Voice;
 var Video = class extends Media_default {
   crop;
   demuxSrc;
-  constructor(options) {
-    super(options, ElementTypes_default.Video);
+  constructor(options, type = ElementTypes_default.Video, ...values) {
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {
       crop: (v) => v && new Crop_default(v)
     }, {
@@ -2193,8 +2196,8 @@ var _Vtuber = class extends Media_default {
   declaimer;
   cutoutColor;
   demuxSrc;
-  constructor(options) {
-    super(options, ElementTypes_default.Vtuber);
+  constructor(options, type = ElementTypes_default.Vtuber, ...values) {
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {}, {
       provider: (v) => util_default.isString(v),
       text: (v) => util_default.isString(v),
@@ -2250,8 +2253,8 @@ var Canvas = class extends Element_default {
   dataSrc = "";
   duration;
   poster;
-  constructor(options, type = ElementTypes_default.Canvas) {
-    super(options, type);
+  constructor(options, type = ElementTypes_default.Canvas, ...values) {
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {
       duration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
@@ -2298,8 +2301,8 @@ var Canvas_default = Canvas;
 
 // src/elements/Chart.ts
 var Chart = class extends Canvas_default {
-  constructor(options) {
-    super(options, ElementTypes_default.Chart);
+  constructor(options, type = ElementTypes_default.Chart, ...values) {
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {}, {});
   }
   renderXML(parent) {
@@ -2322,8 +2325,8 @@ var Chart_default = Chart;
 
 // src/elements/Group.ts
 var Group = class extends Element_default {
-  constructor(options) {
-    super(options, ElementTypes_default.Group);
+  constructor(options, type = ElementTypes_default.Group, ...values) {
+    super(options, type, ...values);
   }
   static isInstance(value) {
     return value instanceof Group;
@@ -2336,8 +2339,8 @@ var Sticker = class extends Image_default {
   drawType;
   editable;
   distortable;
-  constructor(options) {
-    super(options, ElementTypes_default.Sticker);
+  constructor(options, type = ElementTypes_default.Sticker, ...values) {
+    super(options, type, ...values);
     util_default.optionsInject(this, options, {
       editable: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       distortable: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0
@@ -2377,8 +2380,8 @@ var Sticker_default = Sticker;
 
 // src/elements/Subtitle.ts
 var Subtitle = class extends Text_default {
-  constructor(options) {
-    super(options, ElementTypes_default.Subtitle);
+  constructor(options, type = ElementTypes_default.Subtitle, ...values) {
+    super(options, ElementTypes_default.Subtitle, ...values);
   }
   static isInstance(value) {
     return value instanceof Subtitle;
@@ -2388,36 +2391,36 @@ var Subtitle_default = Subtitle;
 
 // src/ElementFactory.ts
 var ElementFactory = class {
-  static createElement(data) {
+  static createElement(data, ...values) {
     if (!util_default.isObject(data))
       throw new TypeError("data must be an Object");
     switch (data.type) {
       case ElementTypes_default.Text:
-        return new Text_default(data);
+        return new Text_default(data, void 0, ...values);
       case ElementTypes_default.Image:
-        return new Image_default(data);
+        return new Image_default(data, void 0, ...values);
       case ElementTypes_default.Audio:
-        return new Audio_default(data);
+        return new Audio_default(data, void 0, ...values);
       case ElementTypes_default.Voice:
-        return new Voice_default(data);
+        return new Voice_default(data, void 0, ...values);
       case ElementTypes_default.Video:
-        return new Video_default(data);
+        return new Video_default(data, void 0, ...values);
       case ElementTypes_default.Vtuber:
-        return new Vtuber_default(data);
+        return new Vtuber_default(data, void 0, ...values);
       case ElementTypes_default.Chart:
-        return new Chart_default(data);
+        return new Chart_default(data, void 0, ...values);
       case ElementTypes_default.Canvas:
-        return new Canvas_default(data);
+        return new Canvas_default(data, void 0, ...values);
       case ElementTypes_default.Group:
-        return new Group_default(data);
+        return new Group_default(data, void 0, ...values);
       case ElementTypes_default.Sticker:
-        return new Sticker_default(data);
+        return new Sticker_default(data, void 0, ...values);
       case ElementTypes_default.Subtitle:
-        return new Subtitle_default(data);
+        return new Subtitle_default(data, void 0, ...values);
       case ElementTypes_default.SSML:
-        return new SSML_default(data);
+        return new SSML_default(data, void 0, ...values);
     }
-    return new Element_default(data);
+    return new Element_default(data, void 0, ...values);
   }
 };
 var ElementFactory_default = ElementFactory;

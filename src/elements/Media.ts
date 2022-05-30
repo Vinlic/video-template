@@ -20,8 +20,8 @@ class Media extends Element {
     public filter?: IFilterOptions; //媒体滤镜
     public muted = false; //媒体是否静音
 
-    public constructor(options: IMediaOptions, type = ElementTypes.Media) {
-        super(options, type);
+    public constructor(options: IMediaOptions, type = ElementTypes.Media, ...values: any[]) {
+        super(options, type, ...values);
         util.optionsInject(this, options, {
             loop: (v: any) => util.booleanParse(util.defaultTo(v, false)),
             volume: (v: any) => Number(util.defaultTo(v, 1)),

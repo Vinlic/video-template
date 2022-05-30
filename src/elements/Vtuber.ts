@@ -16,8 +16,8 @@ class Vtuber extends Media {
   public cutoutColor?: string;  //抠除背景色
   public demuxSrc?: string;  //视频解复用文件路径
 
-  public constructor(options: IVtuberOptions) {
-    super(options, ElementTypes.Vtuber);
+  public constructor(options: IVtuberOptions, type = ElementTypes.Vtuber, ...values: any[]) {
+    super(options, type, ...values);
     util.optionsInject(
       this,
       options,

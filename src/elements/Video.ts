@@ -11,8 +11,8 @@ class Video extends Media {
     public crop?: Crop; //视频裁剪参数
     public demuxSrc?: string;  //视频解复用文件路径
 
-    public constructor(options: IVideoOptions) {
-        super(options, ElementTypes.Video);
+    public constructor(options: IVideoOptions, type = ElementTypes.Video, ...values: any[]) {
+        super(options, type, ...values);
         util.optionsInject(this, options, {
             crop: (v: any) => v && new Crop(v)
         }, {

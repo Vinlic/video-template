@@ -9,9 +9,9 @@ class Audio extends Media {
     public fadeInDuration?: number; //音频淡入时长
     public fadeOutDuration?: number; //音频淡出时长
 
-    public constructor(options: IAudioOptions) {
+    public constructor(options: IAudioOptions, type = ElementTypes.Audio, ...values: any[]) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
-        super(options, ElementTypes.Audio);
+        super(options, type, ...values);
         util.optionsInject(
             this,
             options,

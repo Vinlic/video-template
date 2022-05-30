@@ -19,8 +19,8 @@ class Image extends Element {
     public dynamic?: boolean; //图像是否动态
     public filter?: IFilterOptions; //图像滤镜
 
-    public constructor(options: IImageOptions, type = ElementTypes.Image) {
-        super(options, type);
+    public constructor(options: IImageOptions, type = ElementTypes.Image, ...values: any[]) {
+        super(options, type, ...values);
         util.optionsInject(this, options, {
             mode: (v: any) => util.defaultTo(v, ImageModes.ScaleToFill),
             crop: (v: any) => v && new Crop(v),
