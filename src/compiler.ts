@@ -1,6 +1,8 @@
 import util from './util';
+import extension from './extension';
 
 class Compiler {
+
   /**
    * 编译模板
    *
@@ -42,7 +44,7 @@ class Compiler {
             let result;
             try {
               result = this.eval(expression, data, valueMap);
-            } catch {} //尝试访问表达式指向的值
+            } catch { } //尝试访问表达式指向的值
             if (!result) {
               //结果为假则抛弃节点并设置标识为假
               scope.ifFlag = false;
@@ -70,7 +72,7 @@ class Compiler {
             let result;
             try {
               result = this.eval(expression, data, valueMap);
-            } catch {} //尝试访问表达式指向的值
+            } catch { } //尝试访问表达式指向的值
             if (!result) {
               //结果为假则抛弃节点并设置标识为假
               scope.ifFlag = false;
@@ -98,7 +100,7 @@ class Compiler {
           let list = [];
           try {
             list = this.eval(expression, data, valueMap);
-          } catch {} //尝试访问数组数据
+          } catch { } //尝试访问数组数据
           if (util.isNumber(list)) {
             //如果表达式返回值是数字则直接循环渲染节点指定个数
             const items = [];
@@ -130,22 +132,13 @@ class Compiler {
         const expressions = this.expressionsExtract(value); //表达式提取
         if (!expressions || !expressions.length) return value; //如无任何匹配表达式则直接返回原值
         return expressions.reduce((result: any, expression: any) => {
-          switch (expression.expression) {
-            //UUID自动生成
-            case '__UUID__':
-              result = expression.replace(result, util.uuid());
-              break;
-            //唯一ID自动生成
-            case '__UNIQID__':
-              result = expression.replace(result, util.uniqid());
-              break;
-            //其它直接替换
-            default:
-              try {
-                result = expression.replace(result, this.eval(expression.expression, data, valueMap));
-              } catch {
-                result = null;
-              }
+          try {
+            if (extension[expression.expression])
+              expression.replace(result, extension[expression.expression]());
+            else
+              result = expression.replace(result, this.eval(expression.expression, data, valueMap));
+          } catch {
+            result = null;
           }
           return result;
         }, value); //表达式全部替换并返回替换后的值
@@ -171,7 +164,7 @@ class Compiler {
     } catch (err) {
       result = '';
     } //eval函数对象解构并执行表达式
-    if (util.isString(result) && Object.keys(valueMap).length) {
+    if (util.isString(result)) {
       //如果值中也包含了表达式也需要进行解析处理
       const expressions = this.expressionsExtract(result); //从值提取表达式
       if (!expressions || !expressions.length) return result; //如果不包含表达式则返回原值
@@ -202,7 +195,7 @@ class Compiler {
     const list: string[] = match;
     return Array.from(new Set(list)).map((expression: any) => {
       return {
-        expression: expression.replace(/\$\#/g,"{").replace(/\#\$/g,"}"), //被提取表达式
+        expression: expression.replace(/\$\#/g, "{").replace(/\#\$/g, "}"), //被提取表达式
         replace: (oldValue: string, newValue: string) => {
           //如果新值为空或未定义则返回空
           if (util.isUndefined(newValue) || newValue == null)

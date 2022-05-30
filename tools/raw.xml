@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<data>
+<data source="/scene-diagram/get-flow?sceneId=std_stock">
     <base>/files/</base>
     <name>Test Video</name>
     <mode>scene</mode>
@@ -9,6 +9,11 @@
     <fps>60</fps>
     <date>2022-03-02</date>
     <text>Hello World</text>
+    <charts>
+        <std_stock_inflow_bar>json:
+            {"a":1, "b": 2}
+        </std_stock_inflow_bar>
+    </charts>
 </data>
 <vars>
 
@@ -20,8 +25,8 @@
         <image x="{{270 + index * 5}}" y="220" width="70" height="60" zIndex="2" src="{{base}}images/left_jt.png"/>
         <image x="740" y="220" width="70" height="60" zIndex="2" src="{{base}}images/left_jt.png" if="{{index != 2}}"/>
         <image x="740" y="220" width="70" height="60" zIndex="2" src="{{base}}images/right_jt.png" else/>
-        <text x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000">Test
-        {{item}}</text>
+        <text x="393" y="200" width="295" height="80" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="80" fontWeight="400" fontColor="#000000">Test Hello</text>
+        <chart chartId="std_stock_inflow_bar" configSrc="/avesto" dataSrc="{{charts.std_stock_inflow_bar}}"/>
         <text x="0" y="1640" width="1080" height="32" textAlign="center" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" fontFamily="HarmonyOS_Sans_SC_Regular" fontSize="32" fontWeight="400" fontColor="#FFFFFF">{{date}}</text>
         <voice startTime="500" volume="100" loop="false" playbackRate="1" muted="false" provider="microsoft" text="{{text}}" declaimer="xiaoxiao" speechRate="0"/>
     </scene>

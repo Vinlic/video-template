@@ -131,6 +131,12 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
 // src/Scene.ts
 import { create as create4 } from "xmlbuilder2";
 
+// src/extension.ts
+var extension_default = {
+  "__UUID__": () => util_default.uuid(),
+  "__UNIQID__": () => util_default.uniqid()
+};
+
 // src/Compiler.ts
 var Compiler = class {
   static compile(rawData, data = {}, valueMap = {}) {
@@ -248,19 +254,13 @@ var Compiler = class {
         if (!expressions || !expressions.length)
           return value;
         return expressions.reduce((result, expression) => {
-          switch (expression.expression) {
-            case "__UUID__":
-              result = expression.replace(result, util_default.uuid());
-              break;
-            case "__UNIQID__":
-              result = expression.replace(result, util_default.uniqid());
-              break;
-            default:
-              try {
-                result = expression.replace(result, this.eval(expression.expression, data2, valueMap));
-              } catch {
-                result = null;
-              }
+          try {
+            if (extension_default[expression.expression])
+              expression.replace(result, extension_default[expression.expression]());
+            else
+              result = expression.replace(result, this.eval(expression.expression, data2, valueMap));
+          } catch {
+            result = null;
           }
           return result;
         }, value);
@@ -278,7 +278,7 @@ var Compiler = class {
     } catch (err) {
       result = "";
     }
-    if (util_default.isString(result) && Object.keys(valueMap).length) {
+    if (util_default.isString(result)) {
       const expressions = this.expressionsExtract(result);
       if (!expressions || !expressions.length)
         return result;
@@ -2251,6 +2251,8 @@ var Canvas = class extends Element_default {
   chartId = "";
   configSrc = "";
   dataSrc = "";
+  config = null;
+  data = null;
   duration;
   poster;
   constructor(options, type = ElementTypes_default.Canvas, ...values) {
@@ -2264,14 +2266,22 @@ var Canvas = class extends Element_default {
       duration: (v) => util_default.isUndefined(v) || util_default.isNumber(v),
       poster: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
+    if (/^base64\:/.test(this.configSrc))
+      this.config = JSON.parse(Buffer ? Buffer.from(this.configSrc.substring(7), "base64").toString() : decodeURIComponent(escape(atob(this.configSrc.substring(7)))));
+    else if (/^json\:/.test(this.configSrc))
+      this.config = JSON.parse(this.configSrc.substring(5));
+    if (/^base64\:/.test(this.dataSrc))
+      this.data = JSON.parse(Buffer ? Buffer.from(this.dataSrc.substring(7), "base64").toString() : decodeURIComponent(escape(atob(this.dataSrc.substring(7)))));
+    else if (/^json\:/.test(this.dataSrc))
+      this.data = JSON.parse(this.dataSrc.substring(5));
   }
   renderXML(parent) {
     const canvas = super.renderXML(parent);
     canvas.att("chartId", this.chartId);
     canvas.att("poster", this.poster);
     canvas.att("duration", this.duration);
-    canvas.att("configSrc", this.configSrc);
-    canvas.att("dataSrc", this.dataSrc);
+    canvas.att("configSrc", this.config ? "base64:" + (Buffer ? Buffer.from(JSON.stringify(this.config)).toString("base64") : btoa(unescape(encodeURIComponent(JSON.stringify(this.config))))) : this.configSrc);
+    canvas.att("dataSrc", this.data ? "base64:" + (Buffer ? Buffer.from(JSON.stringify(this.data)).toString("base64") : btoa(unescape(encodeURIComponent(JSON.stringify(this.data))))) : this.dataSrc);
     return canvas;
   }
   renderOldXML(parent, resources, global) {
@@ -2498,11 +2508,11 @@ var _Scene = class {
   }
   toXML(pretty = false) {
     const scene = this.renderXML();
-    return scene.end({ prettyPrint: pretty });
+    return scene.end({ prettyPrint: pretty, headless: true });
   }
   toOldXML(pretty = false) {
     const board = this.renderOldXML();
-    return board.end({ prettyPrint: pretty });
+    return board.end({ prettyPrint: pretty, headless: true });
   }
   toOptions() {
     const children = [];
@@ -2640,9 +2650,8 @@ var _Scene = class {
 };
 var Scene = _Scene;
 _createXMLRoot = new WeakSet();
-createXMLRoot_fn = function(tagName = "scene", attributes = {}, headless = true) {
-  const root = headless ? create4() : create4({ version: "1.0" });
-  const scene = root.ele(tagName, __spreadValues({
+createXMLRoot_fn = function(tagName = "scene", attributes = {}) {
+  const scene = create4().ele(tagName, __spreadValues({
     id: this.id,
     name: this.name,
     poster: this.poster,
