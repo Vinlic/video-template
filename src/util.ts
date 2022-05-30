@@ -78,13 +78,13 @@ export default {
 
   encodeBASE64(value: any) {
     value = this.isString(value) ? value : JSON.stringify(value);
-    return Buffer ? Buffer.from(value).toString("base64") : btoa(unescape(encodeURIComponent(value)));
+    return typeof Buffer !== "undefined" ? Buffer.from(value).toString("base64") : btoa(unescape(encodeURIComponent(value)));
   },
 
   decodeBASE64(value: any) {
     if(!this.isString(value))
       throw new TypeError("value must be an string");
-    return Buffer ? Buffer.from(value, "base64").toString() : decodeURIComponent(escape(atob(value)));
+    return typeof Buffer !== "undefined" ? Buffer.from(value, "base64").toString() : decodeURIComponent(escape(atob(value)));
   },
 
   booleanParse(value: any) {

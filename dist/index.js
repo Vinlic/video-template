@@ -139,12 +139,12 @@ var util_default = __spreadProps(__spreadValues({}, import_lodash.default), {
   },
   encodeBASE64(value) {
     value = this.isString(value) ? value : JSON.stringify(value);
-    return Buffer ? Buffer.from(value).toString("base64") : btoa(unescape(encodeURIComponent(value)));
+    return typeof Buffer !== "undefined" ? Buffer.from(value).toString("base64") : btoa(unescape(encodeURIComponent(value)));
   },
   decodeBASE64(value) {
     if (!this.isString(value))
       throw new TypeError("value must be an string");
-    return Buffer ? Buffer.from(value, "base64").toString() : decodeURIComponent(escape(atob(value)));
+    return typeof Buffer !== "undefined" ? Buffer.from(value, "base64").toString() : decodeURIComponent(escape(atob(value)));
   },
   booleanParse(value) {
     switch (Object.prototype.toString.call(value)) {
