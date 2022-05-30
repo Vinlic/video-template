@@ -2331,8 +2331,8 @@ var Canvas = class extends Element_default {
       chartId: this.chartId,
       poster: this.poster,
       duration: this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0,
-      optionPath: this.configSrc,
-      dataPath: this.dataSrc,
+      optionPath: this.config ? void 0 : this.configSrc,
+      dataPath: this.data ? void 0 : this.dataSrc,
       optionJson: this.config,
       dataJson: this.data
     });

@@ -67,8 +67,8 @@ class Canvas extends Element {
             chartId: this.chartId,
             poster: this.poster,
             duration: this.duration ? util.millisecondsToSenconds(this.duration) : undefined,
-            optionPath: this.configSrc,
-            dataPath: this.dataSrc,
+            optionPath: this.config ? undefined : this.configSrc,
+            dataPath: this.data ? undefined : this.dataSrc,
             optionJson: this.config,
             dataJson: this.data
         };
