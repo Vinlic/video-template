@@ -118,7 +118,7 @@ class Scene {
      */
     public toXML(pretty = false) {
         const scene = this.renderXML();
-        return scene.end({ prettyPrint: pretty });
+        return scene.end({ prettyPrint: pretty, headless: true });
     }
 
     /**
@@ -129,7 +129,7 @@ class Scene {
      */
     public toOldXML(pretty = false) {
         const board = this.renderOldXML();
-        return board.end({ prettyPrint: pretty });
+        return board.end({ prettyPrint: pretty, headless: true });
     }
 
     /**
@@ -234,9 +234,8 @@ class Scene {
     /**
      * 创建XML根节点
      */
-    #createXMLRoot(tagName = 'scene', attributes = {}, headless = true) {
-        const root = headless ? create() : create({ version: "1.0" });
-        const scene = root.ele(tagName, {
+    #createXMLRoot(tagName = 'scene', attributes = {}) {
+        const scene = create().ele(tagName, {
             id: this.id,
             name: this.name,
             poster: this.poster,

@@ -1104,12 +1104,12 @@ var OptionsParser = class {
           effectType: options.effectType,
           effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1e3 : void 0,
           effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1e3 : void 0,
-          styleType: options.styleType,
-          textShadow: options.textShadow,
-          textStroke: options.textStroke,
-          textBackground: options.textBackground,
-          textFillColor: options.textFillColor,
-          fillColorIntension: options.fillColorIntension
+          styleType: options.styleType === "" ? void 0 : options.styleType,
+          textShadow: util_default.omitBy(options.textShadow, (v) => util_default.isNil(v) || v === 0 || v === ""),
+          textStroke: util_default.omitBy(options.textStroke, (v) => util_default.isNil(v) || v === 0 || v === ""),
+          textBackground: options.textBackground === "" ? void 0 : options.textBackground,
+          textFillColor: options.textFillColor === "" ? void 0 : options.textFillColor,
+          fillColorIntension: options.fillColorIntension === 0 ? void 0 : options.fillColorIntension
         }));
       case "audio":
         return new Audio_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
@@ -1517,11 +1517,11 @@ var _Element = class {
   }
   toXML(pretty = false) {
     const element = this.renderXML();
-    return element.end({ prettyPrint: pretty });
+    return element.end({ prettyPrint: pretty, headless: true });
   }
   toOldXML(pretty = false) {
     const element = this.renderOldXML();
-    return element.end({ prettyPrint: pretty });
+    return element.end({ prettyPrint: pretty, headless: true });
   }
   static parse(content, data = {}, vars = {}) {
     if (!util_default.isString(content) && !util_default.isObject(content))

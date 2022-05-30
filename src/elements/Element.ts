@@ -247,7 +247,7 @@ class Element {
      */
      public toXML(pretty = false) {
         const element = this.renderXML();
-        return element.end({ prettyPrint: pretty });
+        return element.end({ prettyPrint: pretty, headless: true });
     }
 
     /**
@@ -258,7 +258,7 @@ class Element {
      */
     public toOldXML(pretty = false) {
         const element = this.renderOldXML();
-        return element.end({ prettyPrint: pretty });
+        return element.end({ prettyPrint: pretty, headless: true });
     }
 
     /**
