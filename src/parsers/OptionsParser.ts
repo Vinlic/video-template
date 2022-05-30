@@ -133,12 +133,12 @@ class OptionsParser {
                     effectType: options.effectType,
                     effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1000 : undefined,
                     effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1000 : undefined,
-                    styleType: options.styleType,
-                    textShadow: options.textShadow,
-                    textStroke: options.textStroke,
-                    textBackground: options.textBackground,
-                    textFillColor: options.textFillColor,
-                    fillColorIntension: options.fillColorIntension
+                    styleType: options.styleType === "" ? undefined : options.styleType,
+                    textShadow: util.omitBy(options.textShadow, v => util.isNil(v) || v === 0 || v === ""),
+                    textStroke: util.omitBy(options.textStroke, v => util.isNil(v) || v === 0 || v === ""),
+                    textBackground: options.textBackground === "" ? undefined : options.textBackground,
+                    textFillColor: options.textFillColor === "" ? undefined : options.textFillColor,
+                    fillColorIntension: options.fillColorIntension === 0 ? undefined : options.fillColorIntension
                 });
             case "audio":
                 return new Audio({
