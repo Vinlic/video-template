@@ -137,6 +137,15 @@ var util_default = __spreadProps(__spreadValues({}, import_lodash.default), {
   arrayParse(value) {
     return this.isArray(value) ? value : [value];
   },
+  encodeBASE64(value) {
+    value = this.isString(value) ? value : JSON.stringify(value);
+    return Buffer ? Buffer.from(value).toString("base64") : btoa(unescape(encodeURIComponent(value)));
+  },
+  decodeBASE64(value) {
+    if (!this.isString(value))
+      throw new TypeError("value must be an string");
+    return Buffer ? Buffer.from(value, "base64").toString() : decodeURIComponent(escape(atob(value)));
+  },
   booleanParse(value) {
     switch (Object.prototype.toString.call(value)) {
       case "[object String]":
@@ -2290,11 +2299,11 @@ var Canvas = class extends Element_default {
       poster: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
     if (/^base64\:/.test(this.configSrc))
-      this.config = JSON.parse(Buffer ? Buffer.from(this.configSrc.substring(7), "base64").toString() : decodeURIComponent(escape(atob(this.configSrc.substring(7)))));
+      this.config = JSON.parse(util_default.decodeBASE64(this.configSrc.substring(7)));
     else if (/^json\:/.test(this.configSrc))
       this.config = JSON.parse(this.configSrc.substring(5));
     if (/^base64\:/.test(this.dataSrc))
-      this.data = JSON.parse(Buffer ? Buffer.from(this.dataSrc.substring(7), "base64").toString() : decodeURIComponent(escape(atob(this.dataSrc.substring(7)))));
+      this.data = JSON.parse(util_default.decodeBASE64(this.dataSrc.substring(7)));
     else if (/^json\:/.test(this.dataSrc))
       this.data = JSON.parse(this.dataSrc.substring(5));
   }
@@ -2303,8 +2312,8 @@ var Canvas = class extends Element_default {
     canvas.att("chartId", this.chartId);
     canvas.att("poster", this.poster);
     canvas.att("duration", this.duration);
-    canvas.att("configSrc", this.config ? "base64:" + (Buffer ? Buffer.from(JSON.stringify(this.config)).toString("base64") : btoa(unescape(encodeURIComponent(JSON.stringify(this.config))))) : this.configSrc);
-    canvas.att("dataSrc", this.data ? "base64:" + (Buffer ? Buffer.from(JSON.stringify(this.data)).toString("base64") : btoa(unescape(encodeURIComponent(JSON.stringify(this.data))))) : this.dataSrc);
+    canvas.att("configSrc", this.config ? "base64:" + util_default.encodeBASE64(this.config) : this.configSrc);
+    canvas.att("dataSrc", this.data ? "base64:" + util_default.encodeBASE64(this.data) : this.dataSrc);
     return canvas;
   }
   renderOldXML(parent, resources, global) {
@@ -2312,8 +2321,8 @@ var Canvas = class extends Element_default {
     canvas.att("chartId", this.chartId);
     canvas.att("poster", this.poster);
     canvas.att("duration", this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0);
-    canvas.att("optionsPath", this.configSrc);
-    canvas.att("dataPath", this.dataSrc);
+    canvas.att("optionsPath", this.config ? "base64:" + util_default.encodeBASE64(this.config) : this.configSrc);
+    canvas.att("dataPath", this.data ? "base64:" + util_default.encodeBASE64(this.data) : this.dataSrc);
     return canvas;
   }
   toOptions() {
@@ -2323,7 +2332,9 @@ var Canvas = class extends Element_default {
       poster: this.poster,
       duration: this.duration ? util_default.millisecondsToSenconds(this.duration) : void 0,
       optionPath: this.configSrc,
-      dataPath: this.dataSrc
+      dataPath: this.dataSrc,
+      optionJson: this.config,
+      dataJson: this.data
     });
   }
   static isInstance(value) {

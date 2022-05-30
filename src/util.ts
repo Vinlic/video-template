@@ -76,6 +76,17 @@ export default {
     return this.isArray(value) ? value as string[] : [value as string];
   },
 
+  encodeBASE64(value: any) {
+    value = this.isString(value) ? value : JSON.stringify(value);
+    return Buffer ? Buffer.from(value).toString("base64") : btoa(unescape(encodeURIComponent(value)));
+  },
+
+  decodeBASE64(value: any) {
+    if(!this.isString(value))
+      throw new TypeError("value must be an string");
+    return Buffer ? Buffer.from(value, "base64").toString() : decodeURIComponent(escape(atob(value)));
+  },
+
   booleanParse(value: any) {
     switch (Object.prototype.toString.call(value)) {
       case '[object String]':

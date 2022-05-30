@@ -5,6 +5,7 @@ import Element from './Element';
 import util from '../util';
 
 class Canvas extends Element {
+
     public chartId = ''; //图表唯一ID
     public configSrc = ''; //画布配置路径
     public dataSrc = ''; //画布数据路径
@@ -25,11 +26,11 @@ class Canvas extends Element {
             poster: (v: any) => util.isUndefined(v) || util.isString(v)
         });
         if(/^base64\:/.test(this.configSrc))
-            this.config = JSON.parse(Buffer ? Buffer.from(this.configSrc.substring(7), "base64").toString() : decodeURIComponent(escape(atob(this.configSrc.substring(7)))));
+            this.config = JSON.parse(util.decodeBASE64(this.configSrc.substring(7)));
         else if(/^json\:/.test(this.configSrc))
             this.config = JSON.parse(this.configSrc.substring(5));
         if(/^base64\:/.test(this.dataSrc))
-            this.data = JSON.parse(Buffer ? Buffer.from(this.dataSrc.substring(7), "base64").toString() : decodeURIComponent(escape(atob(this.dataSrc.substring(7)))));
+            this.data = JSON.parse(util.decodeBASE64(this.dataSrc.substring(7)));
         else if(/^json\:/.test(this.dataSrc))
             this.data = JSON.parse(this.dataSrc.substring(5));
     }
@@ -44,8 +45,8 @@ class Canvas extends Element {
         canvas.att('chartId', this.chartId);
         canvas.att('poster', this.poster);
         canvas.att('duration', this.duration);
-        canvas.att('configSrc', this.config ? "base64:" + (Buffer ? Buffer.from(JSON.stringify(this.config)).toString("base64") : btoa(unescape(encodeURIComponent(JSON.stringify(this.config))))) : this.configSrc);
-        canvas.att('dataSrc', this.data ? "base64:" + (Buffer ? Buffer.from(JSON.stringify(this.data)).toString("base64") : btoa(unescape(encodeURIComponent(JSON.stringify(this.data))))) : this.dataSrc);
+        canvas.att('configSrc', this.config ? "base64:" + util.encodeBASE64(this.config) : this.configSrc);
+        canvas.att('dataSrc', this.data ? "base64:" + util.encodeBASE64(this.data) : this.dataSrc);
         return canvas;
     }
 
@@ -54,8 +55,8 @@ class Canvas extends Element {
         canvas.att('chartId', this.chartId);
         canvas.att('poster', this.poster);
         canvas.att('duration', this.duration ? util.millisecondsToSenconds(this.duration) : undefined);
-        canvas.att('optionsPath', this.configSrc);
-        canvas.att('dataPath', this.dataSrc);
+        canvas.att('optionsPath', this.config ? "base64:" + util.encodeBASE64(this.config) : this.configSrc);
+        canvas.att('dataPath', this.data ? "base64:" + util.encodeBASE64(this.data) : this.dataSrc);
         return canvas;
     }
 
@@ -67,7 +68,9 @@ class Canvas extends Element {
             poster: this.poster,
             duration: this.duration ? util.millisecondsToSenconds(this.duration) : undefined,
             optionPath: this.configSrc,
-            dataPath: this.dataSrc
+            dataPath: this.dataSrc,
+            optionJson: this.config,
+            dataJson: this.data
         };
     }
 
