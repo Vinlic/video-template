@@ -80,8 +80,8 @@ class Element {
     public trackId?: string; //元素轨道ID
     public value?: string; //元素值
     public children: Element[] = []; //元素子节点
-    #absoluteStartTime?: number; //绝对开始时间
-    #absoluteEndTime?: number; //绝对结束时间
+    absoluteStartTime?: number; //绝对开始时间
+    absoluteEndTime?: number; //绝对结束时间
 
     public constructor(options: IElementOptions, type = ElementTypes.Element, data = {}, vars = {}) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
@@ -332,17 +332,16 @@ class Element {
         };
     }
 
+    public update(value: any) {
+        util.merge(this, value);
+    }
+
     public static isId(value: any) {
         return util.isString(value) && /^[a-zA-Z0-9]{16}$/.test(value);
     }
 
     public static isInstance(value: any) {
         return value instanceof Element;
-    }
-
-    public setParentSection(baseTime: number, duration: number) {
-        this.#absoluteStartTime = baseTime + (this.startTime || 0);
-        this.#absoluteEndTime = baseTime + (this.endTime || duration);
     }
 
     /**
@@ -354,20 +353,17 @@ class Element {
      public generateAllTrack(baseTime = 0, duration: number) {
         let track: any = [];
         this.children?.forEach(node => {
-            node.setParentSection(baseTime, duration);
-            track.push(node);
+            track.push({
+                ...node,
+                update: node.update.bind(node),
+                absoluteStartTime: baseTime + (node.startTime || 0),
+                absoluteEndTime: baseTime + (node.endTime || duration)
+            });
             track = track.concat(node.generateAllTrack(baseTime, duration));
         });
         return track?.sort((n1: any, n2: any) => (n1.absoluteStartTime as number) - (n2.absoluteStartTime as number)); // 根据绝对开始时间排序
     }
 
-    public get absoluteStartTime() {
-        return this.#absoluteStartTime;
-    }
-
-    public get absoluteEndTime() {
-        return this.#absoluteEndTime;
-    }
 }
 
 export default Element;

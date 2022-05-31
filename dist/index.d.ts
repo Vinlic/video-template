@@ -510,7 +510,6 @@ declare class Effect {
     static isInstance(value: any): boolean;
 }
 declare class Element {
-    #private;
     static Type: typeof ElementTypes;
     type: ElementTypes;
     id: string;
@@ -538,6 +537,8 @@ declare class Element {
     trackId?: string;
     value?: string;
     children: Element[];
+    absoluteStartTime?: number;
+    absoluteEndTime?: number;
     constructor(options: IElementOptions, type?: ElementTypes, data?: {}, vars?: {});
     renderXML(parent?: any): any;
     renderOldXML(parent?: any, resources?: any, global?: any): any;
@@ -548,12 +549,10 @@ declare class Element {
     static parseXML: typeof Parser.parseElementXML;
     static parseOptions: typeof OptionsParser.parseElementOptions;
     toOptions(): any;
+    update(value: any): void;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
-    setParentSection(baseTime: number, duration: number): void;
     generateAllTrack(baseTime: number | undefined, duration: number): any;
-    get absoluteStartTime(): number | undefined;
-    get absoluteEndTime(): number | undefined;
 }
 
 interface IElementOptions {

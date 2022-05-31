@@ -29,19 +29,10 @@ var __accessCheck = (obj, member, msg) => {
   if (!member.has(obj))
     throw TypeError("Cannot " + msg);
 };
-var __privateGet = (obj, member, getter) => {
-  __accessCheck(obj, member, "read from private field");
-  return getter ? getter.call(obj) : member.get(obj);
-};
 var __privateAdd = (obj, member, value) => {
   if (member.has(obj))
     throw TypeError("Cannot add the same private member more than once");
   member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
-};
-var __privateSet = (obj, member, value, setter) => {
-  __accessCheck(obj, member, "write to private field");
-  setter ? setter.call(obj, value) : member.set(obj, value);
-  return value;
 };
 var __privateMethod = (obj, member, method) => {
   __accessCheck(obj, member, "access private method");
@@ -1329,37 +1320,36 @@ var Effect = class {
     return value instanceof Effect;
   }
 };
-var _absoluteStartTime, _absoluteEndTime;
 var _Element = class {
+  type = ElementTypes_default.Element;
+  id = "";
+  name;
+  x;
+  y;
+  width;
+  height;
+  zIndex;
+  rotate;
+  opacity;
+  scaleWidth;
+  scaleHeight;
+  enterEffect;
+  exitEffect;
+  stayEffect;
+  isBackground;
+  backgroundColor;
+  startTime;
+  endTime;
+  strokeStyle;
+  strokeColor;
+  strokeWidth;
+  fixedScale;
+  trackId;
+  value;
+  children = [];
+  absoluteStartTime;
+  absoluteEndTime;
   constructor(options, type = ElementTypes_default.Element, data = {}, vars = {}) {
-    __publicField(this, "type", ElementTypes_default.Element);
-    __publicField(this, "id", "");
-    __publicField(this, "name");
-    __publicField(this, "x");
-    __publicField(this, "y");
-    __publicField(this, "width");
-    __publicField(this, "height");
-    __publicField(this, "zIndex");
-    __publicField(this, "rotate");
-    __publicField(this, "opacity");
-    __publicField(this, "scaleWidth");
-    __publicField(this, "scaleHeight");
-    __publicField(this, "enterEffect");
-    __publicField(this, "exitEffect");
-    __publicField(this, "stayEffect");
-    __publicField(this, "isBackground");
-    __publicField(this, "backgroundColor");
-    __publicField(this, "startTime");
-    __publicField(this, "endTime");
-    __publicField(this, "strokeStyle");
-    __publicField(this, "strokeColor");
-    __publicField(this, "strokeWidth");
-    __publicField(this, "fixedScale");
-    __publicField(this, "trackId");
-    __publicField(this, "value");
-    __publicField(this, "children", []);
-    __privateAdd(this, _absoluteStartTime, void 0);
-    __privateAdd(this, _absoluteEndTime, void 0);
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
     options.compile && (options = Compiler_default.compile(options, data, vars));
@@ -1550,36 +1540,30 @@ var _Element = class {
       fillColor: this.backgroundColor
     };
   }
+  update(value) {
+    util_default.merge(this, value);
+  }
   static isId(value) {
     return util_default.isString(value) && /^[a-zA-Z0-9]{16}$/.test(value);
   }
   static isInstance(value) {
     return value instanceof _Element;
   }
-  setParentSection(baseTime, duration) {
-    __privateSet(this, _absoluteStartTime, baseTime + (this.startTime || 0));
-    __privateSet(this, _absoluteEndTime, baseTime + (this.endTime || duration));
-  }
   generateAllTrack(baseTime = 0, duration) {
     var _a;
     let track = [];
     (_a = this.children) == null ? void 0 : _a.forEach((node) => {
-      node.setParentSection(baseTime, duration);
-      track.push(node);
+      track.push(__spreadProps(__spreadValues({}, node), {
+        update: node.update.bind(node),
+        absoluteStartTime: baseTime + (node.startTime || 0),
+        absoluteEndTime: baseTime + (node.endTime || duration)
+      }));
       track = track.concat(node.generateAllTrack(baseTime, duration));
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }
-  get absoluteStartTime() {
-    return __privateGet(this, _absoluteStartTime);
-  }
-  get absoluteEndTime() {
-    return __privateGet(this, _absoluteEndTime);
-  }
 };
 var Element2 = _Element;
-_absoluteStartTime = new WeakMap();
-_absoluteEndTime = new WeakMap();
 __publicField(Element2, "Type", ElementTypes_default);
 __publicField(Element2, "parseJSON", Parser_default.parseElementJSON.bind(Parser_default));
 __publicField(Element2, "parseXML", Parser_default.parseElementXML.bind(Parser_default));
@@ -2637,8 +2621,11 @@ var _Scene = class {
   generateAllTrack(baseTime = 0) {
     let track = [];
     this.children.forEach((node) => {
-      node.setParentSection(baseTime, this.duration);
-      track.push(node);
+      track.push(__spreadProps(__spreadValues({}, node), {
+        update: node.update.bind(node),
+        absoluteStartTime: baseTime + (node.startTime || 0),
+        absoluteEndTime: baseTime + (node.endTime || this.duration)
+      }));
       track = track.concat(node.generateAllTrack(baseTime, this.duration));
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
@@ -2844,14 +2831,16 @@ var _Template = class {
   generateAllTrack() {
     let track = [];
     let baseTime = 0;
-    const duration = this.duration;
     this.children.forEach((node) => {
       if (Scene_default.isInstance(node)) {
         track = track.concat(node.generateAllTrack(baseTime));
         baseTime += node.duration;
       } else {
-        node.setParentSection(0, duration);
-        track.push(node);
+        track.push(__spreadProps(__spreadValues({}, node), {
+          update: node.update.bind(node),
+          absoluteStartTime: node.startTime || 0,
+          absoluteEndTime: node.endTime || this.duration
+        }));
       }
     });
     return track;

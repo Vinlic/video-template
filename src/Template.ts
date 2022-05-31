@@ -282,14 +282,17 @@ class Template {
     public generateAllTrack() {
         let track: any = [];
         let baseTime = 0;
-        const duration = this.duration;
         this.children.forEach((node: any) => {
             if (Scene.isInstance(node)) {
                 track = track.concat(node.generateAllTrack(baseTime));
                 baseTime += node.duration;
             } else {
-                node.setParentSection(0, duration);
-                track.push(node);
+                track.push({
+                    ...node,
+                    update: node.update.bind(node),
+                    absoluteStartTime: node.startTime || 0,
+                    absoluteEndTime: node.endTime || this.duration
+                });
             }
         });
         return track;
