@@ -296,6 +296,13 @@ class Template {
     }
 
     /**
+     * 克隆模板对象
+     */
+    public clone(): Template {
+        return Template.parseJSON(JSON.stringify(this));
+    }
+
+    /**
      * 获取模板总时长
      */
     public get duration() {

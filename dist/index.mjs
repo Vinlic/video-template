@@ -2856,6 +2856,9 @@ var _Template = class {
     });
     return track;
   }
+  clone() {
+    return _Template.parseJSON(JSON.stringify(this));
+  }
   get duration() {
     return this.children.reduce((duration, node) => Scene_default.isInstance(node) ? duration + node.duration : duration, 0);
   }

@@ -682,6 +682,7 @@ declare class Template {
     static parseOldXML: typeof OldParser.parseXML;
     static parseOptions: typeof OptionsParser.parseOptions;
     generateAllTrack(): any;
+    clone(): Template;
     get duration(): number;
     get sortedChilren(): (Element | Element[])[];
     get fontFamilys(): string[];
