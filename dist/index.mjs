@@ -2319,7 +2319,10 @@ var Chart = class extends Canvas_default {
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadValues({
-      optionsPath: this.configSrc
+      optionsPath: this.config ? void 0 : this.configSrc,
+      dataPath: this.data ? void 0 : this.dataSrc,
+      ddcoptions: this.config,
+      ddcdata: this.data
     }, parentOptions);
   }
   static isInstance(value) {

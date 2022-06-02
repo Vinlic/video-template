@@ -27,7 +27,10 @@ class Chart extends Canvas {
     public toOptions() {
         const parentOptions = super.toOptions();
         return {
-            optionsPath: this.configSrc,
+            optionsPath: this.config ? undefined : this.configSrc,
+            dataPath: this.data ? undefined : this.dataSrc,
+            ddcoptions: this.config,
+            ddcdata: this.data,
             ...parentOptions
         };
     }
