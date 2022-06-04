@@ -7,6 +7,7 @@ import IFilterOptions from './elements/interface/IFilterOptions';
 import Compiler from './Compiler';
 import ElementFactory from './ElementFactory';
 import { Parser, OptionsParser } from './parsers';
+import Template from './Template';
 import { Element, Text } from './elements';
 import util from './util';
 
@@ -69,6 +70,7 @@ class Scene {
     public backgroundColor?: string; // 场景背景颜色
     public transition?: Transition; // 场景转场效果
     public filter?: IFilterOptions; // 场景滤镜
+    public parent?: Template;  //父级指针
     public children: Element[] = []; // 场景子节点
 
     public constructor(options: ISceneOptions, data = {}, vars = {}) {
@@ -86,7 +88,11 @@ class Scene {
                 transition: (v: any) => v && new Transition(v),
                 children: (datas: any) =>
                     util.isArray(datas)
-                        ? datas.map((data) => (Element.isInstance(data) ? data : ElementFactory.createElement(data)))
+                        ? datas.map((data) => {
+                            const node = Element.isInstance(data) ? data as Element : ElementFactory.createElement(data);
+                            node.parent = this;
+                            return node;
+                        })
                         : [], // 实例化场景子节点
             },
             {
@@ -107,6 +113,7 @@ class Scene {
     }
 
     public appendChild(node: Element) {
+        node.parent = this;
         this.children.push(node);
     }
 

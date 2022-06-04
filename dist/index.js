@@ -1369,6 +1369,7 @@ var _Element = class {
   fixedScale;
   trackId;
   value;
+  parent;
   children = [];
   absoluteStartTime;
   absoluteEndTime;
@@ -1396,7 +1397,11 @@ var _Element = class {
       exitEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       stayEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       isBackground: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
-      children: (datas) => util_default.isArray(datas) ? datas.map((options2) => _Element.isInstance(options2) ? options2 : ElementFactory_default.createElement(options2, data, vars)) : []
+      children: (datas) => util_default.isArray(datas) ? datas.map((options2) => {
+        const node = _Element.isInstance(options2) ? options2 : ElementFactory_default.createElement(options2, data, vars);
+        node.parent = this;
+        return node;
+      }) : []
     }, {
       type: (v) => util_default.isString(v),
       id: (v) => _Element.isId(v),
@@ -2497,6 +2502,7 @@ var _Scene = class {
     __publicField(this, "backgroundColor");
     __publicField(this, "transition");
     __publicField(this, "filter");
+    __publicField(this, "parent");
     __publicField(this, "children", []);
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
@@ -2508,7 +2514,11 @@ var _Scene = class {
       height: (v) => Number(v),
       duration: (v) => Number(v),
       transition: (v) => v && new Transition(v),
-      children: (datas) => util_default.isArray(datas) ? datas.map((data2) => Element_default.isInstance(data2) ? data2 : ElementFactory_default.createElement(data2)) : []
+      children: (datas) => util_default.isArray(datas) ? datas.map((data2) => {
+        const node = Element_default.isInstance(data2) ? data2 : ElementFactory_default.createElement(data2);
+        node.parent = this;
+        return node;
+      }) : []
     }, {
       type: (v) => v === "scene",
       id: (v) => _Scene.isId(v),
@@ -2525,6 +2535,7 @@ var _Scene = class {
     });
   }
   appendChild(node) {
+    node.parent = this;
     this.children.push(node);
   }
   toXML(pretty = false) {
@@ -2742,12 +2753,15 @@ var _Template = class {
       updateTime: (v) => Number(util_default.defaultTo(v, util_default.unixTimestamp())),
       buildBy: (v) => util_default.defaultTo(v, "system"),
       children: (datas) => util_default.isArray(datas) ? datas.map((data2) => {
+        let node;
         if (Scene_default.isInstance(data2) || Element_default.isInstance(data2))
-          return data2;
-        if (data2.type === "scene")
-          return new Scene_default(data2);
+          node = data2;
+        else if (data2.type === "scene")
+          node = new Scene_default(data2);
         else
-          return ElementFactory_default.createElement(data2);
+          node = ElementFactory_default.createElement(data2);
+        node.parent = this;
+        return node;
       }) : []
     }, {
       type: (v) => v === "template",
@@ -2797,6 +2811,7 @@ var _Template = class {
   appendChild(node) {
     if (!Scene_default.isInstance(node) && !Element_default.isInstance(node))
       throw new TypeError("node must be an Scene instance or Element instance");
+    node.parent = this;
     this.children.push(node);
   }
   toBASE64() {

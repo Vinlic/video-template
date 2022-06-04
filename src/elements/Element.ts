@@ -8,6 +8,8 @@ import ElementTypes from '../enums/ElementTypes';
 import util from '../util';
 import Compiler from '../Compiler';
 import ElementFactory from '../ElementFactory';
+import Template from '../Template';
+import Scene from '../Scene';
 import { Parser, OptionsParser } from '../parsers';
 
 class Effect {
@@ -79,9 +81,10 @@ class Element {
     public fixedScale?: boolean;  //元素固定比例
     public trackId?: string; //元素轨道ID
     public value?: string; //元素值
+    public parent?: Template | Scene | Element;  //父级指针
     public children: Element[] = []; //元素子节点
-    absoluteStartTime?: number; //绝对开始时间
-    absoluteEndTime?: number; //绝对结束时间
+    public absoluteStartTime?: number; //绝对开始时间
+    public absoluteEndTime?: number; //绝对结束时间
 
     public constructor(options: IElementOptions, type = ElementTypes.Element, data = {}, vars = {}) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
@@ -108,7 +111,11 @@ class Element {
             isBackground: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
             children: (datas: IElementOptions[]) =>
                 util.isArray(datas)
-                    ? datas.map(options => (Element.isInstance(options) ? options : ElementFactory.createElement(options, data, vars)))
+                    ? datas.map(options => {
+                        const node = Element.isInstance(options) ? options as Element : ElementFactory.createElement(options, data, vars);
+                        node.parent = this;
+                        return node;
+                    })
                     : [], //实例化子节点
         }, {
             type: (v: any) => util.isString(v),

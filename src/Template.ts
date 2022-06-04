@@ -60,9 +60,12 @@ class Template {
                 children: (datas: any) =>
                     util.isArray(datas)
                         ? datas.map((data) => {
-                            if (Scene.isInstance(data) || Element.isInstance(data)) return data; //如果是已实例化对象则直接使用
-                            if (data.type === 'scene') return new Scene(data); //场景对象实例化
-                            else return ElementFactory.createElement(data); //元素对象实例化
+                            let node: Scene | Element;
+                            if (Scene.isInstance(data) || Element.isInstance(data)) node = data; //如果是已实例化对象则直接使用
+                            else if (data.type === 'scene') node = new Scene(data); //场景对象实例化
+                            else node = ElementFactory.createElement(data); //元素对象实例化
+                            node.parent = this;
+                            return node;
                         })
                         : [], //实例化模板子节点
             },
@@ -112,9 +115,10 @@ class Template {
         });
     }
 
-    public appendChild(node: any) {
+    public appendChild(node: Scene | Element) {
         if (!Scene.isInstance(node) && !Element.isInstance(node))
             throw new TypeError('node must be an Scene instance or Element instance');
+        node.parent = this;
         this.children.push(node);
     }
 
@@ -214,7 +218,7 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-     public static async parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
+    public static async parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
         if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
         if (util.isBuffer(content)) content = content.toString();
         if (util.isObject(content)) return new Template(content);
@@ -237,7 +241,7 @@ class Template {
      * @param {String} content
      * @returns {Template}
      */
-     public static parseJSONPreprocessing = Parser.parseJSONPreprocessing.bind(Parser);
+    public static parseJSONPreprocessing = Parser.parseJSONPreprocessing.bind(Parser);
 
     /**
      * 解析XML文档为模型
