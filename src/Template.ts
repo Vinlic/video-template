@@ -293,6 +293,7 @@ class Template {
             } else {
                 track.push({
                     ...node,
+                    update: node.update.bind(node),
                     absoluteStartTime: node.startTime || 0,
                     absoluteEndTime: node.endTime || this.duration
                 });

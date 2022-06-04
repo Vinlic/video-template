@@ -362,6 +362,7 @@ class Element {
         this.children?.forEach(node => {
             track.push({
                 ...node,
+                update: node.update.bind(node),
                 absoluteStartTime: baseTime + (node.startTime || 0),
                 absoluteEndTime: baseTime + (node.endTime || duration)
             });
