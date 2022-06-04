@@ -117,6 +117,10 @@ class Scene {
         this.children.push(node);
     }
 
+    public setDuration(duration: number) {
+        this.duration = duration;
+    }
+
     /**
      * 转换场景模型为XML文档
      *
@@ -355,7 +359,6 @@ class Scene {
         this.children.forEach(node => {
             track.push({
                 ...node,
-                update: node.update.bind(node),
                 absoluteStartTime: baseTime + (node.startTime || 0),
                 absoluteEndTime: baseTime + (node.endTime || this.duration)
             });

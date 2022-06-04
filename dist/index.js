@@ -2538,6 +2538,9 @@ var _Scene = class {
     node.parent = this;
     this.children.push(node);
   }
+  setDuration(duration) {
+    this.duration = duration;
+  }
   toXML(pretty = false) {
     const scene = this.renderXML();
     return scene.end({ prettyPrint: pretty, headless: true });
@@ -2659,7 +2662,6 @@ var _Scene = class {
     let track = [];
     this.children.forEach((node) => {
       track.push(__spreadProps(__spreadValues({}, node), {
-        update: node.update.bind(node),
         absoluteStartTime: baseTime + (node.startTime || 0),
         absoluteEndTime: baseTime + (node.endTime || this.duration)
       }));
@@ -2878,7 +2880,6 @@ var _Template = class {
         baseTime += node.duration;
       } else {
         track.push(__spreadProps(__spreadValues({}, node), {
-          update: node.update.bind(node),
           absoluteStartTime: node.startTime || 0,
           absoluteEndTime: node.endTime || this.duration
         }));

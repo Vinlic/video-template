@@ -478,6 +478,7 @@ declare class Scene {
     children: Element[];
     constructor(options: ISceneOptions, data?: {}, vars?: {});
     appendChild(node: Element): void;
+    setDuration(duration: number): void;
     toXML(pretty?: boolean): any;
     toOldXML(pretty?: boolean): any;
     toOptions(): any;
