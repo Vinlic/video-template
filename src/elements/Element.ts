@@ -351,6 +351,14 @@ class Element {
         return value instanceof Element;
     }
 
+    public resize(width: number, height: number) {
+        const scaleX = this.width ? width / this.width : 1;
+        const scaleY = this.height ? height / this.height : 1;
+        this.width && (this.width = width);
+        this.height && (this.height = height);
+        this.children.forEach(node => node.rescale(scaleX, scaleY));
+    }
+
     public rescale(scaleX: number, scaleY: number) {
         this.x && (this.x = parseFloat((this.x * scaleX).toFixed(4)));
         this.y && (this.y = parseFloat((this.y * scaleY).toFixed(4)));

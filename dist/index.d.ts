@@ -557,6 +557,7 @@ declare class Element {
     update(value: any): void;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
+    resize(width: number, height: number): void;
     rescale(scaleX: number, scaleY: number): void;
     generateAllTrack(baseTime: number | undefined, duration: number): any;
 }
