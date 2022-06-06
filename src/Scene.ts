@@ -348,6 +348,14 @@ class Scene {
         return value instanceof Scene;
     }
 
+    public resize(width: number, height: number) {
+        const scaleX = width / this.width;
+        const scaleY = height / this.height;
+        this.width = width;
+        this.height = height;
+        this.children.forEach(node => node.rescale(scaleX, scaleY));
+    }
+
     /**
      * 生成所有子元素的轨道
      *

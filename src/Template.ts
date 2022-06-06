@@ -278,6 +278,25 @@ class Template {
     public static parseOptions = OptionsParser.parseOptions.bind(OptionsParser);
 
     /**
+     * 重设模板大小
+     * 
+     * @param width 模板宽度
+     * @param height 模板高度
+     */
+    public resize(width: number, height: number) {
+        const scaleX = width / this.width;
+        const scaleY = height / this.height;
+        this.width = width;
+        this.height = height;
+        this.children.forEach(node => {
+            if(Scene.isInstance(node))
+                (node as Scene).resize(width, height);
+            else
+                (node as Element).rescale(scaleX, scaleY);
+        });
+    }
+
+    /**
      * 生成所有子元素的轨道
      *
      * @param {Number} baseTime 基准时间

@@ -1554,6 +1554,13 @@ var _Element = class {
   static isInstance(value) {
     return value instanceof _Element;
   }
+  rescale(scaleX, scaleY) {
+    this.x && (this.x = parseFloat((this.x * scaleX).toFixed(4)));
+    this.y && (this.y = parseFloat((this.y * scaleY).toFixed(4)));
+    this.width && (this.width = parseFloat((this.width * scaleX).toFixed(4)));
+    this.height && (this.height = parseFloat((this.height * scaleY).toFixed(4)));
+    this.children.forEach((node) => node.rescale(scaleX, scaleY));
+  }
   generateAllTrack(baseTime = 0, duration) {
     var _a;
     let track = [];
@@ -1822,6 +1829,10 @@ var Text = class extends Element_default {
       textFillColor: this.textFillColor,
       fillColorIntension: this.fillColorIntension
     });
+  }
+  rescale(scaleX, scaleY) {
+    super.rescale(scaleX, scaleY);
+    this.fontSize && (this.fontSize = parseFloat((this.fontSize * scaleX).toFixed(4)));
   }
   static isInstance(value) {
     return value instanceof Text;
@@ -2635,6 +2646,13 @@ var _Scene = class {
   static isInstance(value) {
     return value instanceof _Scene;
   }
+  resize(width, height) {
+    const scaleX = width / this.width;
+    const scaleY = height / this.height;
+    this.width = width;
+    this.height = height;
+    this.children.forEach((node) => node.rescale(scaleX, scaleY));
+  }
   generateAllTrack(baseTime = 0) {
     let track = [];
     this.children.forEach((node) => {
@@ -2848,6 +2866,18 @@ var _Template = class {
       return _Template.parseOldXML(content, data, vars);
     else
       return await _Template.parseJSONPreprocessing(content, data, vars, dataProcessor, varsProcessor);
+  }
+  resize(width, height) {
+    const scaleX = width / this.width;
+    const scaleY = height / this.height;
+    this.width = width;
+    this.height = height;
+    this.children.forEach((node) => {
+      if (Scene_default.isInstance(node))
+        node.resize(width, height);
+      else
+        node.rescale(scaleX, scaleY);
+    });
   }
   generateAllTrack() {
     let track = [];

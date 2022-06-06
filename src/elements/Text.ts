@@ -156,6 +156,11 @@ class Text extends Element {
         };
     }
 
+    public rescale(scaleX: number, scaleY: number) {
+        super.rescale(scaleX, scaleY);
+        this.fontSize && (this.fontSize = parseFloat((this.fontSize * scaleX).toFixed(4)));
+    }
+
     public static isInstance(value: any) {
         return value instanceof Text;
     }

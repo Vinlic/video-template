@@ -351,6 +351,14 @@ class Element {
         return value instanceof Element;
     }
 
+    public rescale(scaleX: number, scaleY: number) {
+        this.x && (this.x = parseFloat((this.x * scaleX).toFixed(4)));
+        this.y && (this.y = parseFloat((this.y * scaleY).toFixed(4)));
+        this.width && (this.width = parseFloat((this.width * scaleX).toFixed(4)));
+        this.height && (this.height = parseFloat((this.height * scaleY).toFixed(4)));
+        this.children.forEach(node => node.rescale(scaleX, scaleY));
+    }
+
     /**
      * 生成所有子元素的轨道
      *

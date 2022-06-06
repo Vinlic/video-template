@@ -135,6 +135,7 @@ declare class Text extends Element {
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
+    rescale(scaleX: number, scaleY: number): void;
     static isInstance(value: any): boolean;
 }
 
@@ -493,6 +494,7 @@ declare class Scene {
     static parseOptions: typeof OptionsParser.parseSceneOptions;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
+    resize(width: number, height: number): void;
     generateAllTrack(baseTime?: number): any;
     get sortedChildren(): Element[];
     get fontFamilys(): string[];
@@ -555,6 +557,7 @@ declare class Element {
     update(value: any): void;
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
+    rescale(scaleX: number, scaleY: number): void;
     generateAllTrack(baseTime: number | undefined, duration: number): any;
 }
 
@@ -683,6 +686,7 @@ declare class Template {
     static parseXMLPreprocessing: typeof Parser.parseXMLPreprocessing;
     static parseOldXML: typeof OldParser.parseXML;
     static parseOptions: typeof OptionsParser.parseOptions;
+    resize(width: number, height: number): void;
     generateAllTrack(): any;
     clone(): Template;
     get duration(): number;
