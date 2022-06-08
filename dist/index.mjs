@@ -139,7 +139,7 @@ var extension_default = {
 
 // src/Compiler.ts
 var Compiler = class {
-  static compile(rawData, data = {}, valueMap = {}) {
+  static compile(rawData, data = {}, valueMap = {}, extendsScript = "") {
     const render = (value, data2 = {}, scope = {}) => {
       if (util_default.isObject(value)) {
         if (util_default.isArray(value)) {
@@ -169,7 +169,7 @@ var Compiler = class {
             const { expression } = expressions[0];
             let result2;
             try {
-              result2 = this.eval(expression, data2, valueMap);
+              result2 = this.eval(expression, data2, valueMap, extendsScript);
             } catch {
             }
             if (!result2) {
@@ -195,7 +195,7 @@ var Compiler = class {
             const { expression } = expressions[0];
             let result2;
             try {
-              result2 = this.eval(expression, data2, valueMap);
+              result2 = this.eval(expression, data2, valueMap, extendsScript);
             } catch {
             }
             if (!result2) {
@@ -223,7 +223,7 @@ var Compiler = class {
           const { expression } = expressions[0];
           let list = [];
           try {
-            list = this.eval(expression, data2, valueMap);
+            list = this.eval(expression, data2, valueMap, extendsScript);
           } catch {
           }
           if (util_default.isNumber(list)) {
@@ -258,7 +258,7 @@ var Compiler = class {
             if (extension_default[expression.expression])
               expression.replace(result, extension_default[expression.expression]());
             else
-              result = expression.replace(result, this.eval(expression.expression, data2, valueMap));
+              result = expression.replace(result, this.eval(expression.expression, data2, valueMap, extendsScript));
           } catch {
             result = null;
           }
@@ -269,10 +269,10 @@ var Compiler = class {
     };
     return render(rawData, data);
   }
-  static eval(expression, data = {}, valueMap = {}) {
+  static eval(expression, data = {}, valueMap = {}, extendsScript = "") {
     let result;
     const _data = __spreadValues(__spreadValues({}, data), valueMap);
-    const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
+    const evalFun = Function(`${extendsScript};const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
@@ -284,7 +284,7 @@ var Compiler = class {
         return result;
       return expressions.reduce((_result, expression2) => {
         try {
-          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap)));
+          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap), extendsScript));
         } catch (err) {
           _result = null;
         }
@@ -489,7 +489,7 @@ var Parser = class {
     };
   }
   static parseXML(content, data = {}, vars = {}) {
-    let xmlObject, varsObject, dataObject;
+    let xmlObject, varsObject, dataObject, extendsScript = "";
     xmlParser.parse(content).forEach((o) => {
       if (o.template)
         xmlObject = o;
@@ -497,14 +497,16 @@ var Parser = class {
         varsObject = o;
       if (o.data)
         dataObject = o;
+      if (o.script)
+        extendsScript = o.script[0] && o.script[0]["#text"] || "";
     });
     if (!xmlObject)
       throw new Error("template xml invalid");
     const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars);
-    return new Template_default(completeObject, _data, _vars);
+    return new Template_default(completeObject, _data, _vars, extendsScript);
   }
   static async parseXMLPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
-    let xmlObject, varsObject, dataObject;
+    let xmlObject, varsObject, dataObject, extendsScript = "";
     xmlParser.parse(content).forEach((o) => {
       if (o.template)
         xmlObject = o;
@@ -512,6 +514,8 @@ var Parser = class {
         varsObject = o;
       if (o.data)
         dataObject = o;
+      if (o.script)
+        extendsScript = o.script[0] && o.script[0]["#text"] || "";
     });
     if (!xmlObject)
       throw new Error("template xml invalid");
@@ -530,10 +534,10 @@ var Parser = class {
       }
     }
     const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-    return new Template_default(completeObject, _data, _vars);
+    return new Template_default(completeObject, _data, _vars, extendsScript);
   }
   static parseSceneXML(content, data = {}, vars = {}) {
-    let xmlObject, varsObject, dataObject;
+    let xmlObject, varsObject, dataObject, extendsScript;
     xmlParser.parse(content).forEach((o) => {
       if (o.scene)
         xmlObject = o;
@@ -541,14 +545,16 @@ var Parser = class {
         varsObject = o;
       if (o.data)
         dataObject = o;
+      if (o.script)
+        extendsScript = o;
     });
     if (!xmlObject)
       throw new Error("template scene xml invalid");
     const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-    return new Scene_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars));
+    return new Scene_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars), extendsScript);
   }
   static async parseSceneXMLPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
-    let xmlObject, varsObject, dataObject;
+    let xmlObject, varsObject, dataObject, extendsScript;
     xmlParser.parse(content).forEach((o) => {
       if (o.scene)
         xmlObject = o;
@@ -556,6 +562,8 @@ var Parser = class {
         varsObject = o;
       if (o.data)
         dataObject = o;
+      if (o.script)
+        extendsScript = o;
     });
     if (!xmlObject)
       throw new Error("template scene xml invalid");
@@ -574,17 +582,17 @@ var Parser = class {
       }
     }
     const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-    return new Scene_default(completeObject, _data, _vars);
+    return new Scene_default(completeObject, _data, _vars, extendsScript);
   }
-  static parseElementJSON(content, data = {}, vars = {}) {
-    return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
+  static parseElementJSON(content, data = {}, vars = {}, extendsScript = "") {
+    return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content, data, vars, extendsScript);
   }
-  static parseElementXML(content, data = {}, vars = {}) {
+  static parseElementXML(content, data = {}, vars = {}, extendsScript = "") {
     const xmlObject = xmlParser.parse(content)[0];
     if (!xmlObject)
       throw new Error("template element xml invalid");
     const { completeObject } = this.parseXMLObject(xmlObject);
-    return ElementFactory_default.createElement(completeObject, data, vars);
+    return ElementFactory_default.createElement(completeObject, data, vars, extendsScript);
   }
 };
 var Parser_default = Parser;
@@ -2484,7 +2492,7 @@ var Transition = class {
 };
 var _createXMLRoot, createXMLRoot_fn;
 var _Scene = class {
-  constructor(options, data = {}, vars = {}) {
+  constructor(options, data = {}, vars = {}, extendsScript = "") {
     __privateAdd(this, _createXMLRoot);
     __publicField(this, "type", "");
     __publicField(this, "id", "");
@@ -2501,7 +2509,7 @@ var _Scene = class {
     __publicField(this, "children", []);
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
-    options.compile && (options = Compiler_default.compile(options, data, vars));
+    options.compile && (options = Compiler_default.compile(options, data, vars, extendsScript));
     util_default.optionsInject(this, options, {
       type: () => "scene",
       id: (v) => util_default.defaultTo(_Scene.isId(v) ? v : void 0, util_default.uniqid()),
@@ -2740,8 +2748,8 @@ var _Template = class {
   updateTime = 0;
   buildBy = "";
   children = [];
-  constructor(options, data = {}, vars = {}) {
-    options.compile && (options = Compiler_default.compile(options, data, vars));
+  constructor(options, data = {}, vars = {}, extendsScript = "") {
+    options.compile && (options = Compiler_default.compile(options, data, vars, extendsScript));
     util_default.optionsInject(this, options, {
       type: () => "template",
       id: (v) => util_default.defaultTo(_Template.isId(v) ? v : void 0, util_default.uuid(false)),

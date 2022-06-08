@@ -73,9 +73,9 @@ class Scene {
     public parent?: Template;  //父级指针
     public children: Element[] = []; // 场景子节点
 
-    public constructor(options: ISceneOptions, data = {}, vars = {}) {
+    public constructor(options: ISceneOptions, data = {}, vars = {}, extendsScript = "") {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
-        options.compile && (options = Compiler.compile(options, data, vars)); //如果模板属性包含compile则对模板进行编译处理
+        options.compile && (options = Compiler.compile(options, data, vars, extendsScript)); //如果模板属性包含compile则对模板进行编译处理
         util.optionsInject(
             this,
             options,

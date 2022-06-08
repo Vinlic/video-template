@@ -137,23 +137,25 @@ class Parser {
     }
 
     public static parseXML(content: string, data = {}, vars = {}) {
-        let xmlObject, varsObject, dataObject;
+        let xmlObject, varsObject, dataObject, extendsScript = "";
         xmlParser.parse(content).forEach((o: any) => {
             if (o.template) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
+            if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template xml invalid');
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars);
-        return new Template(completeObject, _data, _vars);
+        return new Template(completeObject, _data, _vars, extendsScript);
     }
 
     public static async parseXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
-        let xmlObject, varsObject, dataObject;
+        let xmlObject, varsObject, dataObject, extendsScript = "";
         xmlParser.parse(content).forEach((o: any) => {
             if (o.template) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
+            if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template xml invalid');
         if (dataObject?.[':@']) {
@@ -171,27 +173,29 @@ class Parser {
             }
         }
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-        return new Template(completeObject, _data, _vars);
+        return new Template(completeObject, _data, _vars, extendsScript);
     }
 
     public static parseSceneXML(content: string, data = {}, vars = {}) {
-        let xmlObject, varsObject, dataObject;
+        let xmlObject, varsObject, dataObject, extendsScript;
         xmlParser.parse(content).forEach((o: any) => {
             if (o.scene) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
+            if (o.script) extendsScript = o;
         });
         if (!xmlObject) throw new Error('template scene xml invalid');
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-        return new Scene(completeObject, util.assign(_data, data), util.assign(_vars, vars));
+        return new Scene(completeObject, util.assign(_data, data), util.assign(_vars, vars), extendsScript);
     }
 
     public static async parseSceneXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
-        let xmlObject, varsObject, dataObject;
+        let xmlObject, varsObject, dataObject, extendsScript;
         xmlParser.parse(content).forEach((o: any) => {
             if (o.scene) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
+            if (o.script) extendsScript = o;
         });
         if (!xmlObject) throw new Error('template scene xml invalid');
         if (dataObject?.[':@']) {
@@ -209,18 +213,18 @@ class Parser {
             }
         }
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-        return new Scene(completeObject, _data, _vars);
+        return new Scene(completeObject, _data, _vars, extendsScript);
     }
 
-    public static parseElementJSON(content: any, data = {}, vars = {}) {
-        return ElementFactory.createElement(util.isString(content) ? JSON.parse(content) : content, data, vars);
+    public static parseElementJSON(content: any, data = {}, vars = {}, extendsScript = "") {
+        return ElementFactory.createElement(util.isString(content) ? JSON.parse(content) : content, data, vars, extendsScript);
     }
 
-    public static parseElementXML(content: string, data = {}, vars = {}) {
+    public static parseElementXML(content: string, data = {}, vars = {}, extendsScript = "") {
         const xmlObject = xmlParser.parse(content)[0];
         if (!xmlObject) throw new Error('template element xml invalid');
         const { completeObject } = this.parseXMLObject(xmlObject);
-        return ElementFactory.createElement(completeObject, data, vars);
+        return ElementFactory.createElement(completeObject, data, vars, extendsScript);
     }
 
 }

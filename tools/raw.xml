@@ -65,9 +65,15 @@
 <vars>
 
 </vars>
+<script>
+  function test(value) {
+    return value * 10;
+  }
+</script>
 <?xml version="1.0"?>
 <template version="2.0.0" id="66d29670e02d11ecb8982f73ab35ad3d" name="未命名项目" mode="scene" poster="/ave/upload/3/115/image/20220530/a577889af55749d98a962a6dd6d38973.png" actuator="20000" width="1280" height="720" aspectRatio="16:9" fps="30" videoBitrate="2097152" duration="5000" volume="1" audioBitrate="131072" backgroundColor="#000" createTime="1653924614" updateTime="1653924614" buildBy="system" compile>
     <scene id="1WTMg2sbW15dpQ0I" poster="" width="1280" height="720" aspectRatio="16:9" duration="5000" backgroundColor="#000">
+        <text>{{test(10)}}</text>
         <canvas id="1wtQm8ALLGb6K2JK" x="237.58535760853835" y="135.00000000000017" width="800" height="450" zIndex="0" rotate="0" opacity="1" enterEffect-type="fadeIn" enterEffect-duration="500" exitEffect-type="fadeOut" exitEffect-duration="500" startTime="0" endTime="5000" chartId="basic_line" configSrc="/ave/upload/3/115/option-json/20220530/7e30d363153c4804bde3149974a5af94.json" dataSrc="{{charts.basic_line}}"/>
     </scene>
 </template>

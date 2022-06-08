@@ -37,68 +37,64 @@ class Template {
     public buildBy = ''; //模板从何处构建
     public children: (Scene | Element)[] = []; //模板子节点
 
-    public constructor(options: ITemplateOptions, data = {}, vars = {}) {
-        options.compile && (options = Compiler.compile(options, data, vars)); //如果模板属性包含compile则对模板进行编译处理
-        util.optionsInject(
-            this,
-            options,
-            {
-                type: () => 'template',
-                id: (v: any) => util.defaultTo(Template.isId(v) ? v : undefined, util.uuid(false)),
-                mode: (v: any) => util.defaultTo(v, 'scene'),
-                version: (v: any) => util.defaultTo(v, '2.0.0'),
-                width: (v: any) => Number(v),
-                height: (v: any) => Number(v),
-                fps: (v: any) => Number(util.defaultTo(v, 60)),
-                crf: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                volume: (v: any) => Number(util.defaultTo(v, 1)),
-                frameQuality: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                captureTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
-                createTime: (v: any) => Number(util.defaultTo(v, util.unixTimestamp())),
-                updateTime: (v: any) => Number(util.defaultTo(v, util.unixTimestamp())),
-                buildBy: (v: any) => util.defaultTo(v, 'system'),
-                children: (datas: any) =>
-                    util.isArray(datas)
-                        ? datas.map((data) => {
-                            let node: Scene | Element;
-                            if (Scene.isInstance(data) || Element.isInstance(data)) node = data; //如果是已实例化对象则直接使用
-                            else if (data.type === 'scene') node = new Scene(data); //场景对象实例化
-                            else node = ElementFactory.createElement(data); //元素对象实例化
-                            node.parent = this;
-                            return node;
-                        })
-                        : [], //实例化模板子节点
-            },
-            {
-                type: (v: any) => v === 'template',
-                id: (v: any) => Template.isId(v),
-                mode: (v: any) => util.isString(v),
-                version: (v: any) => util.isString(v),
-                name: (v: any) => util.isUndefined(v) || util.isString(v),
-                poster: (v: any) => util.isUndefined(v) || util.isString(v),
-                actuator: (v: any) => util.isUndefined(v) || util.isString(v),
-                width: (v: any) => util.isFinite(v),
-                height: (v: any) => util.isFinite(v),
-                aspectRatio: (v: any) => util.isString(v),
-                fps: (v: any) => util.isFinite(v),
-                crf: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                volume: (v: any) => util.isFinite(v),
-                videoCodec: (v: any) => util.isUndefined(v) || util.isString(v),
-                videoBitrate: (v: any) => util.isUndefined(v) || util.isString(v),
-                pixelFormat: (v: any) => util.isUndefined(v) || util.isString(v),
-                frameQuality: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
-                format: (v: any) => util.isUndefined(v) || util.isString(v),
-                audioCodec: (v: any) => util.isUndefined(v) || util.isString(v),
-                sampleRate: (v: any) => util.isUndefined(v) || util.isString(v),
-                audioBitrate: (v: any) => util.isUndefined(v) || util.isString(v),
-                captureTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
-                createTime: (v: any) => util.isUnixTimestamp(v),
-                updateTime: (v: any) => util.isUnixTimestamp(v),
-                buildBy: (v: any) => util.isString(v),
-                children: (v: any) => util.isArray(v),
-            },
-        );
+    public constructor(options: ITemplateOptions, data = {}, vars = {}, extendsScript = "") {
+        options.compile && (options = Compiler.compile(options, data, vars, extendsScript)); //如果模板属性包含compile则对模板进行编译处理
+        util.optionsInject(this, options, {
+            type: () => 'template',
+            id: (v: any) => util.defaultTo(Template.isId(v) ? v : undefined, util.uuid(false)),
+            mode: (v: any) => util.defaultTo(v, 'scene'),
+            version: (v: any) => util.defaultTo(v, '2.0.0'),
+            width: (v: any) => Number(v),
+            height: (v: any) => Number(v),
+            fps: (v: any) => Number(util.defaultTo(v, 60)),
+            crf: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            volume: (v: any) => Number(util.defaultTo(v, 1)),
+            frameQuality: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            captureTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            createTime: (v: any) => Number(util.defaultTo(v, util.unixTimestamp())),
+            updateTime: (v: any) => Number(util.defaultTo(v, util.unixTimestamp())),
+            buildBy: (v: any) => util.defaultTo(v, 'system'),
+            children: (datas: any) =>
+                util.isArray(datas)
+                    ? datas.map((data) => {
+                        let node: Scene | Element;
+                        if (Scene.isInstance(data) || Element.isInstance(data)) node = data; //如果是已实例化对象则直接使用
+                        else if (data.type === 'scene') node = new Scene(data); //场景对象实例化
+                        else node = ElementFactory.createElement(data); //元素对象实例化
+                        node.parent = this;
+                        return node;
+                    })
+                    : [], //实例化模板子节点
+        },
+        {
+            type: (v: any) => v === 'template',
+            id: (v: any) => Template.isId(v),
+            mode: (v: any) => util.isString(v),
+            version: (v: any) => util.isString(v),
+            name: (v: any) => util.isUndefined(v) || util.isString(v),
+            poster: (v: any) => util.isUndefined(v) || util.isString(v),
+            actuator: (v: any) => util.isUndefined(v) || util.isString(v),
+            width: (v: any) => util.isFinite(v),
+            height: (v: any) => util.isFinite(v),
+            aspectRatio: (v: any) => util.isString(v),
+            fps: (v: any) => util.isFinite(v),
+            crf: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            volume: (v: any) => util.isFinite(v),
+            videoCodec: (v: any) => util.isUndefined(v) || util.isString(v),
+            videoBitrate: (v: any) => util.isUndefined(v) || util.isString(v),
+            pixelFormat: (v: any) => util.isUndefined(v) || util.isString(v),
+            frameQuality: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
+            format: (v: any) => util.isUndefined(v) || util.isString(v),
+            audioCodec: (v: any) => util.isUndefined(v) || util.isString(v),
+            sampleRate: (v: any) => util.isUndefined(v) || util.isString(v),
+            audioBitrate: (v: any) => util.isUndefined(v) || util.isString(v),
+            captureTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            createTime: (v: any) => util.isUnixTimestamp(v),
+            updateTime: (v: any) => util.isUnixTimestamp(v),
+            buildBy: (v: any) => util.isString(v),
+            children: (v: any) => util.isArray(v),
+        });
     }
 
     public scenesSplice(start: number, end: number) {

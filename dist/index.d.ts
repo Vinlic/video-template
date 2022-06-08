@@ -46,8 +46,8 @@ declare class Parser {
     static parseXMLPreprocessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
     static parseSceneXML(content: string, data?: {}, vars?: {}): Scene;
     static parseSceneXMLPreprocessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Scene>;
-    static parseElementJSON(content: any, data?: {}, vars?: {}): Element;
-    static parseElementXML(content: string, data?: {}, vars?: {}): Element;
+    static parseElementJSON(content: any, data?: {}, vars?: {}, extendsScript?: string): Element;
+    static parseElementXML(content: string, data?: {}, vars?: {}, extendsScript?: string): Element;
 }
 
 declare class OldParser {
@@ -477,7 +477,7 @@ declare class Scene {
     filter?: IFilterOptions;
     parent?: Template;
     children: Element[];
-    constructor(options: ISceneOptions, data?: {}, vars?: {});
+    constructor(options: ISceneOptions, data?: {}, vars?: {}, extendsScript?: string);
     appendChild(node: Element): void;
     setDuration(duration: number): void;
     toXML(pretty?: boolean): any;
@@ -667,7 +667,7 @@ declare class Template {
     updateTime: number;
     buildBy: string;
     children: (Scene | Element)[];
-    constructor(options: ITemplateOptions, data?: {}, vars?: {});
+    constructor(options: ITemplateOptions, data?: {}, vars?: {}, extendsScript?: string);
     scenesSplice(start: number, end: number): void;
     appendChild(node: Scene | Element): void;
     toBASE64(): string;
