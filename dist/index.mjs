@@ -132,14 +132,19 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
 import { create as create4 } from "xmlbuilder2";
 
 // src/extension.ts
-var extension_default = {
+var vars = {
   "__UUID__": () => util_default.uuid(),
   "__UNIQID__": () => util_default.uniqid()
 };
+var functions = {};
+var extension_default = { vars, functions };
 
 // src/Compiler.ts
 var Compiler = class {
   static compile(rawData, data = {}, valueMap = {}, extendsScript = "") {
+    let extendsScriptCtx = {};
+    if (util_default.isString(extendsScript) && extendsScript.length)
+      extendsScriptCtx = Function(extendsScript)();
     const render = (value, data2 = {}, scope = {}) => {
       if (util_default.isObject(value)) {
         if (util_default.isArray(value)) {
@@ -169,7 +174,7 @@ var Compiler = class {
             const { expression } = expressions[0];
             let result2;
             try {
-              result2 = this.eval(expression, data2, valueMap, extendsScript);
+              result2 = this.eval(expression, data2, valueMap, extendsScriptCtx);
             } catch {
             }
             if (!result2) {
@@ -195,7 +200,7 @@ var Compiler = class {
             const { expression } = expressions[0];
             let result2;
             try {
-              result2 = this.eval(expression, data2, valueMap, extendsScript);
+              result2 = this.eval(expression, data2, valueMap, extendsScriptCtx);
             } catch {
             }
             if (!result2) {
@@ -223,7 +228,7 @@ var Compiler = class {
           const { expression } = expressions[0];
           let list = [];
           try {
-            list = this.eval(expression, data2, valueMap, extendsScript);
+            list = this.eval(expression, data2, valueMap, extendsScriptCtx);
           } catch {
           }
           if (util_default.isNumber(list)) {
@@ -255,10 +260,10 @@ var Compiler = class {
           return value;
         return expressions.reduce((result, expression) => {
           try {
-            if (extension_default[expression.expression])
-              expression.replace(result, extension_default[expression.expression]());
+            if (extension_default.vars[expression.expression])
+              expression.replace(result, extension_default.vars[expression.expression]());
             else
-              result = expression.replace(result, this.eval(expression.expression, data2, valueMap, extendsScript));
+              result = expression.replace(result, this.eval(expression.expression, data2, valueMap, extendsScriptCtx));
           } catch {
             result = null;
           }
@@ -269,10 +274,10 @@ var Compiler = class {
     };
     return render(rawData, data);
   }
-  static eval(expression, data = {}, valueMap = {}, extendsScript = "") {
+  static eval(expression, data = {}, valueMap = {}, extendsScriptCtx = {}) {
     let result;
-    const _data = __spreadValues(__spreadValues({}, data), valueMap);
-    const evalFun = Function(`${extendsScript};const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
+    const _data = __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions), extendsScriptCtx);
+    const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
@@ -284,7 +289,7 @@ var Compiler = class {
         return result;
       return expressions.reduce((_result, expression2) => {
         try {
-          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap), extendsScript));
+          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap), extendsScriptCtx));
         } catch (err) {
           _result = null;
         }
@@ -406,10 +411,10 @@ var Parser = class {
   static toBuffer(tempalte) {
     return Buffer.from(tempalte.toXML());
   }
-  static parseJSON(content, data = {}, vars = {}) {
-    return new Template_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
+  static parseJSON(content, data = {}, vars2 = {}) {
+    return new Template_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars2);
   }
-  static async parseJSONPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+  static async parseJSONPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
     const object = util_default.isString(content) ? JSON.parse(content) : content;
     if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
       const result = await dataProcessor(object.dataSrc);
@@ -419,12 +424,12 @@ var Parser = class {
       const result = await varsProcessor(object.varsSrc);
       util_default.isObject(result) && util_default.assign(data, result);
     }
-    return new Template_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
+    return new Template_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars2));
   }
-  static parseSceneJSON(content, data = {}, vars = {}) {
-    return new Scene_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars);
+  static parseSceneJSON(content, data = {}, vars2 = {}) {
+    return new Scene_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars2);
   }
-  static async parseSceneJSONPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+  static async parseSceneJSONPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
     const object = util_default.isString(content) ? JSON.parse(content) : content;
     if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
       const result = await dataProcessor(object.dataSrc);
@@ -434,9 +439,9 @@ var Parser = class {
       const result = await varsProcessor(object.varsSrc);
       util_default.isObject(result) && util_default.assign(data, result);
     }
-    return new Scene_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars));
+    return new Scene_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars2));
   }
-  static parseXMLObject(xmlObject, dataObject, varsObject, data = {}, vars = {}) {
+  static parseXMLObject(xmlObject, dataObject, varsObject, data = {}, vars2 = {}) {
     function parse(obj, target = {}) {
       const type = Object.keys(obj)[0];
       target.type = type;
@@ -485,10 +490,10 @@ var Parser = class {
     return {
       completeObject,
       data: util_default.assign(_data, data),
-      vars: util_default.assign(_vars, vars)
+      vars: util_default.assign(_vars, vars2)
     };
   }
-  static parseXML(content, data = {}, vars = {}) {
+  static parseXML(content, data = {}, vars2 = {}) {
     let xmlObject, varsObject, dataObject, extendsScript = "";
     xmlParser.parse(content).forEach((o) => {
       if (o.template)
@@ -502,10 +507,10 @@ var Parser = class {
     });
     if (!xmlObject)
       throw new Error("template xml invalid");
-    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars);
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars2);
     return new Template_default(completeObject, _data, _vars, extendsScript);
   }
-  static async parseXMLPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+  static async parseXMLPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
     let xmlObject, varsObject, dataObject, extendsScript = "";
     xmlParser.parse(content).forEach((o) => {
       if (o.template)
@@ -530,13 +535,13 @@ var Parser = class {
       const attrs = varsObject[":@"];
       if (util_default.isFunction(varsProcessor) && attrs.source) {
         const result = await dataProcessor(attrs.source);
-        util_default.isObject(result) && util_default.assign(vars, result);
+        util_default.isObject(result) && util_default.assign(vars2, result);
       }
     }
-    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
     return new Template_default(completeObject, _data, _vars, extendsScript);
   }
-  static parseSceneXML(content, data = {}, vars = {}) {
+  static parseSceneXML(content, data = {}, vars2 = {}) {
     let xmlObject, varsObject, dataObject, extendsScript;
     xmlParser.parse(content).forEach((o) => {
       if (o.scene)
@@ -550,10 +555,10 @@ var Parser = class {
     });
     if (!xmlObject)
       throw new Error("template scene xml invalid");
-    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-    return new Scene_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars), extendsScript);
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
+    return new Scene_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars2), extendsScript);
   }
-  static async parseSceneXMLPreprocessing(content, data = {}, vars = {}, dataProcessor, varsProcessor) {
+  static async parseSceneXMLPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
     let xmlObject, varsObject, dataObject, extendsScript;
     xmlParser.parse(content).forEach((o) => {
       if (o.scene)
@@ -578,21 +583,21 @@ var Parser = class {
       const attrs = varsObject[":@"];
       if (util_default.isFunction(varsProcessor) && attrs.source) {
         const result = await dataProcessor(attrs.source);
-        util_default.isObject(result) && util_default.assign(vars, result);
+        util_default.isObject(result) && util_default.assign(vars2, result);
       }
     }
-    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
     return new Scene_default(completeObject, _data, _vars, extendsScript);
   }
-  static parseElementJSON(content, data = {}, vars = {}, extendsScript = "") {
-    return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content, data, vars, extendsScript);
+  static parseElementJSON(content, data = {}, vars2 = {}, extendsScript = "") {
+    return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content, data, vars2, extendsScript);
   }
-  static parseElementXML(content, data = {}, vars = {}, extendsScript = "") {
+  static parseElementXML(content, data = {}, vars2 = {}, extendsScript = "") {
     const xmlObject = xmlParser.parse(content)[0];
     if (!xmlObject)
       throw new Error("template element xml invalid");
     const { completeObject } = this.parseXMLObject(xmlObject);
-    return ElementFactory_default.createElement(completeObject, data, vars, extendsScript);
+    return ElementFactory_default.createElement(completeObject, data, vars2, extendsScript);
   }
 };
 var Parser_default = Parser;
@@ -643,7 +648,7 @@ var OldParser = class {
   static toBuffer(template) {
     return Buffer.from(this.toXML(template));
   }
-  static parseXML(content, data = {}, vars = {}) {
+  static parseXML(content, data = {}, vars2 = {}) {
     const xmlObject = xmlParser2.parse(content);
     function merge(obj, target = {}) {
       Object.assign(target, obj[":@"]);
@@ -965,7 +970,7 @@ var OldParser = class {
       fps: global.fps,
       compile,
       children: templateChildren
-    }, data, vars);
+    }, data, vars2);
   }
 };
 var OldParser_default = OldParser;
@@ -1358,10 +1363,10 @@ var _Element = class {
   children = [];
   absoluteStartTime;
   absoluteEndTime;
-  constructor(options, type = ElementTypes_default.Element, data = {}, vars = {}) {
+  constructor(options, type = ElementTypes_default.Element, data = {}, vars2 = {}) {
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
-    options.compile && (options = Compiler_default.compile(options, data, vars));
+    options.compile && (options = Compiler_default.compile(options, data, vars2));
     util_default.optionsInject(this, options, {
       type: (v) => util_default.defaultTo(v, type),
       id: (v) => util_default.defaultTo(_Element.isId(v) ? v : void 0, util_default.uniqid()),
@@ -1383,7 +1388,7 @@ var _Element = class {
       stayEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       isBackground: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       children: (datas) => util_default.isArray(datas) ? datas.map((options2) => {
-        const node = _Element.isInstance(options2) ? options2 : ElementFactory_default.createElement(options2, data, vars);
+        const node = _Element.isInstance(options2) ? options2 : ElementFactory_default.createElement(options2, data, vars2);
         node.parent = this;
         return node;
       }) : []
@@ -1512,16 +1517,16 @@ var _Element = class {
     const element = this.renderOldXML();
     return element.end({ prettyPrint: pretty, headless: true });
   }
-  static parse(content, data = {}, vars = {}) {
+  static parse(content, data = {}, vars2 = {}) {
     if (!util_default.isString(content) && !util_default.isObject(content))
       throw new TypeError("content must be an string or object");
     if (util_default.isBuffer(content))
       content = content.toString();
     if (util_default.isObject(content))
-      return ElementFactory_default.createElement(content, data, vars);
+      return ElementFactory_default.createElement(content, data, vars2);
     if (util_default.isString(content))
-      return _Element.parseXML(content, data, vars);
-    return _Element.parseJSON(content, data, vars);
+      return _Element.parseXML(content, data, vars2);
+    return _Element.parseJSON(content, data, vars2);
   }
   toOptions() {
     var _a, _b;
@@ -2492,7 +2497,7 @@ var Transition = class {
 };
 var _createXMLRoot, createXMLRoot_fn;
 var _Scene = class {
-  constructor(options, data = {}, vars = {}, extendsScript = "") {
+  constructor(options, data = {}, vars2 = {}, extendsScript = "") {
     __privateAdd(this, _createXMLRoot);
     __publicField(this, "type", "");
     __publicField(this, "id", "");
@@ -2509,7 +2514,7 @@ var _Scene = class {
     __publicField(this, "children", []);
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
-    options.compile && (options = Compiler_default.compile(options, data, vars, extendsScript));
+    options.compile && (options = Compiler_default.compile(options, data, vars2, extendsScript));
     util_default.optionsInject(this, options, {
       type: () => "scene",
       id: (v) => util_default.defaultTo(_Scene.isId(v) ? v : void 0, util_default.uniqid()),
@@ -2633,7 +2638,7 @@ var _Scene = class {
     (_a = this.transition) == null ? void 0 : _a.renderOldXML(board);
     return board;
   }
-  static parse(content, data, vars) {
+  static parse(content, data, vars2) {
     if (!util_default.isString(content) && !util_default.isObject(content))
       throw new TypeError("content must be an string or object");
     if (util_default.isBuffer(content))
@@ -2641,10 +2646,10 @@ var _Scene = class {
     if (util_default.isObject(content))
       return new _Scene(content);
     if (util_default.isString(content))
-      return _Scene.parseXML(content, data, vars);
-    return _Scene.parseJSON(content, data, vars);
+      return _Scene.parseXML(content, data, vars2);
+    return _Scene.parseJSON(content, data, vars2);
   }
-  static async parseAndProcessing(content, data, vars, dataProcessor, varsProcessor) {
+  static async parseAndProcessing(content, data, vars2, dataProcessor, varsProcessor) {
     if (!util_default.isString(content) && !util_default.isObject(content))
       throw new TypeError("content must be an string or object");
     if (util_default.isBuffer(content))
@@ -2652,8 +2657,8 @@ var _Scene = class {
     if (util_default.isObject(content))
       return new _Scene(content);
     if (util_default.isString(content))
-      return _Scene.parseXMLPreprocessing(content, data, vars, dataProcessor, varsProcessor);
-    return _Scene.parseJSONPreprocessing(content, data, vars, dataProcessor, varsProcessor);
+      return _Scene.parseXMLPreprocessing(content, data, vars2, dataProcessor, varsProcessor);
+    return _Scene.parseJSONPreprocessing(content, data, vars2, dataProcessor, varsProcessor);
   }
   static isId(value) {
     return util_default.isString(value) && /^[a-zA-Z0-9]{16}$/.test(value);
@@ -2748,8 +2753,8 @@ var _Template = class {
   updateTime = 0;
   buildBy = "";
   children = [];
-  constructor(options, data = {}, vars = {}, extendsScript = "") {
-    options.compile && (options = Compiler_default.compile(options, data, vars, extendsScript));
+  constructor(options, data = {}, vars2 = {}, extendsScript = "") {
+    options.compile && (options = Compiler_default.compile(options, data, vars2, extendsScript));
     util_default.optionsInject(this, options, {
       type: () => "template",
       id: (v) => util_default.defaultTo(_Template.isId(v) ? v : void 0, util_default.uuid(false)),
@@ -2854,7 +2859,7 @@ var _Template = class {
   static isInstance(value) {
     return value instanceof _Template;
   }
-  static parse(content, data, vars) {
+  static parse(content, data, vars2) {
     if (!util_default.isString(content) && !util_default.isObject(content))
       throw new TypeError("content must be an string or object");
     if (util_default.isBuffer(content))
@@ -2862,13 +2867,13 @@ var _Template = class {
     if (util_default.isObject(content))
       return new _Template(content);
     if (/\<template/.test(content))
-      return _Template.parseXML(content, data, vars);
+      return _Template.parseXML(content, data, vars2);
     else if (/\<project/.test(content))
-      return _Template.parseOldXML(content, data, vars);
+      return _Template.parseOldXML(content, data, vars2);
     else
-      return _Template.parseJSON(content, data, vars);
+      return _Template.parseJSON(content, data, vars2);
   }
-  static async parseAndProcessing(content, data, vars, dataProcessor, varsProcessor) {
+  static async parseAndProcessing(content, data, vars2, dataProcessor, varsProcessor) {
     if (!util_default.isString(content) && !util_default.isObject(content))
       throw new TypeError("content must be an string or object");
     if (util_default.isBuffer(content))
@@ -2876,11 +2881,11 @@ var _Template = class {
     if (util_default.isObject(content))
       return new _Template(content);
     if (/\<template/.test(content))
-      return await _Template.parseXMLPreprocessing(content, data, vars, dataProcessor, varsProcessor);
+      return await _Template.parseXMLPreprocessing(content, data, vars2, dataProcessor, varsProcessor);
     else if (/\<project/.test(content))
-      return _Template.parseOldXML(content, data, vars);
+      return _Template.parseOldXML(content, data, vars2);
     else
-      return await _Template.parseJSONPreprocessing(content, data, vars, dataProcessor, varsProcessor);
+      return await _Template.parseJSONPreprocessing(content, data, vars2, dataProcessor, varsProcessor);
   }
   resize(width, height) {
     const scaleX = width / this.width;

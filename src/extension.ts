@@ -1,6 +1,6 @@
 import util from "./util";
 
-export default {
+const vars = {  //扩展变量
 
     //生成UUID
     "__UUID__": () => util.uuid(),
@@ -9,3 +9,11 @@ export default {
     "__UNIQID__": () => util.uniqid()
 
 } as any;
+
+const functions = {  //扩展函数
+
+    
+
+} as any;
+
+export default { vars, functions };
