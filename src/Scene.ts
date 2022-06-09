@@ -70,8 +70,8 @@ class Scene {
     public backgroundColor?: string; // 场景背景颜色
     public transition?: Transition; // 场景转场效果
     public filter?: IFilterOptions; // 场景滤镜
-    public parent?: Template;  //父级指针
     public children: Element[] = []; // 场景子节点
+    #parent?: Template;  //父级指针
 
     public constructor(options: ISceneOptions, data = {}, vars = {}, extendsScript = "") {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
@@ -395,6 +395,15 @@ class Scene {
         });
         return fontFamilys;
     }
+
+    public set parent(obj: Template | undefined) {
+        this.#parent = obj;
+    }
+
+    public get parent() {
+        return this.#parent;
+    }
+    
 }
 
 export default Scene;

@@ -29,10 +29,19 @@ var __accessCheck = (obj, member, msg) => {
   if (!member.has(obj))
     throw TypeError("Cannot " + msg);
 };
+var __privateGet = (obj, member, getter) => {
+  __accessCheck(obj, member, "read from private field");
+  return getter ? getter.call(obj) : member.get(obj);
+};
 var __privateAdd = (obj, member, value) => {
   if (member.has(obj))
     throw TypeError("Cannot add the same private member more than once");
   member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+};
+var __privateSet = (obj, member, value, setter) => {
+  __accessCheck(obj, member, "write to private field");
+  setter ? setter.call(obj, value) : member.set(obj, value);
+  return value;
 };
 var __privateMethod = (obj, member, method) => {
   __accessCheck(obj, member, "access private method");
@@ -1333,37 +1342,38 @@ var Effect = class {
     return value instanceof Effect;
   }
 };
+var _parent;
 var _Element = class {
-  type = ElementTypes_default.Element;
-  id = "";
-  name;
-  x;
-  y;
-  width;
-  height;
-  zIndex;
-  rotate;
-  opacity;
-  scaleWidth;
-  scaleHeight;
-  enterEffect;
-  exitEffect;
-  stayEffect;
-  isBackground;
-  backgroundColor;
-  startTime;
-  endTime;
-  strokeStyle;
-  strokeColor;
-  strokeWidth;
-  fixedScale;
-  trackId;
-  value;
-  parent;
-  children = [];
-  absoluteStartTime;
-  absoluteEndTime;
   constructor(options, type = ElementTypes_default.Element, data = {}, vars2 = {}) {
+    __publicField(this, "type", ElementTypes_default.Element);
+    __publicField(this, "id", "");
+    __publicField(this, "name");
+    __publicField(this, "x");
+    __publicField(this, "y");
+    __publicField(this, "width");
+    __publicField(this, "height");
+    __publicField(this, "zIndex");
+    __publicField(this, "rotate");
+    __publicField(this, "opacity");
+    __publicField(this, "scaleWidth");
+    __publicField(this, "scaleHeight");
+    __publicField(this, "enterEffect");
+    __publicField(this, "exitEffect");
+    __publicField(this, "stayEffect");
+    __publicField(this, "isBackground");
+    __publicField(this, "backgroundColor");
+    __publicField(this, "startTime");
+    __publicField(this, "endTime");
+    __publicField(this, "strokeStyle");
+    __publicField(this, "strokeColor");
+    __publicField(this, "strokeWidth");
+    __publicField(this, "fixedScale");
+    __publicField(this, "trackId");
+    __publicField(this, "value");
+    __publicField(this, "children", []);
+    __publicField(this, "absoluteStartTime");
+    __publicField(this, "absoluteEndTime");
+    __privateAdd(this, _parent, void 0);
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
     options.compile && (options = Compiler_default.compile(options, data, vars2));
@@ -1594,8 +1604,15 @@ var _Element = class {
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }
+  set parent(obj) {
+    __privateSet(this, _parent, obj);
+  }
+  get parent() {
+    return __privateGet(this, _parent);
+  }
 };
 var Element2 = _Element;
+_parent = new WeakMap();
 __publicField(Element2, "Type", ElementTypes_default);
 __publicField(Element2, "parseJSON", Parser_default.parseElementJSON.bind(Parser_default));
 __publicField(Element2, "parseXML", Parser_default.parseElementXML.bind(Parser_default));
@@ -2495,7 +2512,7 @@ var Transition = class {
     return value instanceof Transition;
   }
 };
-var _createXMLRoot, createXMLRoot_fn;
+var _parent2, _createXMLRoot, createXMLRoot_fn;
 var _Scene = class {
   constructor(options, data = {}, vars2 = {}, extendsScript = "") {
     __privateAdd(this, _createXMLRoot);
@@ -2510,8 +2527,8 @@ var _Scene = class {
     __publicField(this, "backgroundColor");
     __publicField(this, "transition");
     __publicField(this, "filter");
-    __publicField(this, "parent");
     __publicField(this, "children", []);
+    __privateAdd(this, _parent2, void 0);
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
     options.compile && (options = Compiler_default.compile(options, data, vars2, extendsScript));
@@ -2700,8 +2717,15 @@ var _Scene = class {
     });
     return fontFamilys;
   }
+  set parent(obj) {
+    __privateSet(this, _parent2, obj);
+  }
+  get parent() {
+    return __privateGet(this, _parent2);
+  }
 };
 var Scene = _Scene;
+_parent2 = new WeakMap();
 _createXMLRoot = new WeakSet();
 createXMLRoot_fn = function(tagName = "scene", attributes = {}) {
   const scene = create4().ele(tagName, __spreadValues({

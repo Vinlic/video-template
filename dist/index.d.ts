@@ -475,7 +475,6 @@ declare class Scene {
     backgroundColor?: string;
     transition?: Transition;
     filter?: IFilterOptions;
-    parent?: Template;
     children: Element[];
     constructor(options: ISceneOptions, data?: {}, vars?: {}, extendsScript?: string);
     appendChild(node: Element): void;
@@ -498,6 +497,8 @@ declare class Scene {
     generateAllTrack(baseTime?: number): any;
     get sortedChildren(): Element[];
     get fontFamilys(): string[];
+    set parent(obj: Template | undefined);
+    get parent(): Template | undefined;
 }
 
 declare class Effect {
@@ -514,6 +515,7 @@ declare class Effect {
     static isInstance(value: any): boolean;
 }
 declare class Element {
+    #private;
     static Type: typeof ElementTypes;
     type: ElementTypes;
     id: string;
@@ -540,7 +542,6 @@ declare class Element {
     fixedScale?: boolean;
     trackId?: string;
     value?: string;
-    parent?: Template | Scene | Element;
     children: Element[];
     absoluteStartTime?: number;
     absoluteEndTime?: number;
@@ -560,6 +561,8 @@ declare class Element {
     resize(width: number, height: number): void;
     rescale(scaleX: number, scaleY: number): void;
     generateAllTrack(baseTime: number | undefined, duration: number): any;
+    set parent(obj: Template | Scene | Element | undefined);
+    get parent(): Template | Scene | Element | undefined;
 }
 
 interface IElementOptions {

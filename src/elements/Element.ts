@@ -81,10 +81,10 @@ class Element {
     public fixedScale?: boolean;  //元素固定比例
     public trackId?: string; //元素轨道ID
     public value?: string; //元素值
-    public parent?: Template | Scene | Element;  //父级指针
     public children: Element[] = []; //元素子节点
     public absoluteStartTime?: number; //绝对开始时间
     public absoluteEndTime?: number; //绝对结束时间
+    #parent?: Template | Scene | Element;  //父级指针
 
     public constructor(options: IElementOptions, type = ElementTypes.Element, data = {}, vars = {}) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
@@ -385,6 +385,14 @@ class Element {
             track = track.concat(node.generateAllTrack(baseTime, duration));
         });
         return track?.sort((n1: any, n2: any) => (n1.absoluteStartTime as number) - (n2.absoluteStartTime as number)); // 根据绝对开始时间排序
+    }
+
+    public set parent(obj: Template | Scene | Element | undefined) {
+        this.#parent = obj;
+    }
+
+    public get parent() {
+        return this.#parent;
     }
 
 }
