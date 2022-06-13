@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+
 import util from "./util";
 
 const vars = {  //扩展变量
@@ -17,10 +18,7 @@ const functions = {  //扩展函数
 
     o2b: (v: any) => "base64:" + util.encodeBASE64(v),
 
-    dateFormat(date: any, formatString: string) {
-        console.log(date, formatString);
-        return format(date, formatString);
-    }
+    dateFormat: (date: any, formatString: string, options: any) => format(date, formatString, options)
 
 } as any;
 
