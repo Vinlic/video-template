@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<template version="2.0.0" id="d0b12ce0eae711ecb8b4b1dd2030410c" name="国信融资融券" mode="scene" actuator="10000" width="1080" height="1920" aspectRatio="9:16" fps="30" duration="20000" volume="1" createTime="1655104190" updateTime="1655104190" buildBy="system">
+  <audio id="1xJ0sERsfpvEBIad" isBackground="true" startTime="0" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/audios/d03.mp3" volume="0.1" loop="true" muted="false" fadeInDuration="0"/>
+  <scene id="1xj0sEurFPR0MHep" width="1080" height="1920" aspectRatio="9:16" duration="5000" transition-type="angular" transition-duration="300">
+    <video id="1xJ0SeeCsjx1U7GQ" x="0" y="0" width="1080" height="1920" isBackground="true" startTime="0" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/pt.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="100" loop="false" muted="false" provider="aliyun" text="05月27日融资融券市场日参" declaimer="aixia" speechRate="1">
+      <ssml id="1Xj0sE2ygS7z9n6L">
+        <speak>
+          <voice name="aixia">
+            <prosody contenteditable="true" rate="1">
+              <p>05月27日融资融券市场日参</p>
+            </prosody>
+          </voice>
+        </speak>
+      </ssml>
+    </voice>
+    <text id="1xj0SEp36YaKtnRt" x="583" y="682" width="179" height="50" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="1000" endTime="5000" fontFamily="Barlow_Condensed_Medium" fontSize="50" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">2022.05.27</text>
+    <text id="1Xj0seMGCaPoDvCi" x="285" y="1695" width="510" height="30" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" endTime="5000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">以上内容为行情数据，不属投资建议。</text>
+    <text id="1Xj0SeBkgcqiNahw" x="377" y="1745" width="510" height="30" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" endTime="5000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">投资有风险，入市需谨慎。</text>
+  </scene>
+  <scene id="1xj0Se7joYtQO1Lk" width="1080" height="1920" aspectRatio="9:16" duration="15000" transition-type="circleopen" transition-duration="300">
+    <video id="1XJ0segUjoU4GXWC" x="0" y="0" width="1080" height="1920" isBackground="true" startTime="0" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" loop="false" muted="false"/>
+    <voice id="1xJ0sEijLQIEyB8I" startTime="500" endTime="15000" volume="100" loop="false" muted="false" provider="aliyun" text="05月27日沪深两市融资融券余额规模为1.52万亿元，环比下降0.37%。其中融资余额14437.94亿，融券余额781.04亿。" declaimer="aixia" speechRate="1">
+      <ssml id="1xJ0SE87BlG5ljVI">
+        <speak>
+          <voice name="aixia">
+            <prosody contenteditable="true" rate="1">
+              <p>05月27日沪深两市融资融券余额规模为1.52万亿元，环比下降0.37%。其中融资余额14437.94亿，融券余额781.04亿。</p>
+            </prosody>
+          </voice>
+        </speak>
+      </ssml>
+    </voice>
+    <image id="1xJ0SejrflMODIDs" x="82" y="84" width="319" height="48" zIndex="1" startTime="0" endTime="15000" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/images/logo.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1Xj0SeBRtKnFnhce" x="130" y="350" width="820" height="100" zIndex="1" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="700" endTime="15000" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/images/bg01.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1Xj0sEnwAVTZmTs4" x="130" y="460" width="820" height="100" zIndex="1" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="1200" endTime="15000" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/images/bg01.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1Xj0seeVAiYIjsSt" x="130" y="570" width="820" height="100" zIndex="1" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="1700" endTime="15000" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/images/bg01.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1xJ0Se0poqywP8iE" x="130" y="350" width="820" height="100" zIndex="2" enterEffect-type="fadeInUp" enterEffect-duration="500" exitEffect-type="fadeOut" exitEffect-duration="500" startTime="700" endTime="7700" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/images/bg02.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1xj0Sec5bvxzCwjO" x="130" y="460" width="820" height="100" zIndex="2" exitEffect-type="fadeOut" exitEffect-duration="500" startTime="8000" endTime="11000" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/images/bg02.png" mode="scaleToFill" dynamic="false"/>
+    <image id="1xj0Se7JNX3HDcX6" x="130" y="570" width="820" height="100" zIndex="2" startTime="11300" endTime="15000" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/images/bg02.png" mode="scaleToFill" dynamic="false"/>
+    <text id="1XJ0seiE9NyIoDoG" x="330" y="193" width="420" height="55" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="700" endTime="15000" fontFamily="FangZheng_Zheng_Bold" fontSize="55" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">融 资 融 券 余 额</text>
+    <text id="1xj0SEz5PuiWl4z4" x="465" y="300" width="150" height="30" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="700" endTime="15000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#88CCFF" lineHeight="1" wordSpacing="0" lineWrap="false">单位：亿元</text>
+    <text id="1xJ0SeJfxo84HNdl" x="285" y="1695" width="510" height="30" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" endTime="15000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">以上内容为行情数据，不属投资建议。</text>
+    <text id="1xj0SeztZ5dw4ls8" x="377" y="1745" width="510" height="30" zIndex="3" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="500" endTime="15000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" lineWrap="false">投资有风险，入市需谨慎。</text>
+    <text id="1xj0sErN0ol3r7JX" x="339" y="1570" width="404" height="30" zIndex="3" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="700" endTime="15000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#88CCFF" lineHeight="1" wordSpacing="0" lineWrap="false">数据来源：Wind 2022.05.27</text>
+    <chart id="1XJ0sEgaTocFJFN4" x="130" y="350" width="820" height="100" zIndex="5" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="700" endTime="15000" chartId="guosen_secum_digb" configSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_secum_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_secum_digb/ddcdata.json"/>
+    <chart id="1xj0sEyF3Qfpi88s" x="130" y="460" width="820" height="100" zIndex="5" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="1200" endTime="15000" chartId="guosen_securitilend_balance_digb" configSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_securitilend_balance_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_securitilend_balance_digb/ddcdata.json"/>
+    <chart id="1xj0sePjQhpzwtWH" x="130" y="570" width="820" height="100" zIndex="5" enterEffect-type="fadeInUp" enterEffect-duration="500" startTime="1700" endTime="15000" chartId="guosen_financing_balance_digb" configSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_financing_balance_digb/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_financing_balance_digb/ddcdata.json"/>
+    <chart id="1Xj0Sefxyo2jGgyD" x="67" y="761" width="946" height="812" zIndex="5" enterEffect-type="fadeIn" enterEffect-duration="500" exitEffect-type="fadeOut" exitEffect-duration="500" startTime="700" endTime="7700" chartId="guosen_securitilend_balance_line" configSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_securitilend_balance_line/ddcoptions.json" dataSrc="[object Object]"/>
+    <chart id="1xJ0sEVLaqPEtVmE" x="67" y="761" width="946" height="812" zIndex="5" enterEffect-type="fadeIn" enterEffect-duration="500" exitEffect-type="fadeOut" exitEffect-duration="500" startTime="8000" endTime="11000" chartId="guosen_secum_line" configSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_secum_line/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_secum_line/ddcdata.json"/>
+    <chart id="1Xj0Se2B7pff7MtI" x="67" y="761" width="946" height="812" zIndex="5" enterEffect-type="fadeIn" enterEffect-duration="500" startTime="11300" endTime="15000" chartId="guosen_financing_balance_line" configSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_financing_balance_line/ddcoptions.json" dataSrc="/avesto/plat/material/chartoptions/project/guosen/mtss/guosen_financing_balance_line/ddcdata.json"/>
+  </scene>
+</template>

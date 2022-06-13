@@ -164,13 +164,18 @@ var util_default = __spreadProps(__spreadValues({}, import_lodash.default), {
 var import_xmlbuilder24 = require("xmlbuilder2");
 
 // src/extension.ts
+var import_date_fns = require("date-fns");
 var vars = {
   "__UUID__": () => util_default.uuid(),
   "__UNIQID__": () => util_default.uniqid()
 };
 var functions = {
-  o2u: (v) => "json:" + JSON.stringify(v),
-  o2b: (v) => "base64:" + util_default.encodeBASE64(v)
+  o2j: (v) => "json:" + JSON.stringify(v),
+  o2b: (v) => "base64:" + util_default.encodeBASE64(v),
+  dateFormat(date, formatString) {
+    console.log(date, formatString);
+    return (0, import_date_fns.format)(date, formatString);
+  }
 };
 var extension_default = { vars, functions };
 

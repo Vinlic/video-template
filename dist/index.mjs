@@ -141,13 +141,18 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
 import { create as create4 } from "xmlbuilder2";
 
 // src/extension.ts
+import { format } from "date-fns";
 var vars = {
   "__UUID__": () => util_default.uuid(),
   "__UNIQID__": () => util_default.uniqid()
 };
 var functions = {
-  o2u: (v) => "json:" + JSON.stringify(v),
-  o2b: (v) => "base64:" + util_default.encodeBASE64(v)
+  o2j: (v) => "json:" + JSON.stringify(v),
+  o2b: (v) => "base64:" + util_default.encodeBASE64(v),
+  dateFormat(date, formatString) {
+    console.log(date, formatString);
+    return format(date, formatString);
+  }
 };
 var extension_default = { vars, functions };
 
