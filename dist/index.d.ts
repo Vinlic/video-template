@@ -37,7 +37,7 @@ declare class Parser {
     static parseJSONPreprocessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Template>;
     static parseSceneJSON(content: any, data?: {}, vars?: {}): Scene;
     static parseSceneJSONPreprocessing(content: any, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Scene>;
-    static parseXMLObject(xmlObject: any, dataObject?: any, varsObject?: any, data?: {}, vars?: {}): {
+    static parseXMLObject(xmlObject: any, varsObject?: any, dataObject?: any, data?: {}, vars?: {}): {
         completeObject: any;
         data: {};
         vars: {};
@@ -638,6 +638,7 @@ interface ITemplateOptions {
     updateTime?: number;
     buildBy?: string;
     compile?: boolean;
+    debug?: boolean;
     children?: (Scene | Element | ISceneOptions | IElementOptions)[];
 }
 

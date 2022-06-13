@@ -32,6 +32,7 @@ interface ITemplateOptions {
   updateTime?: number;
   buildBy?: string;
   compile?: boolean;
+  debug?: boolean;
   children?: (Scene | Element | ISceneOptions | IElementOptions)[];
 }
 

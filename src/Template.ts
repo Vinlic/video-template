@@ -38,7 +38,7 @@ class Template {
     public children: (Scene | Element)[] = []; //模板子节点
 
     public constructor(options: ITemplateOptions, data = {}, vars = {}, extendsScript = "") {
-        options.compile && (options = Compiler.compile(options, data, vars, extendsScript)); //如果模板属性包含compile则对模板进行编译处理
+        options.compile && (options = Compiler.compile(options, data, vars, extendsScript, options.debug)); //如果模板属性包含compile则对模板进行编译处理
         util.optionsInject(this, options, {
             type: () => 'template',
             id: (v: any) => util.defaultTo(Template.isId(v) ? v : undefined, util.uuid(false)),

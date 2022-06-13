@@ -168,12 +168,15 @@ var vars = {
   "__UUID__": () => util_default.uuid(),
   "__UNIQID__": () => util_default.uniqid()
 };
-var functions = {};
+var functions = {
+  o2u: (v) => "json:" + JSON.stringify(v),
+  o2b: (v) => "base64:" + util_default.encodeBASE64(v)
+};
 var extension_default = { vars, functions };
 
 // src/Compiler.ts
 var Compiler = class {
-  static compile(rawData, data = {}, valueMap = {}, extendsScript = "") {
+  static compile(rawData, data = {}, valueMap = {}, extendsScript = "", debug = false) {
     let extendsScriptCtx = {};
     if (util_default.isString(extendsScript) && extendsScript.length)
       extendsScriptCtx = Function(extendsScript)();
@@ -206,7 +209,7 @@ var Compiler = class {
             const { expression } = expressions[0];
             let result2;
             try {
-              result2 = this.eval(expression, data2, valueMap, extendsScriptCtx);
+              result2 = this.eval(expression, data2, valueMap, extendsScriptCtx, debug);
             } catch {
             }
             if (!result2) {
@@ -232,7 +235,7 @@ var Compiler = class {
             const { expression } = expressions[0];
             let result2;
             try {
-              result2 = this.eval(expression, data2, valueMap, extendsScriptCtx);
+              result2 = this.eval(expression, data2, valueMap, extendsScriptCtx, debug);
             } catch {
             }
             if (!result2) {
@@ -260,7 +263,7 @@ var Compiler = class {
           const { expression } = expressions[0];
           let list = [];
           try {
-            list = this.eval(expression, data2, valueMap, extendsScriptCtx);
+            list = this.eval(expression, data2, valueMap, extendsScriptCtx, debug);
           } catch {
           }
           if (util_default.isNumber(list)) {
@@ -295,7 +298,7 @@ var Compiler = class {
             if (extension_default.vars[expression.expression])
               expression.replace(result, extension_default.vars[expression.expression]());
             else
-              result = expression.replace(result, this.eval(expression.expression, data2, valueMap, extendsScriptCtx));
+              result = expression.replace(result, this.eval(expression.expression, data2, valueMap, extendsScriptCtx, debug));
           } catch {
             result = null;
           }
@@ -306,14 +309,15 @@ var Compiler = class {
     };
     return render(rawData, data);
   }
-  static eval(expression, data = {}, valueMap = {}, extendsScriptCtx = {}) {
+  static eval(expression, data = {}, valueMap = {}, extendsScriptCtx = {}, debug) {
     let result;
     const _data = __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions), extendsScriptCtx);
     const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
-      result = "";
+      debug && console.error(`expression ${expression} evaluate error:`, err);
+      result = null;
     }
     if (util_default.isString(result)) {
       const expressions = this.expressionsExtract(result);
@@ -321,7 +325,7 @@ var Compiler = class {
         return result;
       return expressions.reduce((_result, expression2) => {
         try {
-          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap), extendsScriptCtx));
+          _result = expression2.replace(_result, this.eval(expression2.expression, util_default.assign(data, valueMap), {}, extendsScriptCtx, debug));
         } catch (err) {
           _result = null;
         }
@@ -450,13 +454,13 @@ var Parser = class {
     const object = util_default.isString(content) ? JSON.parse(content) : content;
     if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
       const result = await dataProcessor(object.dataSrc);
-      util_default.isObject(result) && util_default.assign(data, result);
+      util_default.isObject(result) && util_default.merge(data, result);
     }
     if (util_default.isFunction(varsProcessor) && util_default.isString(object.varsSrc)) {
       const result = await varsProcessor(object.varsSrc);
-      util_default.isObject(result) && util_default.assign(data, result);
+      util_default.isObject(result) && util_default.merge(data, result);
     }
-    return new Template_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars2));
+    return new Template_default(object, util_default.merge(object.data || {}, data), util_default.merge(object.vars || {}, vars2));
   }
   static parseSceneJSON(content, data = {}, vars2 = {}) {
     return new Scene_default(util_default.isString(content) ? JSON.parse(content) : content, data, vars2);
@@ -465,15 +469,15 @@ var Parser = class {
     const object = util_default.isString(content) ? JSON.parse(content) : content;
     if (util_default.isFunction(dataProcessor) && util_default.isString(object.dataSrc)) {
       const result = await dataProcessor(object.dataSrc);
-      util_default.isObject(result) && util_default.assign(data, result);
+      util_default.isObject(result) && util_default.merge(data, result);
     }
     if (util_default.isFunction(varsProcessor) && util_default.isString(object.varsSrc)) {
       const result = await varsProcessor(object.varsSrc);
-      util_default.isObject(result) && util_default.assign(data, result);
+      util_default.isObject(result) && util_default.merge(data, result);
     }
-    return new Scene_default(object, util_default.assign(object.data || {}, data), util_default.assign(object.vars || {}, vars2));
+    return new Scene_default(object, util_default.merge(object.data || {}, data), util_default.merge(object.vars || {}, vars2));
   }
-  static parseXMLObject(xmlObject, dataObject, varsObject, data = {}, vars2 = {}) {
+  static parseXMLObject(xmlObject, varsObject, dataObject, data = {}, vars2 = {}) {
     function parse(obj, target = {}) {
       const type = Object.keys(obj)[0];
       target.type = type;
@@ -521,8 +525,8 @@ var Parser = class {
     }
     return {
       completeObject,
-      data: util_default.assign(_data, data),
-      vars: util_default.assign(_vars, vars2)
+      data: util_default.merge(_data, data),
+      vars: util_default.merge(_vars, vars2)
     };
   }
   static parseXML(content, data = {}, vars2 = {}) {
@@ -556,21 +560,21 @@ var Parser = class {
     });
     if (!xmlObject)
       throw new Error("template xml invalid");
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
     if (dataObject == null ? void 0 : dataObject[":@"]) {
       const attrs = dataObject[":@"];
       if (util_default.isFunction(dataProcessor) && attrs.source) {
         const result = await dataProcessor(attrs.source);
-        util_default.isObject(result) && util_default.assign(data, result);
+        util_default.isObject(result) && util_default.merge(_data, result);
       }
     }
     if (varsObject == null ? void 0 : varsObject[":@"]) {
       const attrs = varsObject[":@"];
       if (util_default.isFunction(varsProcessor) && attrs.source) {
         const result = await dataProcessor(attrs.source);
-        util_default.isObject(result) && util_default.assign(vars2, result);
+        util_default.isObject(result) && util_default.merge(_vars, result);
       }
     }
-    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
     return new Template_default(completeObject, _data, _vars, extendsScript);
   }
   static parseSceneXML(content, data = {}, vars2 = {}) {
@@ -588,7 +592,7 @@ var Parser = class {
     if (!xmlObject)
       throw new Error("template scene xml invalid");
     const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
-    return new Scene_default(completeObject, util_default.assign(_data, data), util_default.assign(_vars, vars2), extendsScript);
+    return new Scene_default(completeObject, util_default.merge(_data, data), util_default.merge(_vars, vars2), extendsScript);
   }
   static async parseSceneXMLPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
     let xmlObject, varsObject, dataObject, extendsScript;
@@ -604,21 +608,21 @@ var Parser = class {
     });
     if (!xmlObject)
       throw new Error("template scene xml invalid");
+    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
     if (dataObject == null ? void 0 : dataObject[":@"]) {
       const attrs = dataObject[":@"];
       if (util_default.isFunction(dataProcessor) && attrs.source) {
         const result = await dataProcessor(attrs.source);
-        util_default.isObject(result) && util_default.assign(data, result);
+        util_default.isObject(result) && util_default.merge(_data, result);
       }
     }
     if (varsObject == null ? void 0 : varsObject[":@"]) {
       const attrs = varsObject[":@"];
       if (util_default.isFunction(varsProcessor) && attrs.source) {
         const result = await dataProcessor(attrs.source);
-        util_default.isObject(result) && util_default.assign(vars2, result);
+        util_default.isObject(result) && util_default.merge(_vars, result);
       }
     }
-    const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
     return new Scene_default(completeObject, _data, _vars, extendsScript);
   }
   static parseElementJSON(content, data = {}, vars2 = {}, extendsScript = "") {
@@ -1450,7 +1454,7 @@ var _Element = class {
       endTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       fixedScale: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       trackId: (v) => util_default.isUndefined(v) || util_default.isString(v),
-      value: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      value: (v) => util_default.isUndefined(v) || util_default.isString(v) || v === null,
       children: (v) => util_default.isArray(v)
     });
   }
@@ -2801,7 +2805,7 @@ var _Template = class {
   buildBy = "";
   children = [];
   constructor(options, data = {}, vars2 = {}, extendsScript = "") {
-    options.compile && (options = Compiler_default.compile(options, data, vars2, extendsScript));
+    options.compile && (options = Compiler_default.compile(options, data, vars2, extendsScript, options.debug));
     util_default.optionsInject(this, options, {
       type: () => "template",
       id: (v) => util_default.defaultTo(_Template.isId(v) ? v : void 0, util_default.uuid(false)),

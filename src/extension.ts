@@ -12,7 +12,9 @@ const vars = {  //扩展变量
 
 const functions = {  //扩展函数
 
-    
+    o2u: (v: any) => "json:" + JSON.stringify(v),
+
+    o2b: (v: any) => "base64:" + util.encodeBASE64(v)
 
 } as any;
 

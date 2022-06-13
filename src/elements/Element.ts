@@ -142,7 +142,7 @@ class Element {
             endTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
             fixedScale: (v: any) => util.isUndefined(v) || util.isBoolean(v),
             trackId: (v: any) => util.isUndefined(v) || util.isString(v),
-            value: (v: any) => util.isUndefined(v) || util.isString(v),
+            value: (v: any) => util.isUndefined(v) || util.isString(v) || v === null,
             children: (v: any) => util.isArray(v),
         });
     }

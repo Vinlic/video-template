@@ -63,13 +63,13 @@ class Parser {
         const object = util.isString(content) ? JSON.parse(content) : content;
         if (util.isFunction(dataProcessor) && util.isString(object.dataSrc)) {
             const result = await dataProcessor(object.dataSrc);
-            util.isObject(result) && util.assign(data, result);
+            util.isObject(result) && util.merge(data, result);
         }
         if (util.isFunction(varsProcessor) && util.isString(object.varsSrc)) {
             const result = await varsProcessor(object.varsSrc);
-            util.isObject(result) && util.assign(data, result);
+            util.isObject(result) && util.merge(data, result);
         }
-        return new Template(object, util.assign(object.data || {}, data), util.assign(object.vars || {}, vars));
+        return new Template(object, util.merge(object.data || {}, data), util.merge(object.vars || {}, vars));
     }
 
     public static parseSceneJSON(content: any, data = {}, vars = {}) {
@@ -80,16 +80,16 @@ class Parser {
         const object = util.isString(content) ? JSON.parse(content) : content;
         if (util.isFunction(dataProcessor) && util.isString(object.dataSrc)) {
             const result = await dataProcessor(object.dataSrc);
-            util.isObject(result) && util.assign(data, result);
+            util.isObject(result) && util.merge(data, result);
         }
         if (util.isFunction(varsProcessor) && util.isString(object.varsSrc)) {
             const result = await varsProcessor(object.varsSrc);
-            util.isObject(result) && util.assign(data, result);
+            util.isObject(result) && util.merge(data, result);
         }
-        return new Scene(object, util.assign(object.data || {}, data), util.assign(object.vars || {}, vars));
+        return new Scene(object, util.merge(object.data || {}, data), util.merge(object.vars || {}, vars));
     }
 
-    public static parseXMLObject(xmlObject: any, dataObject?: any, varsObject?: any, data = {}, vars = {}) {
+    public static parseXMLObject(xmlObject: any, varsObject?: any, dataObject?: any, data = {}, vars = {}) {
         function parse(obj: any, target: any = {}) {
             const type = Object.keys(obj)[0];
             target.type = type;
@@ -131,8 +131,8 @@ class Parser {
         }
         return {
             completeObject,
-            data: util.assign(_data, data),
-            vars: util.assign(_vars, vars)
+            data: util.merge(_data, data),
+            vars: util.merge(_vars, vars)
         };
     }
 
@@ -158,21 +158,21 @@ class Parser {
             if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template xml invalid');
+        const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
         if (dataObject?.[':@']) {
             const attrs = dataObject[':@'] as any;
             if (util.isFunction(dataProcessor) && attrs.source) {
                 const result = await dataProcessor(attrs.source);
-                util.isObject(result) && util.assign(data, result);
+                util.isObject(result) && util.merge(_data, result);
             }
         }
         if (varsObject?.[':@']) {
             const attrs = varsObject[':@'] as any;
             if (util.isFunction(varsProcessor) && attrs.source) {
                 const result = await dataProcessor(attrs.source);
-                util.isObject(result) && util.assign(vars, result);
+                util.isObject(result) && util.merge(_vars, result);
             }
         }
-        const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
         return new Template(completeObject, _data, _vars, extendsScript);
     }
 
@@ -186,7 +186,7 @@ class Parser {
         });
         if (!xmlObject) throw new Error('template scene xml invalid');
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-        return new Scene(completeObject, util.assign(_data, data), util.assign(_vars, vars), extendsScript);
+        return new Scene(completeObject, util.merge(_data, data), util.merge(_vars, vars), extendsScript);
     }
 
     public static async parseSceneXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
@@ -198,21 +198,21 @@ class Parser {
             if (o.script) extendsScript = o;
         });
         if (!xmlObject) throw new Error('template scene xml invalid');
+        const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
         if (dataObject?.[':@']) {
             const attrs = dataObject[':@'] as any;
             if (util.isFunction(dataProcessor) && attrs.source) {
                 const result = await dataProcessor(attrs.source);
-                util.isObject(result) && util.assign(data, result);
+                util.isObject(result) && util.merge(_data, result);
             }
         }
         if (varsObject?.[':@']) {
             const attrs = varsObject[':@'] as any;
             if (util.isFunction(varsProcessor) && attrs.source) {
                 const result = await dataProcessor(attrs.source);
-                util.isObject(result) && util.assign(vars, result);
+                util.isObject(result) && util.merge(_vars, result);
             }
         }
-        const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
         return new Scene(completeObject, _data, _vars, extendsScript);
     }
 

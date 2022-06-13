@@ -9,9 +9,11 @@ class Compiler {
    * @param {Object} rawData 待编译数据
    * @param {Object} data 绑定数据
    * @param {Object} valueMap 值映射对象
+   * @param {String} extendsScript 扩展脚本
+   * @param {Boolean} debug 是否调试模式
    * @returns {Object} 编译过的数据
    */
-  public static compile(rawData: any, data = {}, valueMap = {}, extendsScript = "") {
+  public static compile(rawData: any, data = {}, valueMap = {}, extendsScript = "", debug = false) {
     let extendsScriptCtx = {};
     if(util.isString(extendsScript) && extendsScript.length)  //如果存在扩展脚本则缓存为上下文
       extendsScriptCtx = Function(extendsScript)();
@@ -46,7 +48,7 @@ class Compiler {
             const { expression } = expressions[0];
             let result;
             try {
-              result = this.eval(expression, data, valueMap, extendsScriptCtx);
+              result = this.eval(expression, data, valueMap, extendsScriptCtx, debug);
             } catch { } //尝试访问表达式指向的值
             if (!result) {
               //结果为假则抛弃节点并设置标识为假
@@ -74,7 +76,7 @@ class Compiler {
             const { expression } = expressions[0];
             let result;
             try {
-              result = this.eval(expression, data, valueMap, extendsScriptCtx);
+              result = this.eval(expression, data, valueMap, extendsScriptCtx, debug);
             } catch { } //尝试访问表达式指向的值
             if (!result) {
               //结果为假则抛弃节点并设置标识为假
@@ -102,7 +104,7 @@ class Compiler {
           const { expression } = expressions[0];
           let list = [];
           try {
-            list = this.eval(expression, data, valueMap, extendsScriptCtx);
+            list = this.eval(expression, data, valueMap, extendsScriptCtx, debug);
           } catch { } //尝试访问数组数据
           if (util.isNumber(list)) {
             //如果表达式返回值是数字则直接循环渲染节点指定个数
@@ -139,7 +141,7 @@ class Compiler {
             if (extension.vars[expression.expression])
               expression.replace(result, extension.vars[expression.expression]());
             else
-              result = expression.replace(result, this.eval(expression.expression, data, valueMap, extendsScriptCtx));
+              result = expression.replace(result, this.eval(expression.expression, data, valueMap, extendsScriptCtx, debug));
           } catch {
             result = null;
           }
@@ -158,14 +160,15 @@ class Compiler {
    * @param {Object} data 当前作用域数据
    * @returns {Any} 执行结果
    */
-  private static eval(expression: string, data = {}, valueMap = {}, extendsScriptCtx = {}) {
+  private static eval(expression: string, data = {}, valueMap = {}, extendsScriptCtx = {}, debug: boolean) {
     let result;
     const _data = { ...data, ...valueMap, ...extension.functions, ...extendsScriptCtx };
     const evalFun = Function(`const {${Object.keys(_data).join(',')}}=this;return ${expression}`); //将表达式和数据注入在方法内
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
-      result = '';
+      debug && console.error(`expression ${expression} evaluate error:`, err);
+      result = null;
     } //eval函数对象解构并执行表达式
     if (util.isString(result)) {
       //如果值中也包含了表达式也需要进行解析处理
@@ -173,7 +176,7 @@ class Compiler {
       if (!expressions || !expressions.length) return result; //如果不包含表达式则返回原值
       return expressions.reduce((_result: any, expression: any) => {
         try {
-          _result = expression.replace(_result, this.eval(expression.expression, util.assign(data, valueMap), extendsScriptCtx));
+          _result = expression.replace(_result, this.eval(expression.expression, util.assign(data, valueMap), {}, extendsScriptCtx, debug));
         } catch (err) {
           _result = null;
         } //替换表达式为值
