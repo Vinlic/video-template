@@ -187,7 +187,11 @@ class Element {
         return element;
     }
 
-    public renderOldXML(parent?: any, resources?: any, global?: any) {
+    public renderOldXML(parent?: any, resources?: any, global?: any, skip?: boolean) {
+        if(skip) {
+            this.children?.forEach((node) => Element.isInstance(node) && node.renderOldXML(parent, resources, global));
+            return parent;
+        }
         const attributes = {
             id: this.id,
             name: this.name,

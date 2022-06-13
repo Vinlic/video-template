@@ -172,10 +172,7 @@ var vars = {
 var functions = {
   o2j: (v) => "json:" + JSON.stringify(v),
   o2b: (v) => "base64:" + util_default.encodeBASE64(v),
-  dateFormat(date, formatString) {
-    console.log(date, formatString);
-    return (0, import_date_fns.format)(date, formatString);
-  }
+  dateFormat: (date, formatString, options) => (0, import_date_fns.format)(date, formatString, options)
 };
 var extension_default = { vars, functions };
 
@@ -1497,8 +1494,12 @@ var _Element = class {
     (_v = this.children) == null ? void 0 : _v.forEach((node) => _Element.isInstance(node) && node.renderXML(element));
     return element;
   }
-  renderOldXML(parent, resources, global) {
-    var _a, _b, _c, _d, _e, _f, _g;
+  renderOldXML(parent, resources, global, skip) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    if (skip) {
+      (_a = this.children) == null ? void 0 : _a.forEach((node) => _Element.isInstance(node) && node.renderOldXML(parent, resources, global));
+      return parent;
+    }
     const attributes = {
       id: this.id,
       name: this.name,
@@ -1509,10 +1510,10 @@ var _Element = class {
       index: this.zIndex,
       rotate: this.rotate,
       opacity: this.opacity,
-      animationIn: (_b = (_a = this.enterEffect) == null ? void 0 : _a.type) != null ? _b : void 0,
-      animationInDuration: ((_c = this.enterEffect) == null ? void 0 : _c.duration) ? util_default.millisecondsToSenconds(this.enterEffect.duration) : void 0,
-      animationOut: (_e = (_d = this.exitEffect) == null ? void 0 : _d.type) != null ? _e : void 0,
-      animationOutDuration: ((_f = this.exitEffect) == null ? void 0 : _f.duration) ? util_default.millisecondsToSenconds(this.exitEffect.duration) : void 0,
+      animationIn: (_c = (_b = this.enterEffect) == null ? void 0 : _b.type) != null ? _c : void 0,
+      animationInDuration: ((_d = this.enterEffect) == null ? void 0 : _d.duration) ? util_default.millisecondsToSenconds(this.enterEffect.duration) : void 0,
+      animationOut: (_f = (_e = this.exitEffect) == null ? void 0 : _e.type) != null ? _f : void 0,
+      animationOutDuration: ((_g = this.exitEffect) == null ? void 0 : _g.duration) ? util_default.millisecondsToSenconds(this.exitEffect.duration) : void 0,
       strokeStyle: this.strokeStyle,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
@@ -1548,7 +1549,7 @@ var _Element = class {
         [ElementTypes_default.Vtuber]: "vtuber"
       }[this.type], attributes);
     }
-    (_g = this.children) == null ? void 0 : _g.forEach((node) => _Element.isInstance(node) && node.renderOldXML(element, resources, global));
+    (_h = this.children) == null ? void 0 : _h.forEach((node) => _Element.isInstance(node) && node.renderOldXML(element, resources, global));
     return element;
   }
   toXML(pretty = false) {
@@ -2420,6 +2421,9 @@ var Chart_default = Chart;
 var Group = class extends Element_default {
   constructor(options, type = ElementTypes_default.Group, ...values) {
     super(options, type, ...values);
+  }
+  renderOldXML(parent, resources, global) {
+    return super.renderOldXML(parent, resources, global, true);
   }
   static isInstance(value) {
     return value instanceof Group;

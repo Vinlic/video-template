@@ -338,6 +338,7 @@ interface IGroupOptions extends IElementOptions {
 
 declare class Group extends Element {
     constructor(options: IGroupOptions, type?: ElementTypes, ...values: any[]);
+    renderOldXML(parent: any, resources: any, global: any): any;
     static isInstance(value: any): boolean;
 }
 
@@ -547,7 +548,7 @@ declare class Element {
     absoluteEndTime?: number;
     constructor(options: IElementOptions, type?: ElementTypes, data?: {}, vars?: {});
     renderXML(parent?: any): any;
-    renderOldXML(parent?: any, resources?: any, global?: any): any;
+    renderOldXML(parent?: any, resources?: any, global?: any, skip?: boolean): any;
     toXML(pretty?: boolean): any;
     toOldXML(pretty?: boolean): any;
     static parse(content: any, data?: {}, vars?: {}): Element;

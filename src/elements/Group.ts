@@ -9,6 +9,10 @@ class Group extends Element {
         super(options, type, ...values);
     }
 
+    public renderOldXML(parent: any, resources: any, global: any) {
+        return super.renderOldXML(parent, resources, global, true);
+    }
+
     public static isInstance(value: any) {
         return value instanceof Group;
     }
