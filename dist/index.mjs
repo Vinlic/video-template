@@ -157,8 +157,10 @@ var extension_default = { vars, functions };
 var Compiler = class {
   static compile(rawData, data = {}, valueMap = {}, extendsScript = "", debug = false) {
     let extendsScriptCtx = {};
-    if (util_default.isString(extendsScript) && extendsScript.length)
-      extendsScriptCtx = Function(extendsScript)();
+    if (util_default.isString(extendsScript) && extendsScript.length) {
+      const _data = __spreadValues(__spreadValues({}, data), valueMap);
+      extendsScriptCtx = Function(`const {${Object.keys(_data).join(",")}}=this;${extendsScript}`).bind(_data)();
+    }
     const render = (value, data2 = {}, scope = {}) => {
       if (util_default.isObject(value)) {
         if (util_default.isArray(value)) {

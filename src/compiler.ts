@@ -15,8 +15,10 @@ class Compiler {
    */
   public static compile(rawData: any, data = {}, valueMap = {}, extendsScript = "", debug = false) {
     let extendsScriptCtx = {};
-    if(util.isString(extendsScript) && extendsScript.length)  //如果存在扩展脚本则缓存为上下文
-      extendsScriptCtx = Function(extendsScript)();
+    if(util.isString(extendsScript) && extendsScript.length) {  //如果存在扩展脚本则缓存为上下文
+      const _data = { ...data, ...valueMap };
+      extendsScriptCtx = Function(`const {${Object.keys(_data).join(',')}}=this;${extendsScript}`).bind(_data)();
+    }
     const render = (value: any, data = {}, scope: any = {}): any => {
       if (util.isObject(value)) {
         if (util.isArray(value)) {
