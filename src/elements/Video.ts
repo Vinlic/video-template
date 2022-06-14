@@ -19,7 +19,10 @@ class Video extends Media {
             crop: (v: any) => util.isUndefined(v) || Crop.isInstance(v),
             demuxSrc: (v: any) => util.isUndefined(v) || util.isString(v)
         });
-        if(this.isBackground) this.endTime = undefined;  //背景视频禁用退场时间点
+        if (this.isBackground) {  //背景视频禁用退场时间点和退场动效
+            this.endTime = undefined;
+            this.exitEffect = undefined;
+        }
     }
 
     /**

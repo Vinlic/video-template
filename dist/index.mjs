@@ -1963,8 +1963,10 @@ var _Image = class extends Element_default {
       dynamic: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       filter: (v) => util_default.isUndefined(v) || util_default.isObject(v)
     });
-    if (this.isBackground)
+    if (this.isBackground) {
       this.endTime = void 0;
+      this.exitEffect = void 0;
+    }
   }
   renderXML(parent) {
     const image = super.renderXML(parent);
@@ -2191,8 +2193,10 @@ var Video = class extends Media_default {
       crop: (v) => util_default.isUndefined(v) || Crop_default.isInstance(v),
       demuxSrc: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });
-    if (this.isBackground)
+    if (this.isBackground) {
       this.endTime = void 0;
+      this.exitEffect = void 0;
+    }
   }
   renderXML(parent) {
     const video = super.renderXML(parent);

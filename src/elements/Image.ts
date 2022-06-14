@@ -35,7 +35,10 @@ class Image extends Element {
             dynamic: (v: any) => util.isUndefined(v) || util.isBoolean(v),
             filter: (v: any) => util.isUndefined(v) || util.isObject(v),
         });
-        if (this.isBackground) this.endTime = undefined;  //背景图片禁用退场时间点
+        if (this.isBackground) {  //背景图片禁用退场时间点和退场动效
+            this.endTime = undefined;
+            this.exitEffect = undefined;
+        }
     }
 
     /**
