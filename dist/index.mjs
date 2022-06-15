@@ -161,8 +161,8 @@ var Compiler = class {
   static compile(rawData, data = {}, valueMap = {}, extendsScript = "", debug = false) {
     let extendsScriptCtx = {};
     if (util_default.isString(extendsScript) && extendsScript.length) {
-      const _data = __spreadValues(__spreadValues({}, data), valueMap);
-      extendsScriptCtx = Function(`const {${Object.keys(_data).join(",")}}=this;${extendsScript}`).bind(_data)();
+      const _data = __spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions);
+      extendsScriptCtx = Function(`const {${Object.keys(_data).join(",")}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`).bind(_data)();
     }
     const render = (value, data2 = {}, scope = {}) => {
       if (util_default.isObject(value)) {
@@ -297,7 +297,7 @@ var Compiler = class {
   static eval(expression, data = {}, valueMap = {}, extendsScriptCtx = {}, debug) {
     let result;
     const _data = __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions), extendsScriptCtx);
-    const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression}`);
+    const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`);
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
@@ -516,7 +516,7 @@ var Parser = class {
   }
   static parseXML(content, data = {}, vars2 = {}) {
     let xmlObject, varsObject, dataObject, extendsScript = "";
-    xmlParser.parse(content).forEach((o) => {
+    xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o) => {
       if (o.template)
         xmlObject = o;
       if (o.vars)
@@ -533,7 +533,7 @@ var Parser = class {
   }
   static async parseXMLPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
     let xmlObject, varsObject, dataObject, extendsScript = "";
-    xmlParser.parse(content).forEach((o) => {
+    xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o) => {
       if (o.template)
         xmlObject = o;
       if (o.vars)
@@ -564,7 +564,7 @@ var Parser = class {
   }
   static parseSceneXML(content, data = {}, vars2 = {}) {
     let xmlObject, varsObject, dataObject, extendsScript;
-    xmlParser.parse(content).forEach((o) => {
+    xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o) => {
       if (o.scene)
         xmlObject = o;
       if (o.vars)
@@ -581,7 +581,7 @@ var Parser = class {
   }
   static async parseSceneXMLPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
     let xmlObject, varsObject, dataObject, extendsScript;
-    xmlParser.parse(content).forEach((o) => {
+    xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o) => {
       if (o.scene)
         xmlObject = o;
       if (o.vars)
@@ -614,7 +614,7 @@ var Parser = class {
     return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content, data, vars2, extendsScript);
   }
   static parseElementXML(content, data = {}, vars2 = {}, extendsScript = "") {
-    const xmlObject = xmlParser.parse(content)[0];
+    const xmlObject = xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$"))[0];
     if (!xmlObject)
       throw new Error("template element xml invalid");
     const { completeObject } = this.parseXMLObject(xmlObject);

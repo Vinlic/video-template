@@ -16,8 +16,8 @@ class Compiler {
   public static compile(rawData: any, data = {}, valueMap = {}, extendsScript = "", debug = false) {
     let extendsScriptCtx = {};
     if(util.isString(extendsScript) && extendsScript.length) {  //如果存在扩展脚本则缓存为上下文
-      const _data = { ...data, ...valueMap };
-      extendsScriptCtx = Function(`const {${Object.keys(_data).join(',')}}=this;${extendsScript}`).bind(_data)();
+      const _data = { ...data, ...valueMap, ...extension.functions };
+      extendsScriptCtx = Function(`const {${Object.keys(_data).join(',')}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`).bind(_data)();
     }
     const render = (value: any, data = {}, scope: any = {}): any => {
       if (util.isObject(value)) {
@@ -166,7 +166,7 @@ class Compiler {
   private static eval(expression: string, data = {}, valueMap = {}, extendsScriptCtx = {}, debug: boolean) {
     let result;
     const _data = { ...data, ...valueMap, ...extension.functions, ...extendsScriptCtx };
-    const evalFun = Function(`const {${Object.keys(_data).join(',')}}=this;return ${expression}`); //将表达式和数据注入在方法内
+    const evalFun = Function(`const {${Object.keys(_data).join(',')}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`); //将表达式和数据注入在方法内
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
