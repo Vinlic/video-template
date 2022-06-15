@@ -314,8 +314,8 @@ declare class Canvas extends Element {
     chartId: string;
     configSrc: string;
     dataSrc: string;
-    config: null;
-    data: null;
+    config: any;
+    data: any;
     duration?: number;
     poster?: string;
     constructor(options: ICanvasOptions, type?: ElementTypes, ...values: any[]);
