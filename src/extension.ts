@@ -18,7 +18,11 @@ const functions = {  //扩展函数
 
     o2b: (v: any) => "base64:" + util.encodeBASE64(v),
 
-    dateFormat: (date: any, formatString: string, options: any) => format(date, formatString, options)
+    dateFormat: (date: any, formatString: string, options: any) => format(date, formatString, options),
+
+    gt: (v1: any, v2: any) => v1 > v2,
+
+    lt: (v1: any, v2: any) => v1 < v2
 
 } as any;
 

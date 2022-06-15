@@ -17,7 +17,7 @@ class Compiler {
     let extendsScriptCtx = {};
     if(util.isString(extendsScript) && extendsScript.length) {  //如果存在扩展脚本则缓存为上下文
       const _data = { ...data, ...valueMap, ...extension.functions };
-      extendsScriptCtx = Function(`const {${Object.keys(_data).join(',')}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`).bind(_data)();
+      extendsScriptCtx = Function(`const {${Object.keys(_data).join(',')}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/g, ">")}`).bind(_data)();
     }
     const render = (value: any, data = {}, scope: any = {}): any => {
       if (util.isObject(value)) {
