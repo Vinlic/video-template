@@ -2363,6 +2363,8 @@ var Canvas = class extends Element_default {
       this.data = JSON.parse(util_default.decodeBASE64(this.dataSrc.substring(7)));
     else if (/^json\:/.test(this.dataSrc))
       this.data = JSON.parse(this.dataSrc.substring(5));
+    if (this.data)
+      this.data.data = this.data.data || this.data.series || [];
   }
   renderXML(parent) {
     const canvas = super.renderXML(parent);

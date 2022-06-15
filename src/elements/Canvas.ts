@@ -9,8 +9,8 @@ class Canvas extends Element {
     public chartId = ''; //图表唯一ID
     public configSrc = ''; //画布配置路径
     public dataSrc = ''; //画布数据路径
-    public config = null;  //画布配置
-    public data = null;  //画布数据
+    public config: any = null;  //画布配置
+    public data: any = null;  //画布数据
     public duration?: number; //画布播放时长
     public poster?: string;  //画布封面图
 
@@ -33,6 +33,7 @@ class Canvas extends Element {
             this.data = JSON.parse(util.decodeBASE64(this.dataSrc.substring(7)));
         else if(/^json\:/.test(this.dataSrc))
             this.data = JSON.parse(this.dataSrc.substring(5));
+        if(this.data) this.data.data = this.data.data || this.data.series || [];  //数据兼容处理
     }
 
     /**
