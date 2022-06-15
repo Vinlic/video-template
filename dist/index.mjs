@@ -152,7 +152,9 @@ var vars = {
 var functions = {
   o2j: (v) => "json:" + JSON.stringify(v),
   o2b: (v) => "base64:" + util_default.encodeBASE64(v),
-  dateFormat: (date, formatString, options) => format(date, formatString, options)
+  dateFormat: (date, formatString, options) => format(date, formatString, options),
+  gt: (v1, v2) => v1 > v2,
+  lt: (v1, v2) => v1 < v2
 };
 var extension_default = { vars, functions };
 
@@ -162,7 +164,7 @@ var Compiler = class {
     let extendsScriptCtx = {};
     if (util_default.isString(extendsScript) && extendsScript.length) {
       const _data = __spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions);
-      extendsScriptCtx = Function(`const {${Object.keys(_data).join(",")}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`).bind(_data)();
+      extendsScriptCtx = Function(`const {${Object.keys(_data).join(",")}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/g, ">")}`).bind(_data)();
     }
     const render = (value, data2 = {}, scope = {}) => {
       if (util_default.isObject(value)) {
