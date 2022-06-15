@@ -15,7 +15,10 @@ export default {
       if (/^\_/.test(key)) return;
       let value = options[key];
       if (this.isFunction(initializers[key])) value = initializers[key](value);
-      if (this.isFunction(checkers[key]) && !checkers[key](value)) throw new Error(`parameter ${key} invalid`);
+      if (this.isFunction(checkers[key]) && !checkers[key](value)) {
+        console.warn("parameter value:", value);
+        throw new Error(`parameter ${key} invalid`);
+      };
       if ((!this.isFunction(initializers[key]) && !this.isFunction(checkers[key])) || this.isUndefined(value)) return;
       if (this.isSymbol(that[key]) && !this.isSymbol(value)) return;
       that[key] = value;

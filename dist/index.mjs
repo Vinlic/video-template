@@ -62,8 +62,11 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
       let value = options[key];
       if (this.isFunction(initializers[key]))
         value = initializers[key](value);
-      if (this.isFunction(checkers[key]) && !checkers[key](value))
+      if (this.isFunction(checkers[key]) && !checkers[key](value)) {
+        console.warn("parameter value:", value);
         throw new Error(`parameter ${key} invalid`);
+      }
+      ;
       if (!this.isFunction(initializers[key]) && !this.isFunction(checkers[key]) || this.isUndefined(value))
         return;
       if (this.isSymbol(that[key]) && !this.isSymbol(value))
@@ -278,10 +281,11 @@ var Compiler = class {
           try {
             if (extension_default.vars[expression.expression])
               expression.replace(result, extension_default.vars[expression.expression]());
-            else
+            else {
               result = expression.replace(result, this.eval(expression.expression, data2, valueMap, extendsScriptCtx, debug));
-          } catch {
-            result = null;
+            }
+          } catch (err) {
+            debug && console.error(`expression ${expression} value replace error:`, err);
           }
           return result;
         }, value);
@@ -318,13 +322,13 @@ var Compiler = class {
   static expressionsExtract(value) {
     if (util_default.isUndefined(value) || value == null)
       return null;
-    const match = value.toString().match(/(?<={{)[^}]*(?=}})/g);
+    const match = value.toString().match(/(?<={{).*?(?=}})/g);
     if (!match)
       return [];
     const list = match;
     return Array.from(new Set(list)).map((expression) => {
       return {
-        expression: expression.replace(/\$\#/g, "{").replace(/\#\$/g, "}"),
+        expression,
         replace: (oldValue, newValue) => {
           if (util_default.isUndefined(newValue) || newValue == null)
             return oldValue.replace(new RegExp(`\\{\\{${util_default.escapeRegExp(expression)}\\}\\}`, "g"), "") || null;

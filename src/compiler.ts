@@ -142,10 +142,11 @@ class Compiler {
           try {
             if (extension.vars[expression.expression])
               expression.replace(result, extension.vars[expression.expression]());
-            else
+            else {
               result = expression.replace(result, this.eval(expression.expression, data, valueMap, extendsScriptCtx, debug));
-          } catch {
-            result = null;
+            }
+          } catch(err) {
+            debug && console.error(`expression ${expression} value replace error:`, err);
           }
           return result;
         }, value); //表达式全部替换并返回替换后的值
@@ -197,13 +198,13 @@ class Compiler {
   private static expressionsExtract(value: any) {
     //如果表达式值不存在则返回空
     if (util.isUndefined(value) || value == null) return null;
-    const match = value.toString().match(/(?<={{)[^}]*(?=}})/g); //匹配所有的表达式
+    const match = value.toString().match(/(?<={{).*?(?=}})/g); //匹配所有的表达式
     //不存在表达式则返回空数组
     if (!match) return [];
     const list: string[] = match;
     return Array.from(new Set(list)).map((expression: any) => {
       return {
-        expression: expression.replace(/\$\#/g, "{").replace(/\#\$/g, "}"), //被提取表达式
+        expression, //被提取表达式
         replace: (oldValue: string, newValue: string) => {
           //如果新值为空或未定义则返回空
           if (util.isUndefined(newValue) || newValue == null)
