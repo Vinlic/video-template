@@ -30,7 +30,7 @@ const { Template } = require("../dist");
 
     const template = await Template.parseAndProcessing(templateContent, {}, {}, async source => {
         if(!source) return;
-        const result = await axios.get("http://192.168.1.208:18085/ave-vdtapi-server" + source, { timeout: 60000 });
+        const result = await axios.get(source, { timeout: 60000 });
         if(result.status !== 200) throw new Error("data source request error: " + result.statusText);
         const { code, msg, data } = result.data;
         if(code !== 0) throw new Error("data source response error: " + msg);
