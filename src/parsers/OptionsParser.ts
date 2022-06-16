@@ -134,6 +134,7 @@ class OptionsParser {
                     effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1000 : undefined,
                     effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1000 : undefined,
                     styleType: options.styleType === "" ? undefined : options.styleType,
+                    isSubtitle: options.isSubtitle,
                     textShadow: util.omitBy(options.textShadow, v => util.isNil(v) || v === 0 || v === ""),
                     textStroke: util.omitBy(options.textStroke, v => util.isNil(v) || v === 0 || v === ""),
                     textBackground: options.textBackground === "" ? undefined : options.textBackground,

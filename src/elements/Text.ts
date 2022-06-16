@@ -19,6 +19,7 @@ class Text extends Element {
     public effectWordDuration?: number; //文本单字动效时长
     public effectWordInterval?: number; //文本单字间隔
     public styleType?: string;  //文本风格类型
+    public isSubtitle = false;  //文本是否字幕
     public textShadow: any = {};  //文本阴影对象
     public textStroke: any = {};  //文本描边对象
     public textBackground: any = {};  //文本背景对象
@@ -34,6 +35,7 @@ class Text extends Element {
             lineHeight: (v: any) => Number(util.defaultTo(v, 1)),
             wordSpacing: (v: any) => Number(util.defaultTo(v, 0)),
             lineWrap: (v: any) => util.defaultTo(util.booleanParse(v), true),
+            isSubtitle: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : v,
             effectWordDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             effectWordInterval: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             fillColorIntension: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
@@ -50,6 +52,7 @@ class Text extends Element {
             effectType: (v: any) => util.isUndefined(v) || util.isString(v),
             effectWordDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
             effectWordInterval: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            isSubtitle: (v: any) => util.isUndefined(v) || util.isBoolean(v),
             styleType: (v: any) => util.isUndefined(v) || util.isString(v),
             textShadow: (v: any) => util.isUndefined(v) || util.isObject(v),
             textStroke: (v: any) => util.isUndefined(v) || util.isObject(v),
@@ -79,6 +82,7 @@ class Text extends Element {
         text.att('effectType', this.effectType);
         text.att('effectWordDuration', this.effectWordDuration);
         text.att('effectWordInterval', this.effectWordInterval);
+        text.att('isSubtitle', this.isSubtitle);
         text.att('styleType', this.styleType);
         for(let key in this.textShadow) {
             const value = this.textShadow[key];
@@ -111,6 +115,7 @@ class Text extends Element {
         caption.att('effectType', this.effectType);
         caption.att('effectWordDuration', util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration!) : undefined);
         caption.att('effectWordInterval', util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval!) : undefined);
+        caption.att('isSubtitle', this.isSubtitle);
         caption.att('styleType', this.styleType);
         for(let key in this.textShadow) {
             const value = this.textShadow[key];
@@ -135,6 +140,7 @@ class Text extends Element {
         const parentOptions = super.toOptions();
         return {
             ...parentOptions,
+            elementType: this.isSubtitle ? "subtitle" : this.type,
             content: this.value,
             fontSize: this.fontSize,
             fontColor: this.fontColor,
@@ -144,6 +150,7 @@ class Text extends Element {
             wordSpacing: this.wordSpacing,
             bold: this.fontWeight > 400 ? this.fontWeight : undefined,
             italic: this.fontStyle === "italic" ? "italic" : "normal",
+            isSubtitle: this.isSubtitle,
             effectType: this.effectType,
             effectWordDuration: util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration as number) : undefined,
             effectWordInterval: util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval as number) : undefined,

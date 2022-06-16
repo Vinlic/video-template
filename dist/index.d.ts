@@ -104,6 +104,7 @@ interface ITextOptions extends IElementOptions {
     effectType?: string;
     effectWordDuration?: number | string;
     effectWordInterval?: number | string;
+    isSubtitle?: boolean | string;
     styleType?: string;
     textShadow?: any;
     textStroke?: any;
@@ -126,6 +127,7 @@ declare class Text extends Element {
     effectWordDuration?: number;
     effectWordInterval?: number;
     styleType?: string;
+    isSubtitle: boolean;
     textShadow: any;
     textStroke: any;
     textBackground: any;
@@ -644,6 +646,7 @@ interface ITemplateOptions {
 }
 
 declare class Template {
+    static readonly packageVersion = "1.1.61";
     static readonly type = "template";
     type: string;
     id: string;

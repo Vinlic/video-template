@@ -1141,6 +1141,7 @@ var OptionsParser = class {
           effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1e3 : void 0,
           effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1e3 : void 0,
           styleType: options.styleType === "" ? void 0 : options.styleType,
+          isSubtitle: options.isSubtitle,
           textShadow: util_default.omitBy(options.textShadow, (v) => util_default.isNil(v) || v === 0 || v === ""),
           textStroke: util_default.omitBy(options.textStroke, (v) => util_default.isNil(v) || v === 0 || v === ""),
           textBackground: options.textBackground === "" ? void 0 : options.textBackground,
@@ -1782,6 +1783,7 @@ var Text = class extends Element_default {
   effectWordDuration;
   effectWordInterval;
   styleType;
+  isSubtitle = false;
   textShadow = {};
   textStroke = {};
   textBackground = {};
@@ -1796,6 +1798,7 @@ var Text = class extends Element_default {
       lineHeight: (v) => Number(util_default.defaultTo(v, 1)),
       wordSpacing: (v) => Number(util_default.defaultTo(v, 0)),
       lineWrap: (v) => util_default.defaultTo(util_default.booleanParse(v), true),
+      isSubtitle: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : v,
       effectWordDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       effectWordInterval: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       fillColorIntension: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
@@ -1812,6 +1815,7 @@ var Text = class extends Element_default {
       effectType: (v) => util_default.isUndefined(v) || util_default.isString(v),
       effectWordDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       effectWordInterval: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      isSubtitle: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       styleType: (v) => util_default.isUndefined(v) || util_default.isString(v),
       textShadow: (v) => util_default.isUndefined(v) || util_default.isObject(v),
       textStroke: (v) => util_default.isUndefined(v) || util_default.isObject(v),
@@ -1835,6 +1839,7 @@ var Text = class extends Element_default {
     text.att("effectType", this.effectType);
     text.att("effectWordDuration", this.effectWordDuration);
     text.att("effectWordInterval", this.effectWordInterval);
+    text.att("isSubtitle", this.isSubtitle);
     text.att("styleType", this.styleType);
     for (let key in this.textShadow) {
       const value = this.textShadow[key];
@@ -1866,6 +1871,7 @@ var Text = class extends Element_default {
     caption.att("effectType", this.effectType);
     caption.att("effectWordDuration", util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0);
     caption.att("effectWordInterval", util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0);
+    caption.att("isSubtitle", this.isSubtitle);
     caption.att("styleType", this.styleType);
     for (let key in this.textShadow) {
       const value = this.textShadow[key];
@@ -1888,6 +1894,7 @@ var Text = class extends Element_default {
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
+      elementType: this.isSubtitle ? "subtitle" : this.type,
       content: this.value,
       fontSize: this.fontSize,
       fontColor: this.fontColor,
@@ -1897,6 +1904,7 @@ var Text = class extends Element_default {
       wordSpacing: this.wordSpacing,
       bold: this.fontWeight > 400 ? this.fontWeight : void 0,
       italic: this.fontStyle === "italic" ? "italic" : "normal",
+      isSubtitle: this.isSubtitle,
       effectType: this.effectType,
       effectWordDuration: util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0,
       effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0,
@@ -3026,6 +3034,7 @@ var _Template = class {
   }
 };
 var Template = _Template;
+__publicField(Template, "packageVersion", "1.1.61");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
