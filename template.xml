@@ -33,7 +33,7 @@ return {
     <text id="1Xj0seMGCaPoDvCi" x="285" y="1695" width="530" height="30" zIndex="2" rotate="0" opacity="1" enterEffect-type="fadeInUp" enterEffect-duration="500" backgroundColor="" startTime="500" endTime="5000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="left" lineWrap="false" styleType="default">以上内容为行情数据，不属投资建议。</text>
     <text id="1Xj0SeBkgcqiNahw" x="377" y="1745" width="530" height="30" zIndex="3" rotate="0" opacity="1" enterEffect-type="fadeInUp" enterEffect-duration="500" backgroundColor="" startTime="500" endTime="5000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="left" lineWrap="false" styleType="default">投资有风险，入市需谨慎。</text>
   </scene>
-  <scene id="1xj0Se7joYtQO1Lk" poster="" width="1080" height="1920" aspectRatio="9:16" duration="15000" backgroundColor="" transition-type="circleopen" transition-duration="300">
+  <scene id="1xj0Se7joYtQO1Lk" poster="" width="1080" height="1920" aspectRatio="9:16" duration="10000" backgroundColor="" transition-type="circleopen" transition-duration="300">
     <video id="1XJ0segUjoU4GXWC" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="{{dateTts}}沪深两市融资融券余额规模为{{texts[0].total}}万亿元，环比{{n2t(texts[0].huanbi)}}{{texts[0].huanbi}}。其中融资余额{{texts[0].financing}}亿，融券余额{{texts[0].securitiesLoan}}亿。" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
@@ -132,7 +132,7 @@ return {
     <video id="1XKxykVL8Wvknakn" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="融券余额涨幅前三的行业依序为{{texts[4].industry}}，融券余额涨幅为正，说明看空的人增加，{{texts[3].total>0?`前十的行业中,有${texts[3].total}支下跌`:'但前十的行业中，没有下跌行业'}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>融券余额涨幅前三的行业依序为{{texts[4].industry}}，融券余额涨幅为正，说明看空的人增加，{{texts[3].total>0?`前十的行业中,有${texts[3].total}支下跌`:'但前十的行业中，没有下跌行业'}}</p>
@@ -155,7 +155,7 @@ return {
     <video id="1xKY2vcMfoER4FSv" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="个股方面，{{texts[5].industry}}位于融资净买入额前三，在融资净买入额前十的股票中，{{texts[5].total>0?`有${texts[5].total}支上涨`:'没有上涨个股'}}。" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>个股方面，{{texts[5].industry}}位于融资净买入额前三，在融资净买入额前十的股票中，{{texts[5].total>0?`有${texts[5].total}支上涨`:'没有上涨个股'}}。</p>
@@ -177,7 +177,7 @@ return {
     <video id="1XkYb3Gj6ILbN1iq" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="融券余额增幅前十的个股中，{{texts[6].industry}}增幅居前，当日涨跌分别为{{texts[6].zhangdie}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>融券余额增幅前十的个股中，{{texts[6].industry}}增幅居前，当日涨跌分别为{{texts[6].zhangdie}}</p>
@@ -201,7 +201,7 @@ return {
     <video id="1xKyGzVTkDECleP4" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="ETF基金方面，融资净买入额排名前三的ETF分别是{{texts[7].ETF}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>ETF基金方面，融资净买入额排名前三的ETF分别是{{texts[7].ETF}}</p>
@@ -224,7 +224,7 @@ return {
     <video id="1XKyn8Ch4qldGjXu" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="近一周被调入标的证券为{{texts[8].security}}{{texts[8].x>4?`等${texts[8].x}只标的。`:'。'}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>近一周被调入标的证券为{{texts[8].security}}{{texts[8].x>4?`等${texts[8].x}只标的。`:'。'}}</p>
@@ -245,7 +245,7 @@ return {
     <video id="1XKyn8Ch4qldGjXu" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="近一周被调出标的证券为{{texts[9].security}}{{texts[9].x>4?`等${texts[9].x}只标的。`:'。'}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>近一周被调出标的证券为{{texts[9].security}}{{texts[9].x>4?`等${texts[9].x}只标的。`:'。'}}</p>
@@ -270,7 +270,7 @@ return {
     <video id="1xJ0se1OpjEk1xcp" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="近一个月，融资净买入额前三行业依序为{{texts[10].industry}}，排名前十的行业，{{texts[10].total>0?`共有{{texts[10].total}}个行业上涨。`:'没有上涨行业'}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>近一个月，融资净买入额前三行业依序为{{texts[10].industry}}，排名前十的行业，{{texts[10].total>0?`共有${texts[10].total}个行业上涨。`:'没有上涨行业'}}</p>
@@ -293,7 +293,7 @@ return {
     <video id="1xKY2vcMfoER4FSv" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="近一个月，{{texts[11].security}}居融资净买入额前三，涨跌幅分别为{{texts[11].zhangdie}}，融资净买入额前十的股票中，{{texts[11].total>0?`有${texts[11].total}支上涨。`:'没有上涨个股'}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>近一个月，{{texts[11].security}}居融资净买入额前三，涨跌幅分别为{{texts[11].zhangdie}}，融资净买入额前十的股票中，{{texts[11].total>0?`有${texts[11].total}支上涨。`:'没有上涨个股'}}</p>
@@ -317,7 +317,7 @@ return {
     <video id="1XJ0sE4GA2hHbHda" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="融资余额排名前三的行业有：{{texts[1].industry}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>融资余额排名前三的行业有：{{texts[1].industry}}</p>
@@ -339,7 +339,7 @@ return {
     <video id="1Xj0sEc5U6SpeC4y" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" exitEffect-type="fadeOut" exitEffect-duration="500" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
     <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="融券余额方面，{{texts[2].industry}}等行业居融券余额前三。" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak  provider="aliyun">
           <voice name="aixia">
             <prosody contenteditable="true" rate="1">
               <p>融券余额方面，{{texts[2].industry}}等行业居融券余额前三。</p>

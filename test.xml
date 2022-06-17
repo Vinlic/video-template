@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<template version="2.0.0" id="07d98e40ebbc11ecac3ebfc0728f1a78" name="融资融券" mode="scene" poster="/ave/upload/3/117/image/20220614/0823235fcff94801b39d6d205d6dd66e.png" actuator="10000" width="1080" height="1920" aspectRatio="9:16" fps="30" videoBitrate="2097152" duration="124000" volume="1" audioBitrate="131072" createTime="1655195335" updateTime="1655195335" buildBy="system">
+<template version="2.0.0" id="07d98e40ebbc11ecac3ebfc0728f1a78" name="融资融券" mode="scene" poster="/ave/upload/3/117/image/20220614/0823235fcff94801b39d6d205d6dd66e.png" actuator="10000" width="1080" height="1920" aspectRatio="9:16" fps="30" videoBitrate="2097152" duration="128000" volume="1" audioBitrate="131072" createTime="1655195335" updateTime="1655195335" buildBy="system">
   <scene id="1xj0sEurFPR0MHep" poster="" width="1080" height="1920" aspectRatio="9:16" duration="5000" backgroundColor="" transition-type="angular" transition-duration="300">
     <video id="1xJ0SeeCsjx1U7GQ" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/pt.mp4" volume="1" duration="6000" seekEnd="6000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="05月27日融资融券市场日参" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" duration="3800" loop="false" muted="false" provider="aliyun" text="05月27日融资融券市场日参" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>05月27日融资融券市场日参</p>
             </prosody>
           </voice>
@@ -17,13 +17,13 @@
     <text id="1Xj0seMGCaPoDvCi" x="285" y="1695" width="530" height="30" zIndex="2" rotate="0" opacity="1" enterEffect-type="fadeInUp" enterEffect-duration="500" backgroundColor="" startTime="500" endTime="5000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="left" lineWrap="false" isSubtitle="false" styleType="default">以上内容为行情数据，不属投资建议。</text>
     <text id="1Xj0SeBkgcqiNahw" x="377" y="1745" width="530" height="30" zIndex="3" rotate="0" opacity="1" enterEffect-type="fadeInUp" enterEffect-duration="500" backgroundColor="" startTime="500" endTime="5000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#FFFFFF" lineHeight="1" wordSpacing="0" textAlign="left" lineWrap="false" isSubtitle="false" styleType="default">投资有风险，入市需谨慎。</text>
   </scene>
-  <scene id="1xj0Se7joYtQO1Lk" poster="" width="1080" height="1920" aspectRatio="9:16" duration="15000" backgroundColor="" transition-type="circleopen" transition-duration="300">
+  <scene id="1xj0Se7joYtQO1Lk" poster="" width="1080" height="1920" aspectRatio="9:16" duration="13600" backgroundColor="" transition-type="circleopen" transition-duration="300">
     <video id="1XJ0segUjoU4GXWC" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="05月27日沪深两市融资融券余额规模为1.52万亿元，环比下降0.37%-0.37%。其中融资余额14437.94亿，融券余额781.04亿。" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="13600" volume="1" duration="13600" loop="false" muted="false" provider="aliyun" text="05月27日沪深两市融资融券余额规模为1.52万亿元，环比下降0.37%-0.37%。其中融资余额14437.94亿，融券余额781.04亿。" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>05月27日沪深两市融资融券余额规模为1.52万亿元，环比下降0.37%。其中融资余额14437.94亿，融券余额781.04亿。</p>
             </prosody>
           </voice>
@@ -48,11 +48,11 @@
   </scene>
   <scene id="1xj0sEHUtkgbdZzu" poster="" width="1080" height="1920" aspectRatio="9:16" duration="7000" backgroundColor="" transition-type="circleopen" transition-duration="300">
     <video id="1XJ0sE4GA2hHbHda" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="融资余额排名前三的行业有：医药、电气设备以及证券" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" duration="5600" loop="false" muted="false" provider="aliyun" text="融资余额排名前三的行业有：医药、电气设备以及证券" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>融资余额排名前三的行业有：医药、电气设备以及证券</p>
             </prosody>
           </voice>
@@ -69,11 +69,11 @@
   </scene>
   <scene id="1xj0SeqTql9L6DpC" poster="" width="1080" height="1920" aspectRatio="9:16" duration="10000" backgroundColor="" transition-type="angular" transition-duration="300">
     <video id="1Xj0sEc5U6SpeC4y" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="融券余额方面，半导体、电气设备、证券等行业居融券余额前三。" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="6400" volume="1" duration="6400" loop="false" muted="false" provider="aliyun" text="融券余额方面，半导体、电气设备、证券等行业居融券余额前三。" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>融券余额方面，半导体、电气设备、证券等行业居融券余额前三。</p>
             </prosody>
           </voice>
@@ -89,11 +89,11 @@
   </scene>
   <scene id="1xj0sEFLetI2iUgm" poster="" width="1080" height="1920" aspectRatio="9:16" duration="14000" backgroundColor="" transition-type="perlin" transition-duration="300">
     <video id="1xJ0se1OpjEk1xcp" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="行业方面，融资净买入前三行业依序为食品饮料、电器仪表、煤炭，融资净买入额前十的行业中，{{texts[2].total&gt;0?`有${texts[2].total}支上涨`?'没有上涨行业'}}" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="10200" volume="1" duration="10200" loop="false" muted="false" provider="aliyun" text="行业方面，融资净买入前三行业依序为食品饮料、电器仪表、煤炭，融资净买入额前十的行业中，{{texts[2].total&gt;0?`有${texts[2].total}支上涨`?'没有上涨行业'}}" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>行业方面，融资净买入前三行业依序为食品饮料、电器仪表、煤炭，融资净买入额前十的行业中，没有上涨行业。</p>
             </prosody>
           </voice>
@@ -110,11 +110,11 @@
   </scene>
   <scene id="1XkxykC9JU0jfyte" poster="" width="1080" height="1920" aspectRatio="9:16" duration="14000" backgroundColor="" transition-type="perlin" transition-duration="300">
     <video id="1XKxykVL8Wvknakn" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="融券余额涨幅前三的行业依序为食品饮料、电器仪表、煤炭，融券余额涨幅为正，说明看空的人增加，前十的行业中,有4支下跌" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="11600" volume="1" duration="11600" loop="false" muted="false" provider="aliyun" text="融券余额涨幅前三的行业依序为食品饮料、电器仪表、煤炭，融券余额涨幅为正，说明看空的人增加，前十的行业中,有4支下跌" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>融券余额涨幅前三的行业依序为食品饮料、电器仪表、煤炭，融券余额涨幅为正，说明看空的人增加，前十的行业中,有4支下跌</p>
             </prosody>
           </voice>
@@ -131,11 +131,11 @@
   </scene>
   <scene id="1xkY2VMUitC3eMaH" poster="" width="1080" height="1920" aspectRatio="9:16" duration="14000" backgroundColor="" transition-type="perlin" transition-duration="300">
     <video id="1xKY2vcMfoER4FSv" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="个股方面，中国神华、盐湖股份、海康威视位于融资净买入额前三，在融资净买入额前十的股票中，有7支上涨。" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="10200" volume="1" duration="10200" loop="false" muted="false" provider="aliyun" text="个股方面，中国神华、盐湖股份、海康威视位于融资净买入额前三，在融资净买入额前十的股票中，有7支上涨。" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>个股方面，中国神华、盐湖股份、海康威视位于融资净买入额前三，在融资净买入额前十的股票中，有7支上涨。</p>
             </prosody>
           </voice>
@@ -152,11 +152,11 @@
   </scene>
   <scene id="1XKyb3ddLLvKAZeI" poster="" width="1080" height="1920" aspectRatio="9:16" duration="14000" backgroundColor="" transition-type="perlin" transition-duration="300">
     <video id="1XkYb3Gj6ILbN1iq" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="融券余额增幅前十的个股中，欧普康视、酒 鬼 酒、拓新药业增幅居前，当日涨跌分别为-1.64%、1.34%、4.00%" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="13400" volume="1" duration="13400" loop="false" muted="false" provider="aliyun" text="融券余额增幅前十的个股中，欧普康视、酒 鬼 酒、拓新药业增幅居前，当日涨跌分别为-1.64%、1.34%、4.00%" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>融券余额增幅前十的个股中，欧普康视、酒 鬼 酒、拓新药业增幅居前，当日涨跌分别为-1.64%、1.34%、4.00%</p>
             </prosody>
           </voice>
@@ -171,13 +171,13 @@
     <text id="1xkyb3tXE9B9LjvC" x="339" y="1570" width="430" height="30" zIndex="6" rotate="0" opacity="1" enterEffect-type="fadeIn" enterEffect-duration="500" backgroundColor="" startTime="700" endTime="14000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#88CCFF" lineHeight="1" wordSpacing="0" textAlign="left" lineWrap="false" isSubtitle="false" styleType="default">数据来源：Wind 2022.05.27</text>
     <text id="1XKyb3ZBy2mCfgA4" x="293.02404252280803" y="201.472" width="551.989" height="60" zIndex="7" rotate="0" opacity="1" enterEffect-type="fadeIn" enterEffect-duration="500" backgroundColor="" startTime="700" endTime="14000" fontFamily="FangZheng_Zheng_Bold" fontSize="49" fontWeight="400" fontColor="#FFFFFF" lineHeight="1.102" wordSpacing="0" textAlign="left" lineWrap="false" isSubtitle="false" styleType="default">融券余额增幅前十个股</text>
   </scene>
-  <scene id="1xkYGzKHhsbtYLLs" poster="" width="1080" height="1920" aspectRatio="9:16" duration="7000" backgroundColor="" transition-type="circleopen" transition-duration="300">
+  <scene id="1xkYGzKHhsbtYLLs" poster="" width="1080" height="1920" aspectRatio="9:16" duration="11000" backgroundColor="" transition-type="circleopen" transition-duration="300">
     <video id="1xKyGzVTkDECleP4" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="ETF基金方面，融资净买入额排名前三的ETF分别是博时黄金ETF、华夏恒生科技ETF、华安黄金易ETF" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="11000" volume="1" duration="11000" loop="false" muted="false" provider="aliyun" text="ETF基金方面，融资净买入额排名前三的ETF分别是博时黄金ETF、华夏恒生科技ETF、华安黄金易ETF" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>ETF基金方面，融资净买入额排名前三的ETF分别是博时黄金ETF、华夏恒生科技ETF、华安黄金易ETF</p>
             </prosody>
           </voice>
@@ -192,13 +192,13 @@
     <text id="1XkYgzLpf8Rl90Qt" x="307.61017283815914" y="194.7763458533846" width="515.994" height="60" zIndex="5" rotate="0" opacity="1" enterEffect-type="fadeIn" enterEffect-duration="500" backgroundColor="" startTime="700" endTime="7000" fontFamily="FangZheng_Zheng_Bold" fontSize="56" fontWeight="400" fontColor="#FFFFFF" lineHeight="1.089" wordSpacing="0" textAlign="left" lineWrap="false" isSubtitle="false" styleType="default">ETF净买入额排名</text>
     <text id="1XkyJFkg0ognqmxh" x="672.23" y="317.62656653113896" width="283.991" height="30" zIndex="6" rotate="0" opacity="1" enterEffect-type="fadeIn" enterEffect-duration="500" exitEffect-type="fadeOut" exitEffect-duration="500" backgroundColor="" startTime="700" endTime="7000" fontFamily="FangZheng_LanTing_Black" fontSize="30" fontWeight="400" fontColor="#88CCFF" lineHeight="1" wordSpacing="0" textAlign="left" lineWrap="false" isSubtitle="false" styleType="default">融资净买入额(万元)</text>
   </scene>
-  <scene id="1xkyN8ifFIHyznNo" poster="" width="1080" height="1920" aspectRatio="9:16" duration="7000" backgroundColor="" transition-type="circleopen" transition-duration="300">
+  <scene id="1xkyN8ifFIHyznNo" poster="" width="1080" height="1920" aspectRatio="9:16" duration="8400" backgroundColor="" transition-type="circleopen" transition-duration="300">
     <video id="1XKyn8Ch4qldGjXu" x="0" y="0" width="1080" height="1920" zIndex="-1" rotate="0" opacity="1" isBackground="true" startTime="0" poster="" src="/avesto/plat/tmplres/scenetmpl/guosen/guosen_securities/videos/bg1.mp4" volume="1" duration="2000" seekEnd="2000" loop="false" muted="false"/>
-    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="5000" volume="1" loop="false" muted="false" provider="aliyun" text="近一周被调入标的证券为瑜欣电子、东 田 微、菲菱科思、必 易 微等5只标的。" declaimer="aixia" speechRate="1">
+    <voice id="1xj0sEVDZ41howQH" startTime="500" endTime="8400" volume="1" duration="8400" loop="false" muted="false" provider="aliyun" text="近一周被调入标的证券为瑜欣电子、东 田 微、菲菱科思、必 易 微等5只标的。" declaimer="aixia" speechRate="1">
       <ssml id="1Xj0sE2ygS7z9n6L">
-        <speak>
+        <speak version="1.0" xml:lang="zh-cn" xmlns="http://www.w3.org/2001/10/synthesis" provider="aliyun" format="mp3">
           <voice name="aixia">
-            <prosody contenteditable="true" rate="1">
+            <prosody rate="1">
               <p>近一周被调入标的证券为瑜欣电子、东 田 微、菲菱科思、必 易 微等5只标的。</p>
             </prosody>
           </voice>

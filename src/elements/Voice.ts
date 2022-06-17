@@ -1,3 +1,5 @@
+import { Document, elements } from 'aggregation-ssml';
+
 import IVoiceOptions from './interface/IVoiceOptions';
 
 import ElementTypes from '../enums/ElementTypes';
@@ -6,6 +8,8 @@ import VoiceProviders from '../enums/VoiceProviders';
 import Media from './Media';
 import SSML from './SSML';
 import util from '../util';
+
+const { Voice: _Voice, Prosody, Paragraph, Raw } = elements;
 
 class Voice extends Media {
     public static Provider = VoiceProviders;
@@ -22,7 +26,6 @@ class Voice extends Media {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
         super(options, type, ...values);
         util.optionsInject(this, options, {
-            provider: (v: any) => util.defaultTo(v, VoiceProviders.Aliyun),
             speechRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             pitchRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
         }, {
@@ -34,6 +37,15 @@ class Voice extends Media {
             pitchRate: (v: any) => util.isUndefined(v) || util.isFinite(v),
         });
         !this.children.length && this.children.push(this.generateSSML());
+        this.children.forEach(node => {
+            if(!SSML.isInstance(node)) return;
+            (node as SSML).init(this.provider);
+            const duration = (node as SSML).document?.duration;
+            if((this.duration || 0) < duration)
+                this.duration = duration + 1000;
+            if((this.endTime || 0) < duration)
+                this.endTime = duration + 1000;
+        });
     }
 
     /**
@@ -80,13 +92,21 @@ class Voice extends Media {
     }
 
     private generateSSML() {
-        return new SSML({
-            value: `<speak provider="${this.provider}"><voice name="${this.declaimer}"><prosody contenteditable="true" rate="${this.playbackRate}" volume="${this.volume}"><p>${this.text}</p></prosody></voice></speak>`
-        });
+        const document = new Document({ provider: "aggregation", realProvider: this.provider });
+        const voice = new _Voice({ name: this.declaimer });
+        const prosody = new Prosody({ rate: this.playbackRate });
+        const paragraph = new Paragraph();
+        const raw = new Raw({ value: this.text });
+        paragraph.appendChild(raw);
+        prosody.appendChild(paragraph);
+        voice.appendChild(prosody);
+        document.appendChild(voice);
+        return new SSML({ value: document.toSSML() });
     }
 
     public get ssml() {
-        return this.children?.length ? this.children[0].value?.trim() : null;
+        if(!this.children.length || !SSML.isInstance(this.children[0])) return null;
+        return this.children[0].value;
     }
 
     public static isInstance(value: any) {

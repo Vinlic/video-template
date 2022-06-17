@@ -8,7 +8,7 @@ import Compiler from './Compiler';
 import ElementFactory from './ElementFactory';
 import { Parser, OptionsParser } from './parsers';
 import Template from './Template';
-import { Element, Text } from './elements';
+import { Element, Text, Voice, Vtuber } from './elements';
 import util from './util';
 
 class Transition {
@@ -110,6 +110,9 @@ class Scene {
                 children: (v: any) => util.isArray(v),
             },
         );
+        const maxDuration = Math.max(...this.children.map(node => (Voice.isInstance(node) || Vtuber.isInstance(node)) ? node.getMaxDuration() : 0));
+        if(maxDuration > this.duration)
+            this.duration = maxDuration;
     }
 
     public appendChild(node: Element) {

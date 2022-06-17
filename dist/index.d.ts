@@ -1,3 +1,5 @@
+import { Document } from 'aggregation-ssml';
+
 interface IEffectOptions {
     type?: string;
     duration?: number | string;
@@ -371,9 +373,12 @@ declare class Subtitle extends Text {
 declare type ISSMLOptions = IElementOptions;
 
 declare class SSML extends Element {
+    #private;
     constructor(options: ISSMLOptions, type?: ElementTypes, ...values: any[]);
+    init(provider: string): void;
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
+    get document(): Document | undefined;
     static isInstance(value: any): boolean;
 }
 
@@ -549,6 +554,7 @@ declare class Element {
     absoluteStartTime?: number;
     absoluteEndTime?: number;
     constructor(options: IElementOptions, type?: ElementTypes, data?: {}, vars?: {});
+    getMaxDuration(): number;
     renderXML(parent?: any): any;
     renderOldXML(parent?: any, resources?: any, global?: any, skip?: boolean): any;
     toXML(pretty?: boolean): any;
@@ -646,7 +652,7 @@ interface ITemplateOptions {
 }
 
 declare class Template {
-    static readonly packageVersion = "1.1.61";
+    static readonly packageVersion = "1.1.64";
     static readonly type = "template";
     type: string;
     id: string;

@@ -10,6 +10,7 @@ import Compiler from '../Compiler';
 import ElementFactory from '../ElementFactory';
 import Template from '../Template';
 import Scene from '../Scene';
+import { Voice, Vtuber } from './';
 import { Parser, OptionsParser } from '../parsers';
 
 class Effect {
@@ -145,6 +146,11 @@ class Element {
             value: (v: any) => util.isUndefined(v) || util.isString(v) || v === null,
             children: (v: any) => util.isArray(v),
         });
+    }
+
+    public getMaxDuration() {
+        const maxDuration = Math.max(...this.children.map(node => (Voice.isInstance(node) || Vtuber.isInstance(node)) ? node.getMaxDuration() : 0));
+        return Math.max(maxDuration, this.endTime || 0);
     }
 
     /**

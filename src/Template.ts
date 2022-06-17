@@ -8,7 +8,7 @@ import { Parser, OldParser, OptionsParser } from './parsers';
 import Compiler from './Compiler';
 
 class Template {
-    public static readonly packageVersion = '1.1.61'; // 包版本标识
+    public static readonly packageVersion = '1.1.64'; // 包版本标识
     public static readonly type = 'template'; // type标识
     public type = ''; // 模板type必须为template
     public id = ''; // 模板ID
@@ -310,6 +310,7 @@ class Template {
                 track.push({
                     ...node,
                     update: node.update.bind(node),
+                    updateSceneDuration: () => {},
                     absoluteStartTime: node.startTime || 0,
                     absoluteEndTime: node.endTime || this.duration
                 });

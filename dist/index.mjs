@@ -1446,6 +1446,10 @@ var _Element = class {
       children: (v) => util_default.isArray(v)
     });
   }
+  getMaxDuration() {
+    const maxDuration = Math.max(...this.children.map((node) => Voice_default.isInstance(node) || Vtuber_default.isInstance(node) ? node.getMaxDuration() : 0));
+    return Math.max(maxDuration, this.endTime || 0);
+  }
   renderXML(parent) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v;
     const element = (parent || create3()).ele(this.type, {
@@ -2086,6 +2090,9 @@ var Audio = class extends Media_default {
 };
 var Audio_default = Audio;
 
+// src/elements/Voice.ts
+import { Document as Document2, elements } from "aggregation-ssml";
+
 // src/enums/VoiceProviders.ts
 var VoiceProviders = /* @__PURE__ */ ((VoiceProviders2) => {
   VoiceProviders2["Aliyun"] = "aliyun";
@@ -2099,9 +2106,22 @@ var VoiceProviders = /* @__PURE__ */ ((VoiceProviders2) => {
 var VoiceProviders_default = VoiceProviders;
 
 // src/elements/SSML.ts
-var SSML = class extends Element_default {
+import { Document } from "aggregation-ssml";
+var _document;
+var _SSML = class extends Element_default {
   constructor(options, type = ElementTypes_default.SSML, ...values) {
     super(options, type, ...values);
+    __privateAdd(this, _document, void 0);
+  }
+  init(provider) {
+    if (!this.value)
+      return;
+    const document = Document.parse(this.value, provider);
+    const realProvider = document.provider;
+    document.provider = Document.Provider.Aggregation;
+    document.realProvider = realProvider;
+    this.value = document.toSSML();
+    __privateSet(this, _document, document);
   }
   renderXML(parent) {
     const ssml = super.renderXML(parent);
@@ -2113,14 +2133,20 @@ var SSML = class extends Element_default {
     this.value && ssml.txt(this.value);
     return ssml;
   }
+  get document() {
+    return __privateGet(this, _document);
+  }
   static isInstance(value) {
-    return value instanceof SSML;
+    return value instanceof _SSML;
   }
 };
+var SSML = _SSML;
+_document = new WeakMap();
 var SSML_default = SSML;
 
 // src/elements/Voice.ts
-var _Voice = class extends Media_default {
+var { Voice: _Voice, Prosody, Paragraph, Raw } = elements;
+var _Voice2 = class extends Media_default {
   provider = "";
   text;
   declaimer;
@@ -2133,7 +2159,6 @@ var _Voice = class extends Media_default {
       throw new TypeError("options must be an Object");
     super(options, type, ...values);
     util_default.optionsInject(this, options, {
-      provider: (v) => util_default.defaultTo(v, VoiceProviders_default.Aliyun),
       speechRate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       pitchRate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
@@ -2145,6 +2170,17 @@ var _Voice = class extends Media_default {
       pitchRate: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
     });
     !this.children.length && this.children.push(this.generateSSML());
+    this.children.forEach((node) => {
+      var _a;
+      if (!SSML_default.isInstance(node))
+        return;
+      node.init(this.provider);
+      const duration = (_a = node.document) == null ? void 0 : _a.duration;
+      if ((this.duration || 0) < duration)
+        this.duration = duration + 1e3;
+      if ((this.endTime || 0) < duration)
+        this.endTime = duration + 1e3;
+    });
   }
   renderXML(parent) {
     const voice = super.renderXML(parent);
@@ -2181,19 +2217,27 @@ var _Voice = class extends Media_default {
     });
   }
   generateSSML() {
-    return new SSML_default({
-      value: `<speak provider="${this.provider}"><voice name="${this.declaimer}"><prosody contenteditable="true" rate="${this.playbackRate}" volume="${this.volume}"><p>${this.text}</p></prosody></voice></speak>`
-    });
+    const document = new Document2({ provider: "aggregation", realProvider: this.provider });
+    const voice = new _Voice({ name: this.declaimer });
+    const prosody = new Prosody({ rate: this.playbackRate });
+    const paragraph = new Paragraph();
+    const raw = new Raw({ value: this.text });
+    paragraph.appendChild(raw);
+    prosody.appendChild(paragraph);
+    voice.appendChild(prosody);
+    document.appendChild(voice);
+    return new SSML_default({ value: document.toSSML() });
   }
   get ssml() {
-    var _a, _b;
-    return ((_a = this.children) == null ? void 0 : _a.length) ? (_b = this.children[0].value) == null ? void 0 : _b.trim() : null;
+    if (!this.children.length || !SSML_default.isInstance(this.children[0]))
+      return null;
+    return this.children[0].value;
   }
   static isInstance(value) {
-    return value instanceof _Voice;
+    return value instanceof _Voice2;
   }
 };
-var Voice = _Voice;
+var Voice = _Voice2;
 __publicField(Voice, "Provider", VoiceProviders_default);
 var Voice_default = Voice;
 
@@ -2593,6 +2637,9 @@ var _Scene = class {
       filter: (v) => util_default.isUndefined(v) || util_default.isObject(v),
       children: (v) => util_default.isArray(v)
     });
+    const maxDuration = Math.max(...this.children.map((node) => Voice_default.isInstance(node) || Vtuber_default.isInstance(node) ? node.getMaxDuration() : 0));
+    if (maxDuration > this.duration)
+      this.duration = maxDuration;
   }
   appendChild(node) {
     node.parent = this;
@@ -2968,6 +3015,8 @@ var _Template = class {
       } else {
         track.push(__spreadProps(__spreadValues({}, node), {
           update: node.update.bind(node),
+          updateSceneDuration: () => {
+          },
           absoluteStartTime: node.startTime || 0,
           absoluteEndTime: node.endTime || this.duration
         }));
@@ -2982,8 +3031,8 @@ var _Template = class {
     return this.children.reduce((duration, node) => Scene_default.isInstance(node) ? duration + node.duration : duration, 0);
   }
   get sortedChilren() {
-    const elements = this.elements;
-    elements.sort((a, b) => {
+    const elements2 = this.elements;
+    elements2.sort((a, b) => {
       if (Scene_default.isInstance(a))
         return -1;
       return (a.zIndex || 0) - (b.zIndex || 0);
@@ -3011,7 +3060,7 @@ var _Template = class {
   }
 };
 var Template = _Template;
-__publicField(Template, "packageVersion", "1.1.61");
+__publicField(Template, "packageVersion", "1.1.64");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));

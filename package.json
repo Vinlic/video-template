@@ -1,6 +1,6 @@
 {
   "name": "video-template",
-  "version": "1.1.61",
+  "version": "1.1.64",
   "description": "Template model describing video structure",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -32,7 +32,7 @@
   "author": "Vinlic",
   "license": "ISC",
   "dependencies": {
-    "aggregation-ssml": "^1.0.67",
+    "aggregation-ssml": "^1.0.73",
     "date-fns": "^2.28.0",
     "fast-xml-parser": "^4.0.7",
     "goodid.js": "^1.0.8",
