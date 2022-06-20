@@ -2159,6 +2159,7 @@ var _Voice2 = class extends Media_default {
       throw new TypeError("options must be an Object");
     super(options, type, ...values);
     util_default.optionsInject(this, options, {
+      provider: (v) => util_default.defaultTo(v, Document2.Provider.Aliyun),
       speechRate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       pitchRate: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {

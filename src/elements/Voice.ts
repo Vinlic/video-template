@@ -26,6 +26,7 @@ class Voice extends Media {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
         super(options, type, ...values);
         util.optionsInject(this, options, {
+            provider: (v: any) => util.defaultTo(v, Document.Provider.Aliyun),
             speechRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             pitchRate: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
         }, {
