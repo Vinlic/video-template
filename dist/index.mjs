@@ -63,7 +63,7 @@ var util_default = __spreadProps(__spreadValues({}, lodash), {
       if (this.isFunction(initializers[key]))
         value = initializers[key](value);
       if (this.isFunction(checkers[key]) && !checkers[key](value)) {
-        console.warn("parameter value:", value);
+        console.warn("invalid options:", options);
         throw new Error(`parameter ${key} invalid`);
       }
       ;
@@ -3065,7 +3065,7 @@ var _Template = class {
   }
 };
 var Template = _Template;
-__publicField(Template, "packageVersion", "1.1.64");
+__publicField(Template, "packageVersion", "1.1.67");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
