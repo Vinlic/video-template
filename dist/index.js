@@ -80,7 +80,7 @@ var util_default = __spreadProps(__spreadValues({}, import_lodash.default), {
   uniqid: import_goodid.default,
   optionsInject(that, options, initializers = {}, checkers = {}) {
     Object.keys(that).forEach((key) => {
-      if (/^\_/.test(key))
+      if (/^_/.test(key) && !/^__/.test(key))
         return;
       let value = options[key];
       if (this.isFunction(initializers[key]))
@@ -493,6 +493,10 @@ var Parser = class {
       target.type = type;
       for (let key in obj[":@"]) {
         const value = obj[":@"][key];
+        key = {
+          type: "__type",
+          value: "__value"
+        }[key] || key;
         let index;
         if (key === "for-index")
           key = "forIndex";
@@ -2405,8 +2409,8 @@ var Canvas = class extends Element_default {
       duration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
       chartId: (v) => util_default.isString(v),
-      configSrc: (v) => util_default.isString(v),
-      dataSrc: (v) => util_default.isString(v),
+      configSrc: (v) => util_default.isUndefined(v) || util_default.isNull(v) || util_default.isString(v),
+      dataSrc: (v) => util_default.isUndefined(v) || util_default.isNull(v) || util_default.isString(v),
       duration: (v) => util_default.isUndefined(v) || util_default.isNumber(v),
       poster: (v) => util_default.isUndefined(v) || util_default.isString(v)
     });

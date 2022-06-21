@@ -20,8 +20,8 @@ class Canvas extends Element {
             duration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
         }, {
             chartId: (v: any) => util.isString(v),
-            configSrc: (v: any) => util.isString(v),
-            dataSrc: (v: any) => util.isString(v),
+            configSrc: (v: any) => util.isUndefined(v) || util.isNull(v) || util.isString(v),
+            dataSrc: (v: any) => util.isUndefined(v) || util.isNull(v) || util.isString(v),
             duration: (v: any) => util.isUndefined(v) || util.isNumber(v),
             poster: (v: any) => util.isUndefined(v) || util.isString(v)
         });

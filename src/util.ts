@@ -12,11 +12,11 @@ export default {
 
   optionsInject(that: any, options: any, initializers: any = {}, checkers: any = {}) {
     Object.keys(that).forEach((key) => {
-      if (/^\_/.test(key)) return;
+      if (/^_/.test(key) && !/^__/.test(key)) return;
       let value = options[key];
       if (this.isFunction(initializers[key])) value = initializers[key](value);
       if (this.isFunction(checkers[key]) && !checkers[key](value)) {
-        console.warn("parameter value:", value);
+        console.warn("invalid options:", options);
         throw new Error(`parameter ${key} invalid`);
       };
       if ((!this.isFunction(initializers[key]) && !this.isFunction(checkers[key])) || this.isUndefined(value)) return;

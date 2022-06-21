@@ -95,6 +95,10 @@ class Parser {
             target.type = type;
             for (let key in obj[':@']) {
                 const value = obj[':@'][key];
+                key = {
+                    type: "__type",
+                    value: "__value"
+                }[key] || key;
                 let index;
                 if (key === 'for-index') key = 'forIndex';
                 else if (key === 'for-item') key = 'forItem';
