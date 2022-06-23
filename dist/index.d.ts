@@ -502,7 +502,7 @@ declare class Scene {
     static isId(value: any): boolean;
     static isInstance(value: any): boolean;
     resize(width: number, height: number): void;
-    generateAllTrack(baseTime?: number): any;
+    generateTimeline(baseTime?: number): any;
     get sortedChildren(): Element[];
     get fontFamilys(): string[];
     set parent(obj: Template | undefined);
@@ -569,7 +569,7 @@ declare class Element {
     static isInstance(value: any): boolean;
     resize(width: number, height: number): void;
     rescale(scaleX: number, scaleY: number): void;
-    generateAllTrack(baseTime: number | undefined, duration: number): any;
+    generateTimeline(baseTime: number | undefined, duration: number): any;
     set parent(obj: Template | Scene | Element | undefined);
     get parent(): Template | Scene | Element | undefined;
 }
@@ -652,7 +652,7 @@ interface ITemplateOptions {
 }
 
 declare class Template {
-    static readonly packageVersion = "1.1.67";
+    static readonly packageVersion = "1.1.68";
     static readonly type = "template";
     type: string;
     id: string;
@@ -702,7 +702,7 @@ declare class Template {
     static parseOldXML: typeof OldParser.parseXML;
     static parseOptions: typeof OptionsParser.parseOptions;
     resize(width: number, height: number): void;
-    generateAllTrack(): any;
+    generateTimeline(): any;
     clone(): Template;
     get duration(): number;
     get sortedChilren(): (Element | Element[])[];

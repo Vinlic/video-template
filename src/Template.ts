@@ -8,7 +8,7 @@ import { Parser, OldParser, OptionsParser } from './parsers';
 import Compiler from './Compiler';
 
 class Template {
-    public static readonly packageVersion = '1.1.67'; // 包版本标识
+    public static readonly packageVersion = '1.1.68'; // 包版本标识
     public static readonly type = 'template'; // type标识
     public type = ''; // 模板type必须为template
     public id = ''; // 模板ID
@@ -299,12 +299,12 @@ class Template {
      * @param {Number} baseTime 基准时间
      * @returns
      */
-    public generateAllTrack() {
+    public generateTimeline() {
         let track: any = [];
         let baseTime = 0;
         this.children.forEach((node: any) => {
             if (Scene.isInstance(node)) {
-                track = track.concat(node.generateAllTrack(baseTime));
+                track = track.concat(node.generateTimeline(baseTime));
                 baseTime += node.duration;
             } else {
                 track.push({

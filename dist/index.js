@@ -1641,7 +1641,7 @@ var _Element = class {
     this.height && (this.height = parseFloat((this.height * scaleY).toFixed(4)));
     this.children.forEach((node) => node.rescale(scaleX, scaleY));
   }
-  generateAllTrack(baseTime = 0, duration) {
+  generateTimeline(baseTime = 0, duration) {
     var _a;
     let track = [];
     (_a = this.children) == null ? void 0 : _a.forEach((node) => {
@@ -1650,7 +1650,7 @@ var _Element = class {
         absoluteStartTime: baseTime + (node.startTime || 0),
         absoluteEndTime: baseTime + (node.endTime || duration)
       }));
-      track = track.concat(node.generateAllTrack(baseTime, duration));
+      track = track.concat(node.generateTimeline(baseTime, duration));
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }
@@ -2800,7 +2800,7 @@ var _Scene = class {
     this.height = height;
     this.children.forEach((node) => node.rescale(scaleX, scaleY));
   }
-  generateAllTrack(baseTime = 0) {
+  generateTimeline(baseTime = 0) {
     let track = [];
     this.children.forEach((node) => {
       track.push(__spreadProps(__spreadValues({}, node), {
@@ -2808,7 +2808,7 @@ var _Scene = class {
         absoluteStartTime: baseTime + (node.startTime || 0),
         absoluteEndTime: baseTime + (node.endTime || this.duration)
       }));
-      track = track.concat(node.generateAllTrack(baseTime, this.duration));
+      track = track.concat(node.generateTimeline(baseTime, this.duration));
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }
@@ -3033,12 +3033,12 @@ var _Template = class {
         node.rescale(scaleX, scaleY);
     });
   }
-  generateAllTrack() {
+  generateTimeline() {
     let track = [];
     let baseTime = 0;
     this.children.forEach((node) => {
       if (Scene_default.isInstance(node)) {
-        track = track.concat(node.generateAllTrack(baseTime));
+        track = track.concat(node.generateTimeline(baseTime));
         baseTime += node.duration;
       } else {
         track.push(__spreadProps(__spreadValues({}, node), {
@@ -3088,7 +3088,7 @@ var _Template = class {
   }
 };
 var Template = _Template;
-__publicField(Template, "packageVersion", "1.1.67");
+__publicField(Template, "packageVersion", "1.1.68");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));

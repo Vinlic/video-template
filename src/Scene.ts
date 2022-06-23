@@ -365,7 +365,7 @@ class Scene {
      * @param {Number} baseTime 基准时间
      * @returns
      */
-    public generateAllTrack(baseTime = 0) {
+    public generateTimeline(baseTime = 0) {
         let track: any = [];
         this.children.forEach(node => {
             track.push({
@@ -374,7 +374,7 @@ class Scene {
                 absoluteStartTime: baseTime + (node.startTime || 0),
                 absoluteEndTime: baseTime + (node.endTime || this.duration)
             });
-            track = track.concat(node.generateAllTrack(baseTime, this.duration));
+            track = track.concat(node.generateTimeline(baseTime, this.duration));
         });
         return track?.sort((n1: any, n2: any) => (n1.absoluteStartTime as number) - (n2.absoluteStartTime as number)); // 根据绝对开始时间排序
     }

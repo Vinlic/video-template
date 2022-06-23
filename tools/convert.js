@@ -26,8 +26,6 @@ const { Template } = require("../dist");
         templateContent = result.data;
     }
 
-    console.info("template convert complete");
-
     const template = await Template.parseAndProcessing(templateContent, {}, {}, async source => {
         if(!source) return;
         const result = await axios.get(source, { timeout: 60000 });
@@ -36,6 +34,8 @@ const { Template } = require("../dist");
         if(code !== 0) throw new Error("data source response error: " + msg);
         return data;
     });
+
+    console.info("template convert complete");
 
     const ext = path.extname(outputPath);
 
