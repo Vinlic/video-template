@@ -49,8 +49,8 @@ class Audio extends Media {
         const parentOptions = super.toOptions();
         return {
             ...parentOptions,
-            fadeIn: this.fadeInDuration,
-            fadeOut: this.fadeOutDuration
+            fadeInDuration: this.fadeInDuration,
+            fadeOutDuration: this.fadeOutDuration
         };
     }
 

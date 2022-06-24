@@ -2107,8 +2107,8 @@ var Audio = class extends Media_default {
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
-      fadeIn: this.fadeInDuration,
-      fadeOut: this.fadeOutDuration
+      fadeInDuration: this.fadeInDuration,
+      fadeOutDuration: this.fadeOutDuration
     });
   }
   static isInstance(value) {
@@ -3088,7 +3088,7 @@ var _Template = class {
   }
 };
 var Template = _Template;
-__publicField(Template, "packageVersion", "1.1.68");
+__publicField(Template, "packageVersion", "1.1.693");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
