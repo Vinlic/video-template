@@ -488,40 +488,7 @@ var Parser = class {
     return new Scene_default(object, util_default.merge(object.data || {}, data), util_default.merge(object.vars || {}, vars2));
   }
   static parseXMLObject(xmlObject, varsObject, dataObject, data = {}, vars2 = {}) {
-    function parse(obj, target = {}) {
-      const type = Object.keys(obj)[0];
-      target.type = type;
-      for (let key in obj[":@"]) {
-        const value = obj[":@"][key];
-        key = {
-          type: "__type",
-          value: "__value"
-        }[key] || key;
-        let index;
-        if (key === "for-index")
-          key = "forIndex";
-        else if (key === "for-item")
-          key = "forItem";
-        else if ((index = key.indexOf("-")) != -1) {
-          const pkey = key.substring(0, index);
-          const ckey = key.substring(index + 1, key.length);
-          if (!target[pkey])
-            target[pkey] = {};
-          target[pkey][ckey] = value;
-          continue;
-        }
-        target[key] = value;
-      }
-      target.children = [];
-      obj[type].forEach((v) => {
-        if (v["#text"])
-          return target.value = v["#text"];
-        const result = parse(v, {});
-        result && target.children.push(result);
-      });
-      return target;
-    }
-    const completeObject = parse(xmlObject);
+    const completeObject = this.convertXMLObject(xmlObject);
     const _vars = {};
     const _data = {};
     if (varsObject || dataObject) {
@@ -534,8 +501,8 @@ var Parser = class {
           processing(o, target[o.type]);
         });
       };
-      varsObject && processing(parse(varsObject), _vars);
-      dataObject && processing(parse(dataObject), _data);
+      varsObject && processing(this.convertXMLObject(varsObject), _vars);
+      dataObject && processing(this.convertXMLObject(dataObject), _data);
     }
     return {
       completeObject,
@@ -544,7 +511,7 @@ var Parser = class {
     };
   }
   static parseXML(content, data = {}, vars2 = {}) {
-    let xmlObject, varsObject, dataObject, extendsScript = "";
+    let xmlObject, varsObject, dataObject, formOptions, extendsScript = "";
     xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o) => {
       if (o.template)
         xmlObject = o;
@@ -552,16 +519,18 @@ var Parser = class {
         varsObject = o;
       if (o.data)
         dataObject = o;
+      if (o.form)
+        formOptions = this.convertXMLObject(o, void 0, true);
       if (o.script)
         extendsScript = o.script[0] && o.script[0]["#text"] || "";
     });
     if (!xmlObject)
       throw new Error("template xml invalid");
     const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars2);
-    return new Template_default(completeObject, _data, _vars, extendsScript);
+    return new Template_default(completeObject, _data, _vars, extendsScript, formOptions);
   }
   static async parseXMLPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
-    let xmlObject, varsObject, dataObject, extendsScript = "";
+    let xmlObject, varsObject, dataObject, formOptions, extendsScript = "";
     xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o) => {
       if (o.template)
         xmlObject = o;
@@ -569,6 +538,8 @@ var Parser = class {
         varsObject = o;
       if (o.data)
         dataObject = o;
+      if (o.form)
+        formOptions = this.convertXMLObject(o, void 0, true);
       if (o.script)
         extendsScript = o.script[0] && o.script[0]["#text"] || "";
     });
@@ -589,10 +560,10 @@ var Parser = class {
         util_default.isObject(result) && util_default.merge(_vars, result);
       }
     }
-    return new Template_default(completeObject, _data, _vars, extendsScript);
+    return new Template_default(completeObject, _data, _vars, extendsScript, formOptions);
   }
   static parseSceneXML(content, data = {}, vars2 = {}) {
-    let xmlObject, varsObject, dataObject, extendsScript;
+    let xmlObject, varsObject, formOptions, dataObject, extendsScript;
     xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o) => {
       if (o.scene)
         xmlObject = o;
@@ -600,16 +571,18 @@ var Parser = class {
         varsObject = o;
       if (o.data)
         dataObject = o;
+      if (o.form)
+        formOptions = this.convertXMLObject(o, void 0, true);
       if (o.script)
-        extendsScript = o;
+        extendsScript = o.script[0] && o.script[0]["#text"] || "";
     });
     if (!xmlObject)
       throw new Error("template scene xml invalid");
     const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars2);
-    return new Scene_default(completeObject, util_default.merge(_data, data), util_default.merge(_vars, vars2), extendsScript);
+    return new Scene_default(completeObject, util_default.merge(_data, data), util_default.merge(_vars, vars2), extendsScript, formOptions);
   }
   static async parseSceneXMLPreprocessing(content, data = {}, vars2 = {}, dataProcessor, varsProcessor) {
-    let xmlObject, varsObject, dataObject, extendsScript;
+    let xmlObject, varsObject, formOptions, dataObject, extendsScript;
     xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o) => {
       if (o.scene)
         xmlObject = o;
@@ -617,8 +590,10 @@ var Parser = class {
         varsObject = o;
       if (o.data)
         dataObject = o;
+      if (o.form)
+        formOptions = this.convertXMLObject(o, void 0, true);
       if (o.script)
-        extendsScript = o;
+        extendsScript = o.script[0] && o.script[0]["#text"] || "";
     });
     if (!xmlObject)
       throw new Error("template scene xml invalid");
@@ -637,7 +612,7 @@ var Parser = class {
         util_default.isObject(result) && util_default.merge(_vars, result);
       }
     }
-    return new Scene_default(completeObject, _data, _vars, extendsScript);
+    return new Scene_default(completeObject, _data, _vars, extendsScript, formOptions);
   }
   static parseElementJSON(content, data = {}, vars2 = {}, extendsScript = "") {
     return ElementFactory_default.createElement(util_default.isString(content) ? JSON.parse(content) : content, data, vars2, extendsScript);
@@ -648,6 +623,44 @@ var Parser = class {
       throw new Error("template element xml invalid");
     const { completeObject } = this.parseXMLObject(xmlObject);
     return ElementFactory_default.createElement(completeObject, data, vars2, extendsScript);
+  }
+  static convertXMLObject(obj, target = {}, jsonParse = false) {
+    const type = Object.keys(obj)[0];
+    target.type = type;
+    for (let key in obj[":@"]) {
+      let value = obj[":@"][key];
+      key = {
+        type: "__type",
+        value: "__value"
+      }[key] || key;
+      let index;
+      if (jsonParse && value && value[0] === "{" || value[0] === "[")
+        try {
+          value = JSON.parse(value);
+        } catch {
+        }
+      if (key === "for-index")
+        key = "forIndex";
+      else if (key === "for-item")
+        key = "forItem";
+      else if ((index = key.indexOf("-")) != -1) {
+        const pkey = key.substring(0, index);
+        const ckey = key.substring(index + 1, key.length);
+        if (!target[pkey])
+          target[pkey] = {};
+        target[pkey][ckey] = value;
+        continue;
+      }
+      target[key] = value;
+    }
+    target.children = [];
+    obj[type].forEach((v) => {
+      if (v["#text"])
+        return target.value = v["#text"];
+      const result = this.convertXMLObject(v, {});
+      result && target.children.push(result);
+    });
+    return target;
   }
 };
 var Parser_default = Parser;
@@ -1139,7 +1152,7 @@ var OptionsParser = class {
           fontWeight: options.bold,
           fontStyle: options.italic === "italic" ? "italic" : void 0,
           lineHeight: parseFloat((Number(options.lineHeight) / Number(options.fontSize)).toFixed(3)),
-          wordSpacing: options.wordSpacig,
+          wordSpacing: options.wordSpacing,
           textAlign: options.textAlign,
           effectType: options.effectType,
           effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1e3 : void 0,
@@ -2621,7 +2634,7 @@ var Transition = class {
 };
 var _parent2, _createXMLRoot, createXMLRoot_fn;
 var _Scene = class {
-  constructor(options, data = {}, vars2 = {}, extendsScript = "") {
+  constructor(options, data = {}, vars2 = {}, extendsScript = "", formOptions) {
     __privateAdd(this, _createXMLRoot);
     __publicField(this, "type", "");
     __publicField(this, "id", "");
@@ -2635,6 +2648,7 @@ var _Scene = class {
     __publicField(this, "transition");
     __publicField(this, "filter");
     __publicField(this, "children", []);
+    __publicField(this, "formOptions");
     __privateAdd(this, _parent2, void 0);
     if (!util_default.isObject(options))
       throw new TypeError("options must be an Object");
@@ -2668,6 +2682,7 @@ var _Scene = class {
     const maxDuration = Math.max(...this.children.map((node) => Voice_default.isInstance(node) || Vtuber_default.isInstance(node) ? node.getMaxDuration() : 0));
     if (maxDuration > this.duration)
       this.duration = maxDuration;
+    this.formOptions = formOptions;
   }
   appendChild(node) {
     node.parent = this;
@@ -2812,6 +2827,27 @@ var _Scene = class {
     });
     return track == null ? void 0 : track.sort((n1, n2) => n1.absoluteStartTime - n2.absoluteStartTime);
   }
+  generateFormRules() {
+    var _a;
+    if (!this.formOptions)
+      return null;
+    const components = [];
+    (_a = this.formOptions) == null ? void 0 : _a.children.forEach((node) => {
+      const component = util_default.omit(node, ["children"]);
+      node.children.forEach((node2) => {
+        if (!component[node2.type])
+          component[node2.type] = [];
+        const temp = util_default.omit(node2, ["type", "children"]);
+        if (temp.__type) {
+          temp.type = temp.__type;
+          delete temp.__type;
+        }
+        component[node2.type].push(temp);
+      });
+      components.push(component);
+    });
+    return components;
+  }
   get sortedChildren() {
     const _children = util_default.clone(this.children);
     _children.sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
@@ -2887,7 +2923,8 @@ var _Template = class {
   updateTime = 0;
   buildBy = "";
   children = [];
-  constructor(options, data = {}, vars2 = {}, extendsScript = "") {
+  formOptions;
+  constructor(options, data = {}, vars2 = {}, extendsScript = "", formOptions) {
     options.compile && (options = Compiler_default.compile(options, data, vars2, extendsScript, options.debug));
     util_default.optionsInject(this, options, {
       type: () => "template",
@@ -2944,6 +2981,7 @@ var _Template = class {
       buildBy: (v) => util_default.isString(v),
       children: (v) => util_default.isArray(v)
     });
+    this.formOptions = formOptions;
   }
   scenesSplice(start, end) {
     let index = 0;
@@ -3021,6 +3059,27 @@ var _Template = class {
     else
       return await _Template.parseJSONPreprocessing(content, data, vars2, dataProcessor, varsProcessor);
   }
+  generateFormRules() {
+    var _a;
+    if (!this.formOptions)
+      return null;
+    const components = [];
+    (_a = this.formOptions) == null ? void 0 : _a.children.forEach((node) => {
+      const component = util_default.omit(node, ["children"]);
+      node.children.forEach((node2) => {
+        if (!component[node2.type])
+          component[node2.type] = [];
+        const temp = util_default.omit(node2, ["type", "children"]);
+        if (temp.__type) {
+          temp.type = temp.__type;
+          delete temp.__type;
+        }
+        component[node2.type].push(temp);
+      });
+      components.push(component);
+    });
+    return components;
+  }
   resize(width, height) {
     const scaleX = width / this.width;
     const scaleY = height / this.height;
@@ -3088,7 +3147,7 @@ var _Template = class {
   }
 };
 var Template = _Template;
-__publicField(Template, "packageVersion", "1.1.693");
+__publicField(Template, "packageVersion", "1.1.695");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));

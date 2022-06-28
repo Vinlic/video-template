@@ -50,6 +50,7 @@ declare class Parser {
     static parseSceneXMLPreprocessing(content: string, data: {} | undefined, vars: {} | undefined, dataProcessor: any, varsProcessor: any): Promise<Scene>;
     static parseElementJSON(content: any, data?: {}, vars?: {}, extendsScript?: string): Element;
     static parseElementXML(content: string, data?: {}, vars?: {}, extendsScript?: string): Element;
+    static convertXMLObject(obj: any, target?: any, jsonParse?: boolean): any;
 }
 
 declare class OldParser {
@@ -484,7 +485,8 @@ declare class Scene {
     transition?: Transition;
     filter?: IFilterOptions;
     children: Element[];
-    constructor(options: ISceneOptions, data?: {}, vars?: {}, extendsScript?: string);
+    private formOptions?;
+    constructor(options: ISceneOptions, data?: {}, vars?: {}, extendsScript?: string, formOptions?: any);
     appendChild(node: Element): void;
     setDuration(duration: number): void;
     toXML(pretty?: boolean): any;
@@ -503,6 +505,7 @@ declare class Scene {
     static isInstance(value: any): boolean;
     resize(width: number, height: number): void;
     generateTimeline(baseTime?: number): any;
+    generateFormRules(): any[] | null;
     get sortedChildren(): Element[];
     get fontFamilys(): string[];
     set parent(obj: Template | undefined);
@@ -652,7 +655,7 @@ interface ITemplateOptions {
 }
 
 declare class Template {
-    static readonly packageVersion = "1.1.693";
+    static readonly packageVersion = "1.1.695";
     static readonly type = "template";
     type: string;
     id: string;
@@ -681,7 +684,8 @@ declare class Template {
     updateTime: number;
     buildBy: string;
     children: (Scene | Element)[];
-    constructor(options: ITemplateOptions, data?: {}, vars?: {}, extendsScript?: string);
+    private formOptions?;
+    constructor(options: ITemplateOptions, data?: {}, vars?: {}, extendsScript?: string, formOptions?: any);
     scenesSplice(start: number, end: number): void;
     appendChild(node: Scene | Element): void;
     toBASE64(): string;
@@ -701,6 +705,7 @@ declare class Template {
     static parseXMLPreprocessing: typeof Parser.parseXMLPreprocessing;
     static parseOldXML: typeof OldParser.parseXML;
     static parseOptions: typeof OptionsParser.parseOptions;
+    generateFormRules(): any[] | null;
     resize(width: number, height: number): void;
     generateTimeline(): any;
     clone(): Template;

@@ -90,36 +90,7 @@ class Parser {
     }
 
     public static parseXMLObject(xmlObject: any, varsObject?: any, dataObject?: any, data = {}, vars = {}) {
-        function parse(obj: any, target: any = {}) {
-            const type = Object.keys(obj)[0];
-            target.type = type;
-            for (let key in obj[':@']) {
-                const value = obj[':@'][key];
-                key = {
-                    type: "__type",
-                    value: "__value"
-                }[key] || key;
-                let index;
-                if (key === 'for-index') key = 'forIndex';
-                else if (key === 'for-item') key = 'forItem';
-                else if ((index = key.indexOf('-')) != -1) {
-                    const pkey = key.substring(0, index);
-                    const ckey = key.substring(index + 1, key.length);
-                    if (!target[pkey]) target[pkey] = {};
-                    target[pkey][ckey] = value;
-                    continue;
-                }
-                target[key] = value;
-            }
-            target.children = [];
-            obj[type].forEach((v: any) => {
-                if (v['#text']) return (target.value = v['#text']);
-                const result = parse(v, {});
-                result && target.children.push(result);
-            });
-            return target;
-        }
-        const completeObject = parse(xmlObject);
+        const completeObject = this.convertXMLObject(xmlObject);
         const _vars = {};
         const _data = {};
         if (varsObject || dataObject) {
@@ -130,8 +101,8 @@ class Parser {
                     processing(o, target[o.type]);
                 });
             }
-            varsObject && processing(parse(varsObject), _vars);
-            dataObject && processing(parse(dataObject), _data);
+            varsObject && processing(this.convertXMLObject(varsObject), _vars);
+            dataObject && processing(this.convertXMLObject(dataObject), _data);
         }
         return {
             completeObject,
@@ -141,24 +112,26 @@ class Parser {
     }
 
     public static parseXML(content: string, data = {}, vars = {}) {
-        let xmlObject, varsObject, dataObject, extendsScript = "";
+        let xmlObject, varsObject, dataObject, formOptions, extendsScript = "";
         xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o: any) => {
             if (o.template) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
+            if (o.form) formOptions = this.convertXMLObject(o, undefined, true);
             if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template xml invalid');
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars);
-        return new Template(completeObject, _data, _vars, extendsScript);
+        return new Template(completeObject, _data, _vars, extendsScript, formOptions);
     }
 
     public static async parseXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
-        let xmlObject, varsObject, dataObject, extendsScript = "";
+        let xmlObject, varsObject, dataObject, formOptions, extendsScript = "";
         xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o: any) => {
             if (o.template) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
+            if (o.form) formOptions = this.convertXMLObject(o, undefined, true);
             if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template xml invalid');
@@ -177,29 +150,31 @@ class Parser {
                 util.isObject(result) && util.merge(_vars, result);
             }
         }
-        return new Template(completeObject, _data, _vars, extendsScript);
+        return new Template(completeObject, _data, _vars, extendsScript, formOptions);
     }
 
     public static parseSceneXML(content: string, data = {}, vars = {}) {
-        let xmlObject, varsObject, dataObject, extendsScript;
+        let xmlObject, varsObject, formOptions, dataObject, extendsScript;
         xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o: any) => {
             if (o.scene) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
-            if (o.script) extendsScript = o;
+            if (o.form) formOptions = this.convertXMLObject(o, undefined, true);
+            if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template scene xml invalid');
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-        return new Scene(completeObject, util.merge(_data, data), util.merge(_vars, vars), extendsScript);
+        return new Scene(completeObject, util.merge(_data, data), util.merge(_vars, vars), extendsScript, formOptions);
     }
 
     public static async parseSceneXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
-        let xmlObject, varsObject, dataObject, extendsScript;
+        let xmlObject, varsObject, formOptions, dataObject, extendsScript;
         xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o: any) => {
             if (o.scene) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
-            if (o.script) extendsScript = o;
+            if (o.form) formOptions = this.convertXMLObject(o, undefined, true);
+            if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template scene xml invalid');
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
@@ -217,7 +192,7 @@ class Parser {
                 util.isObject(result) && util.merge(_vars, result);
             }
         }
-        return new Scene(completeObject, _data, _vars, extendsScript);
+        return new Scene(completeObject, _data, _vars, extendsScript, formOptions);
     }
 
     public static parseElementJSON(content: any, data = {}, vars = {}, extendsScript = "") {
@@ -229,6 +204,38 @@ class Parser {
         if (!xmlObject) throw new Error('template element xml invalid');
         const { completeObject } = this.parseXMLObject(xmlObject);
         return ElementFactory.createElement(completeObject, data, vars, extendsScript);
+    }
+
+    public static convertXMLObject(obj: any, target: any = {}, jsonParse = false) {
+        const type = Object.keys(obj)[0];
+        target.type = type;
+        for (let key in obj[':@']) {
+            let value = obj[':@'][key];
+            key = {
+                type: "__type",
+                value: "__value"
+            }[key] || key;
+            let index;
+            if(jsonParse && value && value[0] === "{" || value[0] === "[")
+                try { value = JSON.parse(value) } catch {}
+            if (key === 'for-index') key = 'forIndex';
+            else if (key === 'for-item') key = 'forItem';
+            else if ((index = key.indexOf('-')) != -1) {
+                const pkey = key.substring(0, index);
+                const ckey = key.substring(index + 1, key.length);
+                if (!target[pkey]) target[pkey] = {};
+                target[pkey][ckey] = value;
+                continue;
+            }
+            target[key] = value;
+        }
+        target.children = [];
+        obj[type].forEach((v: any) => {
+            if (v['#text']) return (target.value = v['#text']);
+            const result = this.convertXMLObject(v, {});
+            result && target.children.push(result);
+        });
+        return target;
     }
 
 }

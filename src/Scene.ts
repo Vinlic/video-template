@@ -71,9 +71,10 @@ class Scene {
     public transition?: Transition; // 场景转场效果
     public filter?: IFilterOptions; // 场景滤镜
     public children: Element[] = []; // 场景子节点
+    private formOptions?: any;  //表单选项
     #parent?: Template;  //父级指针
 
-    public constructor(options: ISceneOptions, data = {}, vars = {}, extendsScript = "") {
+    public constructor(options: ISceneOptions, data = {}, vars = {}, extendsScript = "", formOptions?: any) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
         options.compile && (options = Compiler.compile(options, data, vars, extendsScript)); //如果模板属性包含compile则对模板进行编译处理
         util.optionsInject(
@@ -111,8 +112,9 @@ class Scene {
             },
         );
         const maxDuration = Math.max(...this.children.map(node => (Voice.isInstance(node) || Vtuber.isInstance(node)) ? node.getMaxDuration() : 0));
-        if(maxDuration > this.duration)
+        if (maxDuration > this.duration)
             this.duration = maxDuration;
+        this.formOptions = formOptions;
     }
 
     public appendChild(node: Element) {
@@ -155,7 +157,7 @@ class Scene {
         let backgroundVideo: Element | undefined;
         let backgroundAudio: Element | undefined;
         this.children.forEach(node => {
-            if(node.isBackground) {
+            if (node.isBackground) {
                 switch (node.type) {
                     case 'image':
                         backgroundImage = node;
@@ -222,13 +224,13 @@ class Scene {
      */
     public renderOldXML(parent?: any, resources?: any) {
         const board = parent ? parent.ele('board', {
-                id: this.id,
-                name: this.name,
-                poster: this.poster,
-                duration: util.millisecondsToSenconds(this.duration),
-            }) : this.#createXMLRoot('board', {
-                duration: util.millisecondsToSenconds(this.duration)
-            });
+            id: this.id,
+            name: this.name,
+            poster: this.poster,
+            duration: util.millisecondsToSenconds(this.duration),
+        }) : this.#createXMLRoot('board', {
+            duration: util.millisecondsToSenconds(this.duration)
+        });
         if (this.backgroundColor) {
             board.ele('bgblock', {
                 id: util.uniqid(),
@@ -269,7 +271,7 @@ class Scene {
      * @param {String} content
      * @returns {Template}
      */
-      public static parse(content: any, data?: object, vars?: object) {
+    public static parse(content: any, data?: object, vars?: object) {
         if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
         if (util.isBuffer(content)) content = content.toString();
         if (util.isObject(content)) return new Scene(content);
@@ -283,7 +285,7 @@ class Scene {
      * @param {String} content
      * @returns {Template}
      */
-     public static async parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
+    public static async parseAndProcessing(content: any, data?: object, vars?: object, dataProcessor?: any, varsProcessor?: any) {
         if (!util.isString(content) && !util.isObject(content)) throw new TypeError('content must be an string or object');
         if (util.isBuffer(content)) content = content.toString();
         if (util.isObject(content)) return new Scene(content);
@@ -305,7 +307,7 @@ class Scene {
      * @param {String} content
      * @returns {Template}
      */
-     public static parseJSONPreprocessing = Parser.parseSceneJSONPreprocessing.bind(Parser);
+    public static parseJSONPreprocessing = Parser.parseSceneJSONPreprocessing.bind(Parser);
 
     /**
      * 解析XML文档为模型
@@ -323,12 +325,12 @@ class Scene {
      */
     public static parseXMLPreprocessing = Parser.parseSceneXMLPreprocessing.bind(Parser);
 
-      /**
-     * 解析前端options
-     * 
-     * @param {Object} options options对象
-     * @returns {Template}
-     */
+    /**
+   * 解析前端options
+   * 
+   * @param {Object} options options对象
+   * @returns {Template}
+   */
     public static parseOptions = OptionsParser.parseSceneOptions.bind(OptionsParser);
 
     /**
@@ -380,6 +382,30 @@ class Scene {
     }
 
     /**
+     * 生成Form表单JSON
+     * 
+     * @returns {Object} 
+     */
+    public generateFormRules() {
+        if (!this.formOptions) return null;
+        const components: any[] = [];
+        this.formOptions?.children.forEach((node: any) => {
+            const component = util.omit(node, ["children"]);
+            node.children.forEach((node: any) => {
+                if (!component[node.type]) component[node.type] = [];
+                const temp = util.omit(node, ["type", "children"]);
+                if(temp.__type) {
+                    temp.type = temp.__type
+                    delete temp.__type;
+                }
+                component[node.type].push(temp);
+            });
+            components.push(component);
+        });
+        return components;
+    }
+
+    /**
      * 获取已排序的子节点
      */
     public get sortedChildren() {
@@ -406,7 +432,7 @@ class Scene {
     public get parent() {
         return this.#parent;
     }
-    
+
 }
 
 export default Scene;
