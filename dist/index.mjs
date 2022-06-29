@@ -3124,7 +3124,7 @@ var _Template = class {
   }
 };
 var Template = _Template;
-__publicField(Template, "packageVersion", "1.1.695");
+__publicField(Template, "packageVersion", "1.1.696");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
