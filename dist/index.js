@@ -322,6 +322,7 @@ var Compiler = class {
   static eval(expression, data = {}, valueMap = {}, extendsScriptCtx = {}, debug) {
     let result;
     const _data = __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions), extendsScriptCtx);
+    console.log(expression, "\u554A\u554A");
     const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`);
     try {
       result = evalFun.bind(_data)();
