@@ -43,9 +43,9 @@ class Voice extends Media {
             (node as SSML).init(this.provider);
             const duration = (node as SSML).document?.duration;
             if((this.duration || 0) < duration)
-                this.duration = duration + 1000;
+                this.duration = duration;
             if((this.endTime || 0) < duration)
-                this.endTime = duration + 1000;
+                this.endTime = duration;
         });
     }
 
@@ -104,6 +104,8 @@ class Voice extends Media {
         document.appendChild(voice);
         return new SSML({ value: document.toSSML() });
     }
+
+    public resetEndTime(value: number) { }
 
     public get ssml() {
         if(!this.children.length || !SSML.isInstance(this.children[0])) return null;

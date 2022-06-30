@@ -166,7 +166,6 @@ class Compiler {
   private static eval(expression: string, data = {}, valueMap = {}, extendsScriptCtx = {}, debug: boolean) {
     let result;
     const _data = { ...data, ...valueMap, ...extension.functions, ...extendsScriptCtx };
-    console.log(expression, "啊啊");
     const evalFun = Function(`const {${Object.keys(_data).join(',')}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`); //将表达式和数据注入在方法内
     try {
       result = evalFun.bind(_data)();

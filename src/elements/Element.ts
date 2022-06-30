@@ -377,6 +377,11 @@ class Element {
         this.children.forEach(node => node.rescale(scaleX, scaleY));
     }
 
+    public resetEndTime(value: number) {
+        this.endTime && (this.endTime += value);
+        this.children.forEach(node => node.resetEndTime(value));
+    }
+
     /**
      * 生成所有子元素的轨道
      *

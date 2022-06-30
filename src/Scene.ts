@@ -112,8 +112,10 @@ class Scene {
             },
         );
         const maxDuration = Math.max(...this.children.map(node => (Voice.isInstance(node) || Vtuber.isInstance(node)) ? node.getMaxDuration() : 0));
-        if (maxDuration > this.duration)
+        if (maxDuration > this.duration) {
+            this.resetEndTime(maxDuration - this.duration);
             this.duration = maxDuration;
+        }
         this.#formObject = formObject;
     }
 
@@ -408,6 +410,10 @@ class Scene {
             rules,
             formObject: this.#formObject
         };
+    }
+
+    public resetEndTime(value: number) {
+        this.children.forEach(node => node.resetEndTime(value));
     }
 
     /**

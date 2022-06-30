@@ -255,6 +255,7 @@ declare class Voice extends Media {
     renderOldXML(parent: any, resources: any, global: any): any;
     toOptions(): any;
     private generateSSML;
+    resetEndTime(value: number): void;
     get ssml(): string | null | undefined;
     static isInstance(value: any): boolean;
 }
@@ -509,6 +510,7 @@ declare class Scene {
         rules: any[];
         formObject: any;
     } | null;
+    resetEndTime(value: number): void;
     get sortedChildren(): Element[];
     get fontFamilys(): string[];
     set parent(obj: Template | undefined);
@@ -575,6 +577,7 @@ declare class Element {
     static isInstance(value: any): boolean;
     resize(width: number, height: number): void;
     rescale(scaleX: number, scaleY: number): void;
+    resetEndTime(value: number): void;
     generateTimeline(baseTime: number | undefined, duration: number): any;
     set parent(obj: Template | Scene | Element | undefined);
     get parent(): Template | Scene | Element | undefined;
@@ -659,7 +662,7 @@ interface ITemplateOptions {
 
 declare class Template {
     #private;
-    static readonly packageVersion = "1.1.72";
+    static readonly packageVersion = "1.1.74";
     static readonly type = "template";
     type: string;
     id: string;

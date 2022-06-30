@@ -299,7 +299,6 @@ var Compiler = class {
   static eval(expression, data = {}, valueMap = {}, extendsScriptCtx = {}, debug) {
     let result;
     const _data = __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions), extendsScriptCtx);
-    console.log(expression, "\u554A\u554A");
     const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`);
     try {
       result = evalFun.bind(_data)();
@@ -1644,6 +1643,10 @@ var _Element = class {
     this.height && (this.height = parseFloat((this.height * scaleY).toFixed(4)));
     this.children.forEach((node) => node.rescale(scaleX, scaleY));
   }
+  resetEndTime(value) {
+    this.endTime && (this.endTime += value);
+    this.children.forEach((node) => node.resetEndTime(value));
+  }
   generateTimeline(baseTime = 0, duration) {
     var _a;
     let track = [];
@@ -2208,9 +2211,9 @@ var _Voice2 = class extends Media_default {
       node.init(this.provider);
       const duration = (_a = node.document) == null ? void 0 : _a.duration;
       if ((this.duration || 0) < duration)
-        this.duration = duration + 1e3;
+        this.duration = duration;
       if ((this.endTime || 0) < duration)
-        this.endTime = duration + 1e3;
+        this.endTime = duration;
     });
   }
   renderXML(parent) {
@@ -2258,6 +2261,8 @@ var _Voice2 = class extends Media_default {
     voice.appendChild(prosody);
     document.appendChild(voice);
     return new SSML_default({ value: document.toSSML() });
+  }
+  resetEndTime(value) {
   }
   get ssml() {
     if (!this.children.length || !SSML_default.isInstance(this.children[0]))
@@ -2670,8 +2675,10 @@ var _Scene = class {
       children: (v) => util_default.isArray(v)
     });
     const maxDuration = Math.max(...this.children.map((node) => Voice_default.isInstance(node) || Vtuber_default.isInstance(node) ? node.getMaxDuration() : 0));
-    if (maxDuration > this.duration)
+    if (maxDuration > this.duration) {
+      this.resetEndTime(maxDuration - this.duration);
       this.duration = maxDuration;
+    }
     __privateSet(this, _formObject, formObject);
   }
   appendChild(node) {
@@ -2841,6 +2848,9 @@ var _Scene = class {
       rules,
       formObject: __privateGet(this, _formObject)
     };
+  }
+  resetEndTime(value) {
+    this.children.forEach((node) => node.resetEndTime(value));
   }
   get sortedChildren() {
     const _children = util_default.clone(this.children);
@@ -3151,7 +3161,7 @@ var _Template = class {
 };
 var Template = _Template;
 _formObject2 = new WeakMap();
-__publicField(Template, "packageVersion", "1.1.72");
+__publicField(Template, "packageVersion", "1.1.74");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
