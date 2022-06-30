@@ -458,8 +458,8 @@ declare class OptionsParser {
         endTime: number | undefined;
     };
     static parseElementOptions(options: any, parentDuration?: number): Element;
-    static parseSceneOptions(options: any): Scene;
-    static parseOptions(options: any): Template;
+    static parseSceneOptions(options: any, formObject?: any): Scene;
+    static parseOptions(options: any, formObject?: any): Template;
 }
 
 declare class Transition {
@@ -485,8 +485,7 @@ declare class Scene {
     transition?: Transition;
     filter?: IFilterOptions;
     children: Element[];
-    private formOptions?;
-    constructor(options: ISceneOptions, data?: {}, vars?: {}, extendsScript?: string, formOptions?: any);
+    constructor(options: ISceneOptions, data?: {}, vars?: {}, extendsScript?: string, formObject?: any);
     appendChild(node: Element): void;
     setDuration(duration: number): void;
     toXML(pretty?: boolean): any;
@@ -505,7 +504,11 @@ declare class Scene {
     static isInstance(value: any): boolean;
     resize(width: number, height: number): void;
     generateTimeline(baseTime?: number): any;
-    generateFormRules(): any[] | null;
+    getFormInfo(): {
+        source: any;
+        rules: any[];
+        formObject: any;
+    } | null;
     get sortedChildren(): Element[];
     get fontFamilys(): string[];
     set parent(obj: Template | undefined);
@@ -655,7 +658,8 @@ interface ITemplateOptions {
 }
 
 declare class Template {
-    static readonly packageVersion = "1.1.696";
+    #private;
+    static readonly packageVersion = "1.1.72";
     static readonly type = "template";
     type: string;
     id: string;
@@ -684,8 +688,7 @@ declare class Template {
     updateTime: number;
     buildBy: string;
     children: (Scene | Element)[];
-    private formOptions?;
-    constructor(options: ITemplateOptions, data?: {}, vars?: {}, extendsScript?: string, formOptions?: any);
+    constructor(options: ITemplateOptions, data?: {}, vars?: {}, extendsScript?: string, formObject?: any);
     scenesSplice(start: number, end: number): void;
     appendChild(node: Scene | Element): void;
     toBASE64(): string;
@@ -705,7 +708,11 @@ declare class Template {
     static parseXMLPreprocessing: typeof Parser.parseXMLPreprocessing;
     static parseOldXML: typeof OldParser.parseXML;
     static parseOptions: typeof OptionsParser.parseOptions;
-    generateFormRules(): any[] | null;
+    getFormInfo(): {
+        source: any;
+        rules: any[];
+        formObject: any;
+    } | null;
     resize(width: number, height: number): void;
     generateTimeline(): any;
     clone(): Template;
@@ -714,6 +721,7 @@ declare class Template {
     get fontFamilys(): string[];
     get scenes(): Scene[];
     get elements(): Element[];
+    get formObject(): any;
 }
 
 export { Scene, Template, index as elements };

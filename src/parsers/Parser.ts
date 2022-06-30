@@ -1,11 +1,18 @@
 import { create } from 'xmlbuilder2';
-import { XMLParser } from 'fast-xml-parser';
+import { XMLBuilder, XMLParser } from 'fast-xml-parser';
 
 import util from '../util';
 import Template from '../Template';
 import Scene from '../Scene';
 import ElementFactory from '../ElementFactory';
 
+const HEAD = '<?xml version="1.0"?>';
+
+const xmlBuilder = new XMLBuilder({
+    attributeNamePrefix: '',
+    ignoreAttributes: false,
+    preserveOrder: true
+});
 const xmlParser = new XMLParser({
     allowBooleanAttributes: true, //需要解析布尔值属性
     ignoreAttributes: false, //不要忽略属性
@@ -18,8 +25,7 @@ const xmlParser = new XMLParser({
 class Parser {
 
     public static toXML(_template: Template, pretty = false) {
-        const root = create({ version: "1.0" });
-        const template = root.ele("template", {
+        const template = create().ele("template", {
             version: _template.version,
             id: _template.id,
             name: _template.name,
@@ -48,7 +54,14 @@ class Parser {
             buildBy: _template.buildBy
         });
         _template.children.forEach((node) => node.renderXML(template)); //子节点XML渲染
-        return template.end({ prettyPrint: pretty });
+        const chunks = [HEAD];
+        let formXML = "";
+        if(_template.formObject) {
+            formXML = xmlBuilder.build([_template.formObject]);
+            chunks.push(formXML);
+        }
+        chunks.push(template.end({ headless: true, prettyPrint: pretty }));
+        return chunks.join(pretty ? "\n" : "");
     }
 
     public static toBuffer(tempalte: Template) {
@@ -112,26 +125,26 @@ class Parser {
     }
 
     public static parseXML(content: string, data = {}, vars = {}) {
-        let xmlObject, varsObject, dataObject, formOptions, extendsScript = "";
+        let xmlObject, varsObject, dataObject, formObject, extendsScript = "";
         xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o: any) => {
             if (o.template) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
-            if (o.form) formOptions = this.convertXMLObject(o, undefined, true);
+            if (o.form) formObject = o;
             if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template xml invalid');
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, dataObject, varsObject, data, vars);
-        return new Template(completeObject, _data, _vars, extendsScript, formOptions);
+        return new Template(completeObject, _data, _vars, extendsScript, formObject);
     }
 
     public static async parseXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
-        let xmlObject, varsObject, dataObject, formOptions, extendsScript = "";
+        let xmlObject, varsObject, dataObject, formObject, extendsScript = "";
         xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o: any) => {
             if (o.template) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
-            if (o.form) formOptions = this.convertXMLObject(o, undefined, true);
+            if (o.form) formObject = o;
             if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template xml invalid');
@@ -150,30 +163,30 @@ class Parser {
                 util.isObject(result) && util.merge(_vars, result);
             }
         }
-        return new Template(completeObject, _data, _vars, extendsScript, formOptions);
+        return new Template(completeObject, _data, _vars, extendsScript, formObject);
     }
 
     public static parseSceneXML(content: string, data = {}, vars = {}) {
-        let xmlObject, varsObject, formOptions, dataObject, extendsScript;
+        let xmlObject, varsObject, formObject, dataObject, extendsScript;
         xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o: any) => {
             if (o.scene) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
-            if (o.form) formOptions = this.convertXMLObject(o, undefined, true);
+            if (o.form) formObject = o;
             if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template scene xml invalid');
         const { completeObject, data: _data, vars: _vars } = this.parseXMLObject(xmlObject, varsObject, dataObject, data, vars);
-        return new Scene(completeObject, util.merge(_data, data), util.merge(_vars, vars), extendsScript, formOptions);
+        return new Scene(completeObject, util.merge(_data, data), util.merge(_vars, vars), extendsScript, formObject);
     }
 
     public static async parseSceneXMLPreprocessing(content: string, data = {}, vars = {}, dataProcessor: any, varsProcessor: any) {
-        let xmlObject, varsObject, formOptions, dataObject, extendsScript;
+        let xmlObject, varsObject, formObject, dataObject, extendsScript;
         xmlParser.parse(content.replace(/\s<\s/g, "$#").replace(/\s>\s/g, "#$")).forEach((o: any) => {
             if (o.scene) xmlObject = o;
             if (o.vars) varsObject = o;
             if (o.data) dataObject = o;
-            if (o.form) formOptions = this.convertXMLObject(o, undefined, true);
+            if (o.form) formObject = o;
             if (o.script) extendsScript = (o.script[0] && o.script[0]["#text"]) || "";
         });
         if (!xmlObject) throw new Error('template scene xml invalid');
@@ -192,7 +205,7 @@ class Parser {
                 util.isObject(result) && util.merge(_vars, result);
             }
         }
-        return new Scene(completeObject, _data, _vars, extendsScript, formOptions);
+        return new Scene(completeObject, _data, _vars, extendsScript, formObject);
     }
 
     public static parseElementJSON(content: any, data = {}, vars = {}, extendsScript = "") {

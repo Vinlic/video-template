@@ -248,7 +248,7 @@ class OptionsParser {
         }
     }
 
-    public static parseSceneOptions(options: any) {
+    public static parseSceneOptions(options: any, formObject?: any) {
         if (util.isString(options))
             options = JSON.parse(options);
         const children: Element[] = [];
@@ -301,10 +301,10 @@ class OptionsParser {
             filter: undefined,
             compile: options.compile,
             children
-        });
+        }, undefined, undefined, undefined, formObject);
     }
 
-    public static parseOptions(options: any) {
+    public static parseOptions(options: any, formObject?: any) {
         if (util.isString(options))
             options = JSON.parse(options);
         const children: (Scene | Element)[] = [];
@@ -356,7 +356,7 @@ class OptionsParser {
             captureTime: util.isFinite(options.captureTime) ? options.captureTime * 1000 : undefined,
             compile: options.compile,
             children
-        });
+        }, undefined, undefined, undefined, formObject);
     }
 
 }

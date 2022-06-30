@@ -8,7 +8,7 @@ import { Parser, OldParser, OptionsParser } from './parsers';
 import Compiler from './Compiler';
 
 class Template {
-    public static readonly packageVersion = '1.1.696'; // 包版本标识
+    public static readonly packageVersion = '1.1.72'; // 包版本标识
     public static readonly type = 'template'; // type标识
     public type = ''; // 模板type必须为template
     public id = ''; // 模板ID
@@ -37,9 +37,9 @@ class Template {
     public updateTime = 0; //模板最后更新时间
     public buildBy = ''; //模板从何处构建
     public children: (Scene | Element)[] = []; //模板子节点
-    private formOptions?: any;  //表单选项
+    #formObject?: any;  //表单对象
 
-    public constructor(options: ITemplateOptions, data = {}, vars = {}, extendsScript = "", formOptions?: any) {
+    public constructor(options: ITemplateOptions, data = {}, vars = {}, extendsScript = "", formObject?: any) {
         options.compile && (options = Compiler.compile(options, data, vars, extendsScript, options.debug)); //如果模板属性包含compile则对模板进行编译处理
         util.optionsInject(this, options, {
             type: () => 'template',
@@ -97,7 +97,7 @@ class Template {
             buildBy: (v: any) => util.isString(v),
             children: (v: any) => util.isArray(v),
         });
-        this.formOptions = formOptions;
+        this.#formObject = formObject;
     }
 
     public scenesSplice(start: number, end: number) {
@@ -277,27 +277,32 @@ class Template {
     public static parseOptions = OptionsParser.parseOptions.bind(OptionsParser);
 
     /**
-     * 生成Form表单规则
+     * 获取Form表单信息
      * 
      * @returns {Object} 
      */
-    public generateFormRules() {
-        if(!this.formOptions) return null;
-        const components: any[] = [];
-        this.formOptions?.children.forEach((node: any) => {
-            const component = util.omit(node, ["children"]);
+    public getFormInfo() {
+        if(!this.#formObject) return null;
+        const formOptions = Parser.convertXMLObject(this.#formObject, undefined, true);
+        const rules: any[] = [];
+        formOptions.children.forEach((node: any) => {
+            const rule = util.omit(node, ["children"]);
             node.children.forEach((node: any) => {
-                if(!component[node.type]) component[node.type] = [];
+                if(!rule[node.type]) rule[node.type] = [];
                 const temp = util.omit(node, ["type", "children"]);
                 if(temp.__type) {
                     temp.type = temp.__type
                     delete temp.__type;
                 }
-                component[node.type].push(temp);
+                rule[node.type].push(temp);
             });
-            components.push(component);
+            rules.push(rule);
         });
-        return components;
+        return {
+            source: formOptions.source,
+            rules,
+            formObject: this.#formObject
+        };
     }
 
     /**
@@ -398,6 +403,10 @@ class Template {
      */
     public get elements() {
         return this.children.filter(node => Element.isInstance(node)) as Element[];
+    }
+
+    public get formObject() {
+        return this.#formObject;
     }
 }
 

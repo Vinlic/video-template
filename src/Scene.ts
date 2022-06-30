@@ -71,10 +71,10 @@ class Scene {
     public transition?: Transition; // 场景转场效果
     public filter?: IFilterOptions; // 场景滤镜
     public children: Element[] = []; // 场景子节点
-    private formOptions?: any;  //表单选项
+    #formObject?: any;  //表单对象
     #parent?: Template;  //父级指针
 
-    public constructor(options: ISceneOptions, data = {}, vars = {}, extendsScript = "", formOptions?: any) {
+    public constructor(options: ISceneOptions, data = {}, vars = {}, extendsScript = "", formObject?: any) {
         if (!util.isObject(options)) throw new TypeError('options must be an Object');
         options.compile && (options = Compiler.compile(options, data, vars, extendsScript)); //如果模板属性包含compile则对模板进行编译处理
         util.optionsInject(
@@ -114,7 +114,7 @@ class Scene {
         const maxDuration = Math.max(...this.children.map(node => (Voice.isInstance(node) || Vtuber.isInstance(node)) ? node.getMaxDuration() : 0));
         if (maxDuration > this.duration)
             this.duration = maxDuration;
-        this.formOptions = formOptions;
+        this.#formObject = formObject;
     }
 
     public appendChild(node: Element) {
@@ -382,27 +382,32 @@ class Scene {
     }
 
     /**
-     * 生成Form表单JSON
+     * 获取Form表单信息
      * 
      * @returns {Object} 
      */
-    public generateFormRules() {
-        if (!this.formOptions) return null;
-        const components: any[] = [];
-        this.formOptions?.children.forEach((node: any) => {
-            const component = util.omit(node, ["children"]);
+     public getFormInfo() {
+        if(!this.#formObject) return null;
+        const formOptions = Parser.convertXMLObject(this.#formObject, undefined, true);
+        const rules: any[] = [];
+        formOptions.children.forEach((node: any) => {
+            const rule = util.omit(node, ["children"]);
             node.children.forEach((node: any) => {
-                if (!component[node.type]) component[node.type] = [];
+                if(!rule[node.type]) rule[node.type] = [];
                 const temp = util.omit(node, ["type", "children"]);
                 if(temp.__type) {
                     temp.type = temp.__type
                     delete temp.__type;
                 }
-                component[node.type].push(temp);
+                rule[node.type].push(temp);
             });
-            components.push(component);
+            rules.push(rule);
         });
-        return components;
+        return {
+            source: formOptions.source,
+            rules,
+            formObject: this.#formObject
+        };
     }
 
     /**
