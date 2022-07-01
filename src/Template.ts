@@ -8,7 +8,7 @@ import { Parser, OldParser, OptionsParser } from './parsers';
 import Compiler from './Compiler';
 
 class Template {
-    public static readonly packageVersion = '1.1.77'; // 包版本标识
+    public static readonly packageVersion = '1.1.771'; // 包版本标识
     public static readonly type = 'template'; // type标识
     public type = ''; // 模板type必须为template
     public id = ''; // 模板ID

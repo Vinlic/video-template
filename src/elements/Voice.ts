@@ -45,7 +45,7 @@ class Voice extends Media {
         this.children.forEach(node => {
             if(!SSML.isInstance(node)) return;
             (node as SSML).init(this.provider);
-            const duration = (node as SSML).document?.duration;
+            const duration = (node as SSML).document?.duration + 1000;
             if((this.duration || 0) < duration)
                 this.duration = duration;
             if((this.endTime || 0) < duration)

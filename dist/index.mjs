@@ -2213,7 +2213,7 @@ var _Voice2 = class extends Media_default {
       if (!SSML_default.isInstance(node))
         return;
       node.init(this.provider);
-      const duration = (_a = node.document) == null ? void 0 : _a.duration;
+      const duration = ((_a = node.document) == null ? void 0 : _a.duration) + 1e3;
       if ((this.duration || 0) < duration)
         this.duration = duration;
       if ((this.endTime || 0) < duration)
@@ -3165,7 +3165,7 @@ var _Template = class {
 };
 var Template = _Template;
 _formObject2 = new WeakMap();
-__publicField(Template, "packageVersion", "1.1.77");
+__publicField(Template, "packageVersion", "1.1.771");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
