@@ -150,7 +150,7 @@ class Element {
 
     public getMaxDuration() {
         const maxDuration = Math.max(...this.children.map(node => (Voice.isInstance(node) || Vtuber.isInstance(node)) ? node.getMaxDuration() : 0));
-        return Math.max(maxDuration, this.endTime || 0);
+        return Math.max(maxDuration, (this.endTime || 0) - (this.startTime || 0));
     }
 
     /**

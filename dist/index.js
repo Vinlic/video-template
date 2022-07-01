@@ -1500,7 +1500,7 @@ var _Element = class {
   }
   getMaxDuration() {
     const maxDuration = Math.max(...this.children.map((node) => Voice_default.isInstance(node) || Vtuber_default.isInstance(node) ? node.getMaxDuration() : 0));
-    return Math.max(maxDuration, this.endTime || 0);
+    return Math.max(maxDuration, (this.endTime || 0) - (this.startTime || 0));
   }
   renderXML(parent) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v;
@@ -2227,6 +2227,10 @@ var _Voice2 = class extends Media_default {
       pitchRate: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
     });
     !this.children.length && this.children.push(this.generateSSML());
+    if (this.duration) {
+      !util_default.isFinite(this.endTime) && (this.endTime = this.duration - (this.startTime || 0));
+      return;
+    }
     this.children.forEach((node) => {
       var _a;
       if (!SSML_default.isInstance(node))
@@ -2236,7 +2240,7 @@ var _Voice2 = class extends Media_default {
       if ((this.duration || 0) < duration)
         this.duration = duration;
       if ((this.endTime || 0) < duration)
-        this.endTime = duration;
+        this.endTime = duration + (this.startTime || 0);
     });
   }
   renderXML(parent) {
@@ -3184,7 +3188,7 @@ var _Template = class {
 };
 var Template = _Template;
 _formObject2 = new WeakMap();
-__publicField(Template, "packageVersion", "1.1.74");
+__publicField(Template, "packageVersion", "1.1.77");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));

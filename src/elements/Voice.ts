@@ -38,6 +38,10 @@ class Voice extends Media {
             pitchRate: (v: any) => util.isUndefined(v) || util.isFinite(v),
         });
         !this.children.length && this.children.push(this.generateSSML());
+        if(this.duration) {  //如果存在时长则不进行时长推算
+            !util.isFinite(this.endTime) && (this.endTime = this.duration - (this.startTime || 0));
+            return;
+        }
         this.children.forEach(node => {
             if(!SSML.isInstance(node)) return;
             (node as SSML).init(this.provider);
@@ -45,7 +49,7 @@ class Voice extends Media {
             if((this.duration || 0) < duration)
                 this.duration = duration;
             if((this.endTime || 0) < duration)
-                this.endTime = duration;
+                this.endTime = duration + (this.startTime || 0);
         });
     }
 

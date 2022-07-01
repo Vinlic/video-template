@@ -662,7 +662,7 @@ interface ITemplateOptions {
 
 declare class Template {
     #private;
-    static readonly packageVersion = "1.1.74";
+    static readonly packageVersion = "1.1.77";
     static readonly type = "template";
     type: string;
     id: string;
