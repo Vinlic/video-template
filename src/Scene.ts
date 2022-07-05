@@ -66,6 +66,7 @@ class Scene {
     public width = 0; // 场景宽度
     public height = 0; // 场景高度
     public aspectRatio = '';  //场景比例
+    public original?: any; //视频原始信息对象
     public duration = 0; // 场景总时长
     public backgroundColor?: string; // 场景背景颜色
     public transition?: Transition; // 场景转场效果
@@ -104,6 +105,7 @@ class Scene {
                 width: (v: any) => util.isFinite(v),
                 height: (v: any) => util.isFinite(v),
                 aspectRatio: (v: any) => util.isString(v),
+                original: (v: any) => util.isUndefined(v) || util.isString(v),
                 duration: (v: any) => util.isFinite(v),
                 backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
                 transition: (v: any) => util.isUndefined(v) || Transition.isInstance(v),
@@ -182,6 +184,7 @@ class Scene {
             videoWidth: this.width,
             videoHeight: this.height,
             videoSize: this.aspectRatio,
+            original: this.original,
             bgColor: { id: util.uniqid(), fillColor: this.backgroundColor },
             bgImage: backgroundImage ? backgroundImage.toOptions() : undefined,
             bgVideo: backgroundVideo ? backgroundVideo.toOptions() : undefined,
@@ -212,6 +215,10 @@ class Scene {
                 backgroundColor: this.backgroundColor,
             })
             : this.#createXMLRoot();
+        if (util.isObject(this.original)) {
+            for (let key in this.original)
+                scene.att(`original-${key}`, (this.original as any)[key]);
+        }
         this.transition?.renderXML(scene); // 渲染转场属性
         this.sortedChildren.forEach((node) => node.renderXML(scene)); // 渲染场景子节点
         return scene;

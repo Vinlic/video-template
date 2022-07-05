@@ -433,9 +433,9 @@ var Parser = class {
       updateTime: _template.updateTime,
       buildBy: _template.buildBy
     });
-    for (let key in _template.original) {
-      const value = _template.original[key];
-      template.att(`original-${key}`, value);
+    if (util_default.isObject(_template.original)) {
+      for (let key in _template.original)
+        template.att(`original-${key}`, _template.original[key]);
     }
     _template.children.forEach((node) => node.renderXML(template));
     const chunks = [HEAD];
@@ -1299,6 +1299,7 @@ var OptionsParser = class {
       width: options.videoWidth,
       height: options.videoHeight,
       aspectRatio: options.videoSize,
+      original: options.original,
       duration: duration * 1e3,
       backgroundColor: options.bgColor ? options.bgColor.fillColor : void 0,
       transition: options.transition ? {
@@ -2648,6 +2649,7 @@ var _Scene = class {
     __publicField(this, "width", 0);
     __publicField(this, "height", 0);
     __publicField(this, "aspectRatio", "");
+    __publicField(this, "original");
     __publicField(this, "duration", 0);
     __publicField(this, "backgroundColor");
     __publicField(this, "transition");
@@ -2678,6 +2680,7 @@ var _Scene = class {
       width: (v) => util_default.isFinite(v),
       height: (v) => util_default.isFinite(v),
       aspectRatio: (v) => util_default.isString(v),
+      original: (v) => util_default.isUndefined(v) || util_default.isString(v),
       duration: (v) => util_default.isFinite(v),
       backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       transition: (v) => util_default.isUndefined(v) || Transition.isInstance(v),
@@ -2734,6 +2737,7 @@ var _Scene = class {
       videoWidth: this.width,
       videoHeight: this.height,
       videoSize: this.aspectRatio,
+      original: this.original,
       bgColor: { id: util_default.uniqid(), fillColor: this.backgroundColor },
       bgImage: backgroundImage ? backgroundImage.toOptions() : void 0,
       bgVideo: backgroundVideo ? backgroundVideo.toOptions() : void 0,
@@ -2757,6 +2761,10 @@ var _Scene = class {
       duration: this.duration,
       backgroundColor: this.backgroundColor
     }) : __privateMethod(this, _createXMLRoot, createXMLRoot_fn).call(this);
+    if (util_default.isObject(this.original)) {
+      for (let key in this.original)
+        scene.att(`original-${key}`, this.original[key]);
+    }
     (_a = this.transition) == null ? void 0 : _a.renderXML(scene);
     this.sortedChildren.forEach((node) => node.renderXML(scene));
     return scene;
@@ -3173,7 +3181,7 @@ var _Template = class {
 };
 var Template = _Template;
 _formObject2 = new WeakMap();
-__publicField(Template, "packageVersion", "1.1.774");
+__publicField(Template, "packageVersion", "1.1.776");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));

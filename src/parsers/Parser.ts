@@ -53,14 +53,14 @@ class Parser {
             updateTime: _template.updateTime,
             buildBy: _template.buildBy
         });
-        for(let key in _template.original) {
-            const value = _template.original[key];
-            template.att(`original-${key}`, value);
+        if (util.isObject(_template.original)) {
+            for (let key in _template.original)
+                template.att(`original-${key}`, (_template.original as any)[key]);
         }
         _template.children.forEach((node) => node.renderXML(template)); //子节点XML渲染
         const chunks = [HEAD];
         let formXML = "";
-        if(_template.formObject) {
+        if (_template.formObject) {
             formXML = xmlBuilder.build([_template.formObject]);
             chunks.push(formXML);
         }
@@ -233,8 +233,8 @@ class Parser {
                 value: "__value"
             }[key] || key;
             let index;
-            if(jsonParse && value && value[0] === "{" || value[0] === "[")
-                try { value = JSON.parse(value) } catch {}
+            if (jsonParse && value && value[0] === "{" || value[0] === "[")
+                try { value = JSON.parse(value) } catch { }
             if (key === 'for-index') key = 'forIndex';
             else if (key === 'for-item') key = 'forItem';
             else if ((index = key.indexOf('-')) != -1) {

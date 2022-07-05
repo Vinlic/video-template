@@ -481,6 +481,7 @@ declare class Scene {
     width: number;
     height: number;
     aspectRatio: string;
+    original?: any;
     duration: number;
     backgroundColor?: string;
     transition?: Transition;
@@ -620,6 +621,7 @@ interface ISceneOptions {
     width?: number | string;
     height?: number | string;
     aspectRatio?: string;
+    original?: any;
     duration?: number | string;
     backgroundColor?: string;
     transition?: ITransitionOptions;
@@ -663,7 +665,7 @@ interface ITemplateOptions {
 
 declare class Template {
     #private;
-    static readonly packageVersion = "1.1.774";
+    static readonly packageVersion = "1.1.776";
     static readonly type = "template";
     type: string;
     id: string;
@@ -675,7 +677,7 @@ declare class Template {
     width: number;
     height: number;
     aspectRatio: string;
-    original: any;
+    original?: any;
     fps: number;
     crf?: number;
     videoCodec?: string;

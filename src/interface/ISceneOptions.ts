@@ -11,6 +11,7 @@ interface ISceneOptions {
   width?: number | string;
   height?: number | string;
   aspectRatio?: string;
+  original?: any;
   duration?: number | string;
   backgroundColor?: string;
   transition?: ITransitionOptions;

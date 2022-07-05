@@ -293,6 +293,7 @@ class OptionsParser {
             width: options.videoWidth,
             height: options.videoHeight,
             aspectRatio: options.videoSize,
+            original: options.original,
             duration: duration * 1000,
             backgroundColor: options.bgColor ? options.bgColor.fillColor : undefined,
             transition: options.transition ? {

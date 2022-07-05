@@ -8,7 +8,7 @@ import { Parser, OldParser, OptionsParser } from './parsers';
 import Compiler from './Compiler';
 
 class Template {
-    public static readonly packageVersion = '1.1.774'; // 包版本标识
+    public static readonly packageVersion = '1.1.776'; // 包版本标识
     public static readonly type = 'template'; // type标识
     public type = ''; // 模板type必须为template
     public id = ''; // 模板ID
@@ -20,7 +20,7 @@ class Template {
     public width = 0; //视频宽度
     public height = 0; //视频高度
     public aspectRatio = ''; //视频比例
-    public original: any; //视频原始信息对象
+    public original?: any; //视频原始信息对象
     public fps = 0; //视频帧率
     public crf?: number; //视频码率影响因子
     public videoCodec?: string; //视频编码器
