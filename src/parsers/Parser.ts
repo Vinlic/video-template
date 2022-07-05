@@ -53,6 +53,10 @@ class Parser {
             updateTime: _template.updateTime,
             buildBy: _template.buildBy
         });
+        for(let key in _template.original) {
+            const value = _template.original[key];
+            template.att(`original-${key}`, value);
+        }
         _template.children.forEach((node) => node.renderXML(template)); //子节点XML渲染
         const chunks = [HEAD];
         let formXML = "";

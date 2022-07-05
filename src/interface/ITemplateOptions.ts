@@ -15,6 +15,7 @@ interface ITemplateOptions {
   width?: number | string;
   height?: number | string;
   aspectRatio?: string;
+  original?: any;
   fps?: number | string;
   crf?: number | string;
   videoCodec?: string;

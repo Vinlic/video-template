@@ -639,6 +639,7 @@ interface ITemplateOptions {
     width?: number | string;
     height?: number | string;
     aspectRatio?: string;
+    original?: any;
     fps?: number | string;
     crf?: number | string;
     videoCodec?: string;
@@ -662,7 +663,7 @@ interface ITemplateOptions {
 
 declare class Template {
     #private;
-    static readonly packageVersion = "1.1.771";
+    static readonly packageVersion = "1.1.774";
     static readonly type = "template";
     type: string;
     id: string;
@@ -674,6 +675,7 @@ declare class Template {
     width: number;
     height: number;
     aspectRatio: string;
+    original: any;
     fps: number;
     crf?: number;
     videoCodec?: string;

@@ -4,6 +4,8 @@ const axios = require("axios");
 
 const { Template } = require("../dist");
 
+const DATA_SERVICE_URL = "http://192.168.1.208:18085";
+
 (async () => {
     const [templateSource, outputPath, toOld = false] = process.argv.slice(2);
 
@@ -28,6 +30,7 @@ const { Template } = require("../dist");
 
     const template = await Template.parseAndProcessing(templateContent, {}, {}, async source => {
         if(!source) return;
+        if(/^\//.test(source)) source = DATA_SERVICE_URL + source;
         const result = await axios.get(source, { timeout: 60000 });
         if(result.status !== 200) throw new Error("data source request error: " + result.statusText);
         const { code, msg, data } = result.data;

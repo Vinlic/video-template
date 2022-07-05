@@ -456,6 +456,10 @@ var Parser = class {
       updateTime: _template.updateTime,
       buildBy: _template.buildBy
     });
+    for (let key in _template.original) {
+      const value = _template.original[key];
+      template.att(`original-${key}`, value);
+    }
     _template.children.forEach((node) => node.renderXML(template));
     const chunks = [HEAD];
     let formXML = "";
@@ -1085,6 +1089,7 @@ var OptionsParser = class {
       videoSize: template.aspectRatio,
       videoWidth: template.width,
       videoHeight: template.height,
+      original: template.original,
       poster: template.poster,
       fps: template.fps,
       captureTime: !util_default.isUndefined(template.captureTime) ? template.captureTime / 1e3 : void 0,
@@ -1371,6 +1376,7 @@ var OptionsParser = class {
       width: options.videoWidth,
       height: options.videoHeight,
       aspectRatio: options.videoSize,
+      original: options.original,
       videoBitrate: `${options.videoBitrate}`,
       audioBitrate: `${options.audioBitrate}`,
       backgroundColor: options.bgColor ? options.bgColor.fillColor || void 0 : void 0,
@@ -2940,6 +2946,7 @@ var _Template = class {
     __publicField(this, "width", 0);
     __publicField(this, "height", 0);
     __publicField(this, "aspectRatio", "");
+    __publicField(this, "original");
     __publicField(this, "fps", 0);
     __publicField(this, "crf");
     __publicField(this, "videoCodec");
@@ -2996,6 +3003,7 @@ var _Template = class {
       width: (v) => util_default.isFinite(v),
       height: (v) => util_default.isFinite(v),
       aspectRatio: (v) => util_default.isString(v),
+      original: (v) => util_default.isUndefined(v) || util_default.isString(v),
       fps: (v) => util_default.isFinite(v),
       crf: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       volume: (v) => util_default.isFinite(v),
@@ -3188,7 +3196,7 @@ var _Template = class {
 };
 var Template = _Template;
 _formObject2 = new WeakMap();
-__publicField(Template, "packageVersion", "1.1.771");
+__publicField(Template, "packageVersion", "1.1.774");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
