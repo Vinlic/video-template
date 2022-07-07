@@ -105,7 +105,7 @@ class Scene {
                 width: (v: any) => util.isFinite(v),
                 height: (v: any) => util.isFinite(v),
                 aspectRatio: (v: any) => util.isString(v),
-                original: (v: any) => util.isUndefined(v) || util.isString(v),
+                original: (v: any) => util.isUndefined(v) || util.isObject(v),
                 duration: (v: any) => util.isFinite(v),
                 backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
                 transition: (v: any) => util.isUndefined(v) || Transition.isInstance(v),

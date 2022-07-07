@@ -80,7 +80,7 @@ class Template {
             width: (v: any) => util.isFinite(v),
             height: (v: any) => util.isFinite(v),
             aspectRatio: (v: any) => util.isString(v),
-            original: (v: any) => util.isUndefined(v) || util.isString(v),
+            original: (v: any) => util.isUndefined(v) || util.isObject(v),
             fps: (v: any) => util.isFinite(v),
             crf: (v: any) => util.isUndefined(v) || util.isFinite(v),
             volume: (v: any) => util.isFinite(v),
