@@ -159,12 +159,13 @@ var functions = {
 var extension_default = { vars, functions };
 
 // src/Compiler.ts
+var SAFE_SCRIPT = ["require", "process", "eval", "Buffer", "Function", "fetch", "global", "window"].join("={},") + "={};";
 var Compiler = class {
   static compile(rawData, data = {}, valueMap = {}, extendsScript = "", debug = false) {
     let extendsScriptCtx = {};
     if (util_default.isString(extendsScript) && extendsScript.length) {
       const _data = __spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions);
-      extendsScriptCtx = Function(`const {${Object.keys(_data).join(",")}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/g, ">")}`).bind(_data)();
+      extendsScriptCtx = this.prepareFunctionScript(`const {${Object.keys(_data).join(",")}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/g, ">")}`).bind(_data)();
     }
     const render = (value, data2 = {}, scope = {}) => {
       if (util_default.isObject(value)) {
@@ -299,7 +300,7 @@ var Compiler = class {
   static eval(expression, data = {}, valueMap = {}, extendsScriptCtx = {}, debug) {
     let result;
     const _data = __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions), extendsScriptCtx);
-    const evalFun = Function(`const {${Object.keys(_data).join(",")}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`);
+    const evalFun = this.prepareFunctionScript(`const {${Object.keys(_data).join(",")}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`);
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
@@ -340,6 +341,9 @@ var Compiler = class {
         }
       };
     });
+  }
+  static prepareFunctionScript(script) {
+    return Function("const " + SAFE_SCRIPT + script);
   }
 };
 var Compiler_default = Compiler;
@@ -3203,7 +3207,7 @@ var _Template = class {
 };
 var Template = _Template;
 _formObject2 = new WeakMap();
-__publicField(Template, "packageVersion", "1.1.779");
+__publicField(Template, "packageVersion", "1.1.78");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));

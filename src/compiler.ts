@@ -1,6 +1,8 @@
 import util from './util';
 import extension from './extension';
 
+const SAFE_SCRIPT = ["require", "process", "eval", "Buffer", "Function", "fetch", "global", "window"].join("={},") + "={};";
+
 class Compiler {
 
   /**
@@ -17,7 +19,7 @@ class Compiler {
     let extendsScriptCtx = {};
     if(util.isString(extendsScript) && extendsScript.length) {  //如果存在扩展脚本则缓存为上下文
       const _data = { ...data, ...valueMap, ...extension.functions };
-      extendsScriptCtx = Function(`const {${Object.keys(_data).join(',')}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/g, ">")}`).bind(_data)();
+      extendsScriptCtx = this.prepareFunctionScript(`const {${Object.keys(_data).join(',')}}=this;${extendsScript.replace(/\$\#/g, "<").replace(/\#\$/g, ">")}`).bind(_data)();
     }
     const render = (value: any, data = {}, scope: any = {}): any => {
       if (util.isObject(value)) {
@@ -166,7 +168,7 @@ class Compiler {
   private static eval(expression: string, data = {}, valueMap = {}, extendsScriptCtx = {}, debug: boolean) {
     let result;
     const _data = { ...data, ...valueMap, ...extension.functions, ...extendsScriptCtx };
-    const evalFun = Function(`const {${Object.keys(_data).join(',')}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`); //将表达式和数据注入在方法内
+    const evalFun = this.prepareFunctionScript(`const {${Object.keys(_data).join(',')}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`); //将表达式和数据注入在方法内
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
@@ -215,6 +217,10 @@ class Compiler {
         }, //替换函数
       };
     }); //匹配结果排重并替换为包含对应替换方法的对象
+  }
+
+  private static prepareFunctionScript(script: string) {
+    return Function("const " + SAFE_SCRIPT + script);
   }
 }
 
