@@ -4,7 +4,7 @@ const axios = require("axios");
 
 const { Template } = require("../dist");
 
-const DATA_SERVICE_URL = "http://192.168.1.208:18085";
+const DATA_SERVICE_URL = "http://192.168.90.132:18085";
 
 (async () => {
     const [templateSource, outputPath, toOld = false] = process.argv.slice(2);

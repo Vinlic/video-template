@@ -168,6 +168,8 @@ interface IImageOptions extends IElementOptions {
     loop?: boolean | string;
     dynamic?: boolean | string;
     filter?: IFilterOptions;
+    naturalWidth?: number | string;
+    naturalHeight?: number | string;
 }
 
 declare class Crop {
@@ -200,6 +202,8 @@ declare class Image extends Element {
     loop?: boolean;
     dynamic?: boolean;
     filter?: IFilterOptions;
+    naturalWidth?: number;
+    naturalHeight?: number;
     constructor(options: IImageOptions, type?: ElementTypes, ...values: any[]);
     renderXML(parent: any): any;
     renderOldXML(parent: any, resources: any, global: any): any;
@@ -208,11 +212,13 @@ declare class Image extends Element {
 }
 
 interface IAudioOptions extends IMediaOptions {
+    isRecord?: boolean | string;
     fadeInDuration?: number | string;
     fadeOutDuration?: number | string;
 }
 
 declare class Audio extends Media {
+    isRecord?: boolean;
     fadeInDuration?: number;
     fadeOutDuration?: number;
     constructor(options: IAudioOptions, type?: ElementTypes, ...values: any[]);
@@ -665,7 +671,7 @@ interface ITemplateOptions {
 
 declare class Template {
     #private;
-    static readonly packageVersion = "1.1.776";
+    static readonly packageVersion = "1.1.779";
     static readonly type = "template";
     type: string;
     id: string;

@@ -6,6 +6,8 @@ import Media from './Media';
 import util from '../util';
 
 class Audio extends Media {
+
+    public isRecord?: boolean;  //音频是否为录制音频
     public fadeInDuration?: number; //音频淡入时长
     public fadeOutDuration?: number; //音频淡出时长
 
@@ -16,10 +18,12 @@ class Audio extends Media {
             this,
             options,
             {
+                isRecord: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
                 fadeInDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
                 fadeOutDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             },
             {
+                isRecord: (v: any) => util.isUndefined(v) || util.isBoolean(v),
                 fadeInDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
                 fadeOutDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
             },
@@ -33,6 +37,7 @@ class Audio extends Media {
      */
     public renderXML(parent: any) {
         const audio = super.renderXML(parent);
+        audio.att('isRecord', this.isRecord);
         audio.att('fadeInDuration', this.fadeInDuration);
         audio.att('fadeOutDuration', this.fadeOutDuration);
         return audio;
@@ -49,6 +54,7 @@ class Audio extends Media {
         const parentOptions = super.toOptions();
         return {
             ...parentOptions,
+            isRecord: this.isRecord,
             fadeInDuration: this.fadeInDuration,
             fadeOutDuration: this.fadeOutDuration
         };

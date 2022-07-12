@@ -12,6 +12,8 @@ interface IImageOptions extends IElementOptions {
   loop?: boolean | string;
   dynamic?: boolean | string;
   filter?: IFilterOptions;
+  naturalWidth?: number | string;
+  naturalHeight?: number | string;
 }
 
 export default IImageOptions;

@@ -107,6 +107,8 @@ class OptionsParser {
                     src: options.src,
                     loop: options.loop,
                     dynamic: options.src.indexOf('.gif') !== -1,
+                    naturalWidth: options.naturalWidth,
+                    naturalHeight: options.naturalHeight
                 });
             case "sticker":
                 return new Sticker({
@@ -152,6 +154,7 @@ class OptionsParser {
                     loop: options.loop,
                     seekStart: options.seekStart ? options.seekStart * 1000 : undefined,
                     seekEnd: options.seekEnd ? options.seekEnd * 1000 : undefined,
+                    isRecord: options.isRecord,
                     fadeInDuration: options.fadeInDuration ? options.fadeInDuration * 1000 : undefined,
                     fadeOutDuration: options.fadeOutDuration ? options.fadeOutDuration * 1000 : undefined,
                 });
@@ -258,7 +261,9 @@ class OptionsParser {
             ...this.parseBaseOptions(options.bgImage, duration),
             endTime: undefined,
             isBackground: true,
-            src: options.bgImage.src
+            src: options.bgImage.src,
+            naturalWidth: options.bgImage.naturalWidth,
+            naturalHeight: options.bgImage.naturalHeight
         }));
         options.bgVideo && children.push(new Video({
             ...this.parseBaseOptions(options.bgVideo, duration),
@@ -315,7 +320,9 @@ class OptionsParser {
             ...this.parseBaseOptions(options.bgImage),
             endTime: undefined,
             isBackground: true,
-            src: options.bgImage.src
+            src: options.bgImage.src,
+            naturalWidth: options.bgImage.naturalWidth,
+            naturalHeight: options.bgImage.naturalHeight
         }));
         options.bgVideo && children.push(new Video({
             ...this.parseBaseOptions(options.bgVideo),

@@ -1125,7 +1125,9 @@ var OptionsParser = class {
           } : void 0,
           src: options.src,
           loop: options.loop,
-          dynamic: options.src.indexOf(".gif") !== -1
+          dynamic: options.src.indexOf(".gif") !== -1,
+          naturalWidth: options.naturalWidth,
+          naturalHeight: options.naturalHeight
         }));
       case "sticker":
         return new Sticker_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
@@ -1168,6 +1170,7 @@ var OptionsParser = class {
           loop: options.loop,
           seekStart: options.seekStart ? options.seekStart * 1e3 : void 0,
           seekEnd: options.seekEnd ? options.seekEnd * 1e3 : void 0,
+          isRecord: options.isRecord,
           fadeInDuration: options.fadeInDuration ? options.fadeInDuration * 1e3 : void 0,
           fadeOutDuration: options.fadeOutDuration ? options.fadeOutDuration * 1e3 : void 0
         }));
@@ -1266,7 +1269,9 @@ var OptionsParser = class {
     options.bgImage && children.push(new Image_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgImage, duration)), {
       endTime: void 0,
       isBackground: true,
-      src: options.bgImage.src
+      src: options.bgImage.src,
+      naturalWidth: options.bgImage.naturalWidth,
+      naturalHeight: options.bgImage.naturalHeight
     })));
     options.bgVideo && children.push(new Video_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgVideo, duration)), {
       poster: options.bgVideo.poster,
@@ -1319,7 +1324,9 @@ var OptionsParser = class {
     options.bgImage && children.push(new Image_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgImage)), {
       endTime: void 0,
       isBackground: true,
-      src: options.bgImage.src
+      src: options.bgImage.src,
+      naturalWidth: options.bgImage.naturalWidth,
+      naturalHeight: options.bgImage.naturalHeight
     })));
     options.bgVideo && children.push(new Video_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options.bgVideo)), {
       poster: options.bgVideo.poster,
@@ -2007,13 +2014,17 @@ var _Image = class extends Element_default {
   loop;
   dynamic;
   filter;
+  naturalWidth;
+  naturalHeight;
   constructor(options, type = ElementTypes_default.Image, ...values) {
     super(options, type, ...values);
     util_default.optionsInject(this, options, {
       mode: (v) => util_default.defaultTo(v, ImageModes_default.ScaleToFill),
       crop: (v) => v && new Crop_default(v),
       loop: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
-      dynamic: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0
+      dynamic: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
+      naturalWidth: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      naturalHeight: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
       src: (v) => util_default.isString(v),
       path: (v) => util_default.isUndefined(v) || util_default.isString(v),
@@ -2021,7 +2032,9 @@ var _Image = class extends Element_default {
       crop: (v) => util_default.isUndefined(v) || Crop_default.isInstance(v),
       loop: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       dynamic: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
-      filter: (v) => util_default.isUndefined(v) || util_default.isObject(v)
+      filter: (v) => util_default.isUndefined(v) || util_default.isObject(v),
+      naturalWidth: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      naturalHeight: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
     });
     if (this.isBackground) {
       this.endTime = void 0;
@@ -2034,6 +2047,8 @@ var _Image = class extends Element_default {
     image.att("mode", this.mode);
     image.att("dynamic", this.dynamic);
     image.att("loop", this.loop);
+    image.att("naturalWidth", this.naturalWidth);
+    image.att("naturalHeight", this.naturalHeight);
     if (this.crop) {
       image.att("crop-style", this.crop.style);
       image.att("crop-x", this.crop.x);
@@ -2078,7 +2093,9 @@ var _Image = class extends Element_default {
       mode: this.mode,
       crop: this.crop ? this.crop.toOptions() : void 0,
       loop: this.loop,
-      dynamic: this.dynamic
+      dynamic: this.dynamic,
+      naturalWidth: this.naturalWidth,
+      naturalHeight: this.naturalHeight
     });
   }
   static isInstance(value) {
@@ -2091,6 +2108,7 @@ var Image_default = Image;
 
 // src/elements/Audio.ts
 var Audio = class extends Media_default {
+  isRecord;
   fadeInDuration;
   fadeOutDuration;
   constructor(options, type = ElementTypes_default.Audio, ...values) {
@@ -2098,15 +2116,18 @@ var Audio = class extends Media_default {
       throw new TypeError("options must be an Object");
     super(options, type, ...values);
     util_default.optionsInject(this, options, {
+      isRecord: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       fadeInDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       fadeOutDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
     }, {
+      isRecord: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       fadeInDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       fadeOutDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
     });
   }
   renderXML(parent) {
     const audio = super.renderXML(parent);
+    audio.att("isRecord", this.isRecord);
     audio.att("fadeInDuration", this.fadeInDuration);
     audio.att("fadeOutDuration", this.fadeOutDuration);
     return audio;
@@ -2120,6 +2141,7 @@ var Audio = class extends Media_default {
   toOptions() {
     const parentOptions = super.toOptions();
     return __spreadProps(__spreadValues({}, parentOptions), {
+      isRecord: this.isRecord,
       fadeInDuration: this.fadeInDuration,
       fadeOutDuration: this.fadeOutDuration
     });
@@ -3181,7 +3203,7 @@ var _Template = class {
 };
 var Template = _Template;
 _formObject2 = new WeakMap();
-__publicField(Template, "packageVersion", "1.1.776");
+__publicField(Template, "packageVersion", "1.1.779");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
