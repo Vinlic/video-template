@@ -1381,6 +1381,7 @@ var OptionsParser_default = OptionsParser;
 var Effect = class {
   type = "";
   duration = 0;
+  direction;
   path;
   constructor(options) {
     util_default.optionsInject(this, options, {
@@ -1389,6 +1390,7 @@ var Effect = class {
     }, {
       type: (v) => util_default.isString(v),
       duration: (v) => util_default.isFinite(v),
+      direction: (v) => util_default.isUndefined(v) || util_default.isString(v),
       path: (v) => util_default.isUndefined(v) || util_default.isArray(v)
     });
   }
@@ -1397,6 +1399,7 @@ var Effect = class {
       name: this.type,
       delay: util_default.millisecondsToSenconds(startTime),
       duration: util_default.millisecondsToSenconds(this.duration),
+      direction: this.direction,
       path: this.path
     };
   }
@@ -1498,7 +1501,7 @@ var _Element = class {
     return Math.max(maxDuration, (this.endTime || 0) - (this.startTime || 0));
   }
   renderXML(parent) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
     const element = (parent || create3()).ele(this.type, {
       id: this.id,
       name: this.name,
@@ -1513,13 +1516,15 @@ var _Element = class {
       scaleHeight: this.scaleHeight,
       "enterEffect-type": (_b = (_a = this.enterEffect) == null ? void 0 : _a.type) != null ? _b : void 0,
       "enterEffect-duration": (_d = (_c = this.enterEffect) == null ? void 0 : _c.duration) != null ? _d : void 0,
-      "enterEffect-path": (_g = (_f = (_e = this.enterEffect) == null ? void 0 : _e.path) == null ? void 0 : _f.join(",")) != null ? _g : void 0,
-      "exitEffect-type": (_i = (_h = this.exitEffect) == null ? void 0 : _h.type) != null ? _i : void 0,
-      "exitEffect-duration": (_k = (_j = this.exitEffect) == null ? void 0 : _j.duration) != null ? _k : void 0,
-      "exitEffect-path": (_n = (_m = (_l = this.exitEffect) == null ? void 0 : _l.path) == null ? void 0 : _m.join(",")) != null ? _n : void 0,
-      "stayEffect-type": (_p = (_o = this.stayEffect) == null ? void 0 : _o.type) != null ? _p : void 0,
-      "stayEffect-duration": (_r = (_q = this.stayEffect) == null ? void 0 : _q.duration) != null ? _r : void 0,
-      "stayEffect-path": (_u = (_t = (_s = this.stayEffect) == null ? void 0 : _s.path) == null ? void 0 : _t.join(",")) != null ? _u : void 0,
+      "enterEffect-direction": (_f = (_e = this.enterEffect) == null ? void 0 : _e.direction) != null ? _f : void 0,
+      "enterEffect-path": (_i = (_h = (_g = this.enterEffect) == null ? void 0 : _g.path) == null ? void 0 : _h.join(",")) != null ? _i : void 0,
+      "exitEffect-type": (_k = (_j = this.exitEffect) == null ? void 0 : _j.type) != null ? _k : void 0,
+      "exitEffect-duration": (_m = (_l = this.exitEffect) == null ? void 0 : _l.duration) != null ? _m : void 0,
+      "exitEffect-direction": (_o = (_n = this.exitEffect) == null ? void 0 : _n.direction) != null ? _o : void 0,
+      "exitEffect-path": (_r = (_q = (_p = this.exitEffect) == null ? void 0 : _p.path) == null ? void 0 : _q.join(",")) != null ? _r : void 0,
+      "stayEffect-type": (_t = (_s = this.stayEffect) == null ? void 0 : _s.type) != null ? _t : void 0,
+      "stayEffect-duration": (_v = (_u = this.stayEffect) == null ? void 0 : _u.duration) != null ? _v : void 0,
+      "stayEffect-path": (_y = (_x = (_w = this.stayEffect) == null ? void 0 : _w.path) == null ? void 0 : _x.join(",")) != null ? _y : void 0,
       strokeStyle: this.strokeStyle,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
@@ -1528,7 +1533,7 @@ var _Element = class {
       startTime: this.startTime,
       endTime: this.endTime
     });
-    (_v = this.children) == null ? void 0 : _v.forEach((node) => _Element.isInstance(node) && node.renderXML(element));
+    (_z = this.children) == null ? void 0 : _z.forEach((node) => _Element.isInstance(node) && node.renderXML(element));
     return element;
   }
   renderOldXML(parent, resources, global, skip) {

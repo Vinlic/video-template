@@ -16,6 +16,7 @@ import { Parser, OptionsParser } from '../parsers';
 class Effect {
     public type = ''; //动效类
     public duration = 0; //动效动画时长
+    public direction?: string;  //动效方向
     public path?: number[]; //路径点列表
 
     public constructor(options: IEffectOptions) {
@@ -29,6 +30,7 @@ class Effect {
             {
                 type: (v: any) => util.isString(v),
                 duration: (v: any) => util.isFinite(v),
+                direction: (v: any) => util.isUndefined(v) || util.isString(v),
                 path: (v: any) => util.isUndefined(v) || util.isArray(v),
             },
         );
@@ -39,6 +41,7 @@ class Effect {
             name: this.type,
             delay: util.millisecondsToSenconds(startTime),
             duration: util.millisecondsToSenconds(this.duration),
+            direction: this.direction,
             path: this.path
         };
     }
@@ -174,9 +177,11 @@ class Element {
             scaleHeight: this.scaleHeight,
             'enterEffect-type': this.enterEffect?.type ?? undefined,
             'enterEffect-duration': this.enterEffect?.duration ?? undefined,
+            'enterEffect-direction': this.enterEffect?.direction ?? undefined,
             'enterEffect-path': this.enterEffect?.path?.join(',') ?? undefined,
             'exitEffect-type': this.exitEffect?.type ?? undefined,
             'exitEffect-duration': this.exitEffect?.duration ?? undefined,
+            'exitEffect-direction': this.exitEffect?.direction ?? undefined,
             'exitEffect-path': this.exitEffect?.path?.join(',') ?? undefined,
             'stayEffect-type': this.stayEffect?.type ?? undefined,
             'stayEffect-duration': this.stayEffect?.duration ?? undefined,

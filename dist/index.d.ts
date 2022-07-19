@@ -3,6 +3,7 @@ import { Document } from 'aggregation-ssml';
 interface IEffectOptions {
     type?: string;
     duration?: number | string;
+    direction?: string;
     path?: number[] | string;
 }
 
@@ -527,12 +528,14 @@ declare class Scene {
 declare class Effect {
     type: string;
     duration: number;
+    direction?: string;
     path?: number[];
     constructor(options: IEffectOptions);
     toOptions(startTime?: number): {
         name: string;
         delay: number;
         duration: number;
+        direction: string | undefined;
         path: number[] | undefined;
     };
     static isInstance(value: any): boolean;
