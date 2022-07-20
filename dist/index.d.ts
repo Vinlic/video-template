@@ -450,15 +450,18 @@ declare class OptionsParser {
         opacity: any;
         rotate: any;
         zIndex: any;
+        locked: any;
         strokeStyle: any;
         strokeColor: any;
         strokeWidth: any;
         enterEffect: {
             type: any;
+            direction: any;
             duration: number;
         } | undefined;
         exitEffect: {
             type: any;
+            direction: any;
             duration: number;
         } | undefined;
         backgroundColor: any;
@@ -562,6 +565,7 @@ declare class Element {
     backgroundColor?: string;
     startTime?: number;
     endTime?: number;
+    locked?: boolean;
     strokeStyle?: string;
     strokeColor?: string;
     strokeWidth?: number;
@@ -616,6 +620,7 @@ interface IElementOptions {
     strokeWidth?: number | string;
     startTime?: number | string;
     endTime?: number | string;
+    locked?: boolean | string;
     fixedScale?: boolean | string;
     trackId?: string;
     value?: string;

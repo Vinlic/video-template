@@ -26,6 +26,7 @@ interface IElementOptions {
   strokeWidth?: number | string;
   startTime?: number | string;
   endTime?: number | string;
+  locked?: boolean | string;
   fixedScale?: boolean | string;
   trackId?: string;
   value?: string;

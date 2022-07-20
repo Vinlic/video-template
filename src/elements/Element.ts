@@ -79,6 +79,7 @@ class Element {
     public backgroundColor?: string; //元素背景颜色
     public startTime?: number; //元素入场时间点
     public endTime?: number; //元素退场时间点
+    public locked?: boolean;  //元素是否锁定
     public strokeStyle?: string;  //元素边框样式
     public strokeColor?: string;  //元素边框颜色
     public strokeWidth?: number;  //元素边框宽度
@@ -108,6 +109,7 @@ class Element {
             strokeWidth: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             startTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             endTime: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+            locked: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
             fixedScale: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : undefined,
             enterEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
             exitEffect: (v: any) => (util.isUndefined(v) ? v : new Effect(v)),
@@ -144,6 +146,7 @@ class Element {
             backgroundColor: (v: any) => util.isUndefined(v) || util.isString(v),
             startTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
             endTime: (v: any) => util.isUndefined(v) || util.isFinite(v),
+            locked: (v: any) => util.isUndefined(v) || util.isBoolean(v),
             fixedScale: (v: any) => util.isUndefined(v) || util.isBoolean(v),
             trackId: (v: any) => util.isUndefined(v) || util.isString(v),
             value: (v: any) => util.isUndefined(v) || util.isString(v) || v === null,
@@ -193,6 +196,7 @@ class Element {
             backgroundColor: this.backgroundColor,
             startTime: this.startTime,
             endTime: this.endTime,
+            locked: this.locked
         });
         this.children?.forEach((node) => Element.isInstance(node) && node.renderXML(element));
         return element;
@@ -213,6 +217,7 @@ class Element {
             index: this.zIndex,
             rotate: this.rotate,
             opacity: this.opacity,
+            locked: this.locked,
             animationIn: this.enterEffect?.type ?? undefined,
             animationInDuration: this.enterEffect?.duration ? util.millisecondsToSenconds(this.enterEffect.duration) : undefined,
             animationOut: this.exitEffect?.type ?? undefined,
@@ -343,6 +348,7 @@ class Element {
             rotate: this.rotate,
             opacity: this.opacity,
             index: this.zIndex || 0,
+            locked: this.locked,
             strokeStyle: this.strokeStyle,
             strokeColor: this.strokeColor,
             strokeWidth: this.strokeWidth,

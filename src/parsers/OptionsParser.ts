@@ -70,15 +70,18 @@ class OptionsParser {
             opacity: obj.opacity,
             rotate: obj.rotate,
             zIndex: obj.index,
+            locked: obj.locked,
             strokeStyle: obj.strokeStyle,
             strokeColor: obj.strokeColor,
             strokeWidth: obj.strokeWidth,
             enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
                 type: obj.animationIn.name,
+                direction: obj.animationIn.direction,
                 duration: obj.animationIn.duration * 1000
             } : undefined,
             exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
                 type: obj.animationOut.name,
+                direction: obj.animationIn.direction,
                 duration: obj.animationOut.duration * 1000,
             } : undefined,
             backgroundColor: obj.fillColor,

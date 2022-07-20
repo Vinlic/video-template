@@ -1095,15 +1095,18 @@ var OptionsParser = class {
       opacity: obj.opacity,
       rotate: obj.rotate,
       zIndex: obj.index,
+      locked: obj.locked,
       strokeStyle: obj.strokeStyle,
       strokeColor: obj.strokeColor,
       strokeWidth: obj.strokeWidth,
       enterEffect: obj.animationIn && obj.animationIn.name && obj.animationIn.name !== "none" ? {
         type: obj.animationIn.name,
+        direction: obj.animationIn.direction,
         duration: obj.animationIn.duration * 1e3
       } : void 0,
       exitEffect: obj.animationOut && obj.animationOut.name && obj.animationOut.name !== "none" ? {
         type: obj.animationOut.name,
+        direction: obj.animationIn.direction,
         duration: obj.animationOut.duration * 1e3
       } : void 0,
       backgroundColor: obj.fillColor,
@@ -1429,6 +1432,7 @@ var _Element = class {
     __publicField(this, "backgroundColor");
     __publicField(this, "startTime");
     __publicField(this, "endTime");
+    __publicField(this, "locked");
     __publicField(this, "strokeStyle");
     __publicField(this, "strokeColor");
     __publicField(this, "strokeWidth");
@@ -1457,6 +1461,7 @@ var _Element = class {
       strokeWidth: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       startTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       endTime: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      locked: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       fixedScale: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : void 0,
       enterEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
       exitEffect: (v) => util_default.isUndefined(v) ? v : new Effect(v),
@@ -1490,6 +1495,7 @@ var _Element = class {
       backgroundColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       startTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       endTime: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      locked: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       fixedScale: (v) => util_default.isUndefined(v) || util_default.isBoolean(v),
       trackId: (v) => util_default.isUndefined(v) || util_default.isString(v),
       value: (v) => util_default.isUndefined(v) || util_default.isString(v) || v === null,
@@ -1531,7 +1537,8 @@ var _Element = class {
       isBackground: this.isBackground,
       backgroundColor: this.backgroundColor,
       startTime: this.startTime,
-      endTime: this.endTime
+      endTime: this.endTime,
+      locked: this.locked
     });
     (_z = this.children) == null ? void 0 : _z.forEach((node) => _Element.isInstance(node) && node.renderXML(element));
     return element;
@@ -1552,6 +1559,7 @@ var _Element = class {
       index: this.zIndex,
       rotate: this.rotate,
       opacity: this.opacity,
+      locked: this.locked,
       animationIn: (_c = (_b = this.enterEffect) == null ? void 0 : _b.type) != null ? _c : void 0,
       animationInDuration: ((_d = this.enterEffect) == null ? void 0 : _d.duration) ? util_default.millisecondsToSenconds(this.enterEffect.duration) : void 0,
       animationOut: (_f = (_e = this.exitEffect) == null ? void 0 : _e.type) != null ? _f : void 0,
@@ -1633,6 +1641,7 @@ var _Element = class {
       rotate: this.rotate,
       opacity: this.opacity,
       index: this.zIndex || 0,
+      locked: this.locked,
       strokeStyle: this.strokeStyle,
       strokeColor: this.strokeColor,
       strokeWidth: this.strokeWidth,
