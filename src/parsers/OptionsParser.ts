@@ -1,7 +1,7 @@
 import util from '../util';
 import Template from '../Template';
 import Scene from '../Scene';
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, Canvas, SSML, Sticker, Group, Subtitle } from '../elements';
+import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, Canvas, SSML, Sticker, Group, Subtitle, Link } from '../elements';
 
 class OptionsParser {
 
@@ -252,6 +252,18 @@ class OptionsParser {
                     ...this.parseBaseOptions(options, parentDuration),
                     children: (options.children || options.elements)?.map((element: any) => this.parseElementOptions(element, parentDuration))
                 });
+            case "link":
+                return new Link({
+                    ...this.parseBaseOptions(options, parentDuration),
+                    __type: options.type,
+                    target: options.target,
+                    trigger: options.trigger,
+                    modal: options.modal,
+                    params: options.params,
+                    enter: options.enter,
+                    exit: options.exit,
+                    children: (options.children || options.elements)?.map((element: any) => this.parseElementOptions(element, parentDuration))
+                })
             default:
                 return new Element({});
         }

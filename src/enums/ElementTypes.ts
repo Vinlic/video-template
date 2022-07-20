@@ -13,6 +13,7 @@ enum ElementTypes {
   Subtitle = 'subtitle',
   Media = 'media',
   SSML = 'ssml',
+  Link = 'link'
 }
 
 export default ElementTypes;

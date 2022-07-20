@@ -2,7 +2,7 @@ import IElementOptions from './elements/interface/IElementOptions';
 
 import ElementTypes from './enums/ElementTypes';
 
-import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML, Canvas, Group, Sticker, Subtitle } from './elements';
+import { Element, Text, Image, Audio, Voice, Video, Vtuber, Chart, SSML, Canvas, Group, Sticker, Subtitle, Link } from './elements';
 import util from './util';
 
 class ElementFactory {
@@ -39,6 +39,8 @@ class ElementFactory {
                 return new Subtitle(data, undefined, ...values);
             case ElementTypes.SSML: //SSML文档元素
                 return new SSML(data, undefined, ...values);
+            case ElementTypes.Link:  //交互链接元素
+                return new Link(data, undefined, ...values);
         }
         return new Element(data, undefined, ...values);
     }

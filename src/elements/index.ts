@@ -12,3 +12,4 @@ export { default as Group } from './Group';
 export { default as Sticker } from './Sticker';
 export { default as Subtitle } from './Subtitle';
 export { default as SSML } from './SSML';
+export { default as Link } from './Link';

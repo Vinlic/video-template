@@ -387,6 +387,7 @@ var ElementTypes = /* @__PURE__ */ ((ElementTypes2) => {
   ElementTypes2["Subtitle"] = "subtitle";
   ElementTypes2["Media"] = "media";
   ElementTypes2["SSML"] = "ssml";
+  ElementTypes2["Link"] = "link";
   return ElementTypes2;
 })(ElementTypes || {});
 var ElementTypes_default = ElementTypes;
@@ -400,6 +401,7 @@ __export(elements_exports, {
   Element: () => Element_default,
   Group: () => Group_default,
   Image: () => Image_default,
+  Link: () => Link_default,
   Media: () => Media_default,
   SSML: () => SSML_default,
   Sticker: () => Sticker_default,
@@ -1138,7 +1140,7 @@ var OptionsParser = class {
     };
   }
   static parseElementOptions(options, parentDuration) {
-    var _a, _b;
+    var _a, _b, _c;
     if (util_default.isString(options))
       options = JSON.parse(options);
     switch (options.elementType) {
@@ -1284,6 +1286,17 @@ var OptionsParser = class {
       case "subtitle":
         return new Subtitle_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
           children: (_b = options.children || options.elements) == null ? void 0 : _b.map((element) => this.parseElementOptions(element, parentDuration))
+        }));
+      case "link":
+        return new Link_default(__spreadProps(__spreadValues({}, this.parseBaseOptions(options, parentDuration)), {
+          __type: options.type,
+          target: options.target,
+          trigger: options.trigger,
+          modal: options.modal,
+          params: options.params,
+          enter: options.enter,
+          exit: options.exit,
+          children: (_c = options.children || options.elements) == null ? void 0 : _c.map((element) => this.parseElementOptions(element, parentDuration))
         }));
       default:
         return new Element_default({});
@@ -2693,6 +2706,71 @@ var Subtitle = class extends Text_default {
 };
 var Subtitle_default = Subtitle;
 
+// src/elements/Link.ts
+var Link = class extends Element_default {
+  __type = "";
+  target;
+  trigger;
+  modal = {};
+  params = {};
+  enter = {};
+  exit = {};
+  constructor(options, type = ElementTypes_default.Link, ...values) {
+    super(options, type, ...values);
+    util_default.optionsInject(this, options, {}, {
+      __type: (v) => util_default.isString(v),
+      target: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      trigger: (v) => util_default.isUndefined(v) || util_default.isString(v),
+      modal: (v) => util_default.isUndefined(v) || util_default.isObject(v),
+      params: (v) => util_default.isUndefined(v) || util_default.isObject(v),
+      enter: (v) => util_default.isUndefined(v) || util_default.isObject(v),
+      exit: (v) => util_default.isUndefined(v) || util_default.isObject(v)
+    });
+  }
+  renderXML(parent) {
+    const link = super.renderXML(parent);
+    link.att("type", this.__type);
+    link.att("target", this.target);
+    link.att("trigger", this.trigger);
+    for (let key in this.modal) {
+      const value = this.modal[key];
+      link.att(`modal-${key}`, value);
+    }
+    for (let key in this.params) {
+      const value = this.params[key];
+      link.att(`params-${key}`, value);
+    }
+    for (let key in this.enter) {
+      const value = this.enter[key];
+      link.att(`enter-${key}`, value);
+    }
+    for (let key in this.exit) {
+      const value = this.exit[key];
+      link.att(`exit-${key}`, value);
+    }
+    return link;
+  }
+  renderOldXML(parent, resources, global) {
+    return super.renderOldXML(parent, resources, global, true);
+  }
+  toOptions() {
+    const parentOptions = super.toOptions();
+    return __spreadProps(__spreadValues({}, parentOptions), {
+      type: this.__type,
+      target: this.target,
+      trigger: this.trigger,
+      modal: this.modal,
+      params: this.params,
+      enter: this.enter,
+      exit: this.exit
+    });
+  }
+  static isInstance(value) {
+    return value instanceof Link;
+  }
+};
+var Link_default = Link;
+
 // src/ElementFactory.ts
 var ElementFactory = class {
   static createElement(data, ...values) {
@@ -2723,6 +2801,8 @@ var ElementFactory = class {
         return new Subtitle_default(data, void 0, ...values);
       case ElementTypes_default.SSML:
         return new SSML_default(data, void 0, ...values);
+      case ElementTypes_default.Link:
+        return new Link_default(data, void 0, ...values);
     }
     return new Element_default(data, void 0, ...values);
   }

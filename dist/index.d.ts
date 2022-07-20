@@ -21,7 +21,8 @@ declare enum ElementTypes {
     Sticker = "sticker",
     Subtitle = "subtitle",
     Media = "media",
-    SSML = "ssml"
+    SSML = "ssml",
+    Link = "link"
 }
 
 interface ITransitionOptions {
@@ -419,6 +420,31 @@ declare class SSML extends Element {
     static isInstance(value: any): boolean;
 }
 
+interface ILinkOptions extends IElementOptions {
+    __type?: string;
+    target?: string;
+    trigger?: string;
+    modal?: any;
+    params?: any;
+    enter?: any;
+    exit?: any;
+}
+
+declare class Link extends Element {
+    __type: string;
+    target?: string;
+    trigger?: string;
+    modal: any;
+    params: any;
+    enter: any;
+    exit: any;
+    constructor(options: ILinkOptions, type?: ElementTypes, ...values: any[]);
+    renderXML(parent: any): any;
+    renderOldXML(parent: any, resources: any, global: any): any;
+    toOptions(): any;
+    static isInstance(value: any): boolean;
+}
+
 type index_Element = Element;
 declare const index_Element: typeof Element;
 type index_Media = Media;
@@ -447,6 +473,8 @@ type index_Subtitle = Subtitle;
 declare const index_Subtitle: typeof Subtitle;
 type index_SSML = SSML;
 declare const index_SSML: typeof SSML;
+type index_Link = Link;
+declare const index_Link: typeof Link;
 declare namespace index {
   export {
     index_Element as Element,
@@ -463,6 +491,7 @@ declare namespace index {
     index_Sticker as Sticker,
     index_Subtitle as Subtitle,
     index_SSML as SSML,
+    index_Link as Link,
   };
 }
 
