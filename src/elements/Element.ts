@@ -14,7 +14,7 @@ import { Voice, Vtuber } from './';
 import { Parser, OptionsParser } from '../parsers';
 
 class Effect {
-    public type = ''; //动效类
+    public type = ''; //动效类型
     public duration = 0; //动效动画时长
     public direction?: string;  //动效方向
     public path?: number[]; //路径点列表

@@ -1,4 +1,5 @@
 import IElementOptions from './IElementOptions';
+import ITextEffectOptions from './ITextEffectOptions';
 
 interface ITextOptions extends IElementOptions {
   fontFamily?: string;
@@ -10,6 +11,8 @@ interface ITextOptions extends IElementOptions {
   wordSpacing?: number | string;
   textAlign?: string;
   lineWrap?: boolean | string;
+  textEnterEffect?: ITextEffectOptions;
+  textExitEffect?: ITextEffectOptions;
   effectType?: string;
   effectWordDuration?: number | string;
   effectWordInterval?: number | string;

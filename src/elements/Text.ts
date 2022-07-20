@@ -1,9 +1,57 @@
 import ITextOptions from './interface/ITextOptions';
+import ITextEffectOptions from './interface/ITextEffectOptions';
 
 import ElementTypes from '../enums/ElementTypes';
 
 import Element from './Element';
 import util from '../util';
+
+class TextEffect {
+    public type = ''; //动效类型
+    public wordDuration?: number; //动效单字时长
+    public wordInterval?: number; //动效单字间隔
+    public duration?: number;  //动效总时长
+    public direction?: string;  //动效方向
+
+    public constructor(options: ITextEffectOptions) {
+        util.optionsInject(
+            this,
+            options,
+            {
+                wordDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                wordInterval: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
+                duration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
+            },
+            {
+                type: (v: any) => util.isString(v),
+                wordDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
+                wordInterval: (v: any) => util.isUndefined(v) || util.isFinite(v),
+                duration: (v: any) => util.isUndefined(v) || util.isFinite(v),
+                direction: (v: any) => util.isUndefined(v) || util.isString(v)
+            },
+        );
+    }
+
+    public toOptions() {
+        return {
+            type: this.type,
+            wordDuration: util.isFinite(this.wordDuration) ? util.millisecondsToSenconds(this.wordDuration as number) : undefined,
+            wordInterval: util.isFinite(this.wordInterval) ? util.millisecondsToSenconds(this.wordInterval as number) : undefined,
+            duration: util.isFinite(this.duration) ? util.millisecondsToSenconds(this.duration as number) : undefined,
+            direction: this.direction
+        };
+    }
+
+    /**
+     * 是否为文本动效实例
+     *
+     * @param {Object} value
+     * @returns
+     */
+    public static isInstance(value: any) {
+        return value instanceof TextEffect;
+    }
+}
 
 class Text extends Element {
     public fontFamily?: string; //字体集名称
@@ -15,6 +63,8 @@ class Text extends Element {
     public wordSpacing = 0; //字间距
     public textAlign?: string; //文本对齐方式
     public lineWrap = false; //文本是否自动换行
+    public textEnterEffect?: TextEffect;  //文本入场动效
+    public textExitEffect?: TextEffect;  //文本出场动效
     public effectType?: string; //文本动效类型
     public effectWordDuration?: number; //文本单字动效时长
     public effectWordInterval?: number; //文本单字间隔
@@ -36,6 +86,8 @@ class Text extends Element {
             wordSpacing: (v: any) => Number(util.defaultTo(v, 0)),
             lineWrap: (v: any) => util.defaultTo(util.booleanParse(v), true),
             isSubtitle: (v: any) => !util.isUndefined(v) ? util.booleanParse(v) : v,
+            textEnterEffect: (v: any) => (util.isUndefined(v) ? v : new TextEffect(v)),
+            textExitEffect: (v: any) => (util.isUndefined(v) ? v : new TextEffect(v)),
             effectWordDuration: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             effectWordInterval: (v: any) => !util.isUndefined(v) ? Number(v) : undefined,
             fillColorIntension: (v: any) => !util.isUndefined(v) ? Number(v) : undefined
@@ -49,6 +101,8 @@ class Text extends Element {
             wordSpacing: (v: any) => util.isFinite(v),
             textAlign: (v: any) => util.isUndefined(v) || util.isString(v),
             lineWrap: (v: any) => util.isBoolean(v),
+            textEnterEffect: (v: any) => util.isUndefined(v) || TextEffect.isInstance(v),
+            textExitEffect: (v: any) => util.isUndefined(v) || TextEffect.isInstance(v),
             effectType: (v: any) => util.isUndefined(v) || util.isString(v),
             effectWordDuration: (v: any) => util.isUndefined(v) || util.isFinite(v),
             effectWordInterval: (v: any) => util.isUndefined(v) || util.isFinite(v),
@@ -60,6 +114,13 @@ class Text extends Element {
             textFillColor: (v: any) => util.isUndefined(v) || util.isString(v),
             fillColorIntension: (v: any) => util.isUndefined(v) || util.isFinite(v)
         });
+        if(this.effectType && !this.textEnterEffect) {  //兼容旧模板处理
+            this.textEnterEffect = new TextEffect({
+                type: this.effectType,
+                wordDuration: this.effectWordDuration,
+                wordInterval: this.effectWordInterval
+            });
+        }
     }
 
     /**
@@ -79,9 +140,20 @@ class Text extends Element {
         text.att('wordSpacing', this.wordSpacing);
         text.att('textAlign', this.textAlign);
         text.att('lineWrap', this.lineWrap);
-        text.att('effectType', this.effectType);
-        text.att('effectWordDuration', this.effectWordDuration);
-        text.att('effectWordInterval', this.effectWordInterval);
+        if(this.textEnterEffect) {
+            text.att("textEnterEffect-type", this.textEnterEffect.type);
+            text.att("textEnterEffect-wordDuration", this.textEnterEffect.wordDuration);
+            text.att("textEnterEffect-wordInterval", this.textEnterEffect.wordInterval);
+            text.att("textEnterEffect-duration", this.textEnterEffect.duration);
+            text.att("textEnterEffect-direction", this.textEnterEffect.direction);
+        }
+        if(this.textExitEffect) {
+            text.att("textExitEffect-type", this.textExitEffect.type);
+            text.att("textExitEffect-wordDuration", this.textExitEffect.wordDuration);
+            text.att("textExitEffect-wordInterval", this.textExitEffect.wordInterval);
+            text.att("textExitEffect-duration", this.textExitEffect.duration);
+            text.att("textExitEffect-direction", this.textExitEffect.direction);
+        }
         text.att('isSubtitle', this.isSubtitle);
         text.att('styleType', this.styleType);
         for(let key in this.textShadow) {
@@ -151,9 +223,8 @@ class Text extends Element {
             bold: this.fontWeight > 400 ? this.fontWeight : undefined,
             italic: this.fontStyle === "italic" ? "italic" : "normal",
             isSubtitle: this.isSubtitle,
-            effectType: this.effectType,
-            effectWordDuration: util.isFinite(this.effectWordDuration) ? util.millisecondsToSenconds(this.effectWordDuration as number) : undefined,
-            effectWordInterval: util.isFinite(this.effectWordInterval) ? util.millisecondsToSenconds(this.effectWordInterval as number) : undefined,
+            textEnterEffect: this.textEnterEffect,
+            textExitEffect: this.textExitEffect,
             styleType: this.styleType,
             textShadow: this.textShadow,
             textStroke: this.textStroke,

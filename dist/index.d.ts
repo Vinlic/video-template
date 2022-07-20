@@ -95,6 +95,14 @@ declare class Media extends Element {
     static isInstance(value: any): boolean;
 }
 
+interface ITextEffectOptions {
+    type?: string;
+    wordDuration?: number | string;
+    wordInterval?: number | string;
+    duration?: number | string;
+    direction?: string;
+}
+
 interface ITextOptions extends IElementOptions {
     fontFamily?: string;
     fontSize?: string;
@@ -105,6 +113,8 @@ interface ITextOptions extends IElementOptions {
     wordSpacing?: number | string;
     textAlign?: string;
     lineWrap?: boolean | string;
+    textEnterEffect?: ITextEffectOptions;
+    textExitEffect?: ITextEffectOptions;
     effectType?: string;
     effectWordDuration?: number | string;
     effectWordInterval?: number | string;
@@ -117,6 +127,22 @@ interface ITextOptions extends IElementOptions {
     fillColorIntension?: number | string;
 }
 
+declare class TextEffect {
+    type: string;
+    wordDuration?: number;
+    wordInterval?: number;
+    duration?: number;
+    direction?: string;
+    constructor(options: ITextEffectOptions);
+    toOptions(): {
+        type: string;
+        wordDuration: number | undefined;
+        wordInterval: number | undefined;
+        duration: number | undefined;
+        direction: string | undefined;
+    };
+    static isInstance(value: any): boolean;
+}
 declare class Text extends Element {
     fontFamily?: string;
     fontSize: number;
@@ -127,6 +153,8 @@ declare class Text extends Element {
     wordSpacing: number;
     textAlign?: string;
     lineWrap: boolean;
+    textEnterEffect?: TextEffect;
+    textExitEffect?: TextEffect;
     effectType?: string;
     effectWordDuration?: number;
     effectWordInterval?: number;

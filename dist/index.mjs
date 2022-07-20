@@ -1157,9 +1157,8 @@ var OptionsParser = class {
           lineHeight: parseFloat((Number(options.lineHeight) / Number(options.fontSize)).toFixed(3)),
           wordSpacing: options.wordSpacing,
           textAlign: options.textAlign,
-          effectType: options.effectType,
-          effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1e3 : void 0,
-          effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1e3 : void 0,
+          textEnterEffect: options.textEnterEffect,
+          textExitEffect: options.textExitEffect,
           styleType: options.styleType === "" ? void 0 : options.styleType,
           isSubtitle: options.isSubtitle,
           textShadow: util_default.omitBy(options.textShadow, (v) => util_default.isNil(v) || v === 0 || v === ""),
@@ -1815,6 +1814,38 @@ var Media = class extends Element_default {
 var Media_default = Media;
 
 // src/elements/Text.ts
+var TextEffect = class {
+  type = "";
+  wordDuration;
+  wordInterval;
+  duration;
+  direction;
+  constructor(options) {
+    util_default.optionsInject(this, options, {
+      wordDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      wordInterval: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
+      duration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
+    }, {
+      type: (v) => util_default.isString(v),
+      wordDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      wordInterval: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      duration: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
+      direction: (v) => util_default.isUndefined(v) || util_default.isString(v)
+    });
+  }
+  toOptions() {
+    return {
+      type: this.type,
+      wordDuration: util_default.isFinite(this.wordDuration) ? util_default.millisecondsToSenconds(this.wordDuration) : void 0,
+      wordInterval: util_default.isFinite(this.wordInterval) ? util_default.millisecondsToSenconds(this.wordInterval) : void 0,
+      duration: util_default.isFinite(this.duration) ? util_default.millisecondsToSenconds(this.duration) : void 0,
+      direction: this.direction
+    };
+  }
+  static isInstance(value) {
+    return value instanceof TextEffect;
+  }
+};
 var Text = class extends Element_default {
   fontFamily;
   fontSize = 0;
@@ -1825,6 +1856,8 @@ var Text = class extends Element_default {
   wordSpacing = 0;
   textAlign;
   lineWrap = false;
+  textEnterEffect;
+  textExitEffect;
   effectType;
   effectWordDuration;
   effectWordInterval;
@@ -1845,6 +1878,8 @@ var Text = class extends Element_default {
       wordSpacing: (v) => Number(util_default.defaultTo(v, 0)),
       lineWrap: (v) => util_default.defaultTo(util_default.booleanParse(v), true),
       isSubtitle: (v) => !util_default.isUndefined(v) ? util_default.booleanParse(v) : v,
+      textEnterEffect: (v) => util_default.isUndefined(v) ? v : new TextEffect(v),
+      textExitEffect: (v) => util_default.isUndefined(v) ? v : new TextEffect(v),
       effectWordDuration: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       effectWordInterval: (v) => !util_default.isUndefined(v) ? Number(v) : void 0,
       fillColorIntension: (v) => !util_default.isUndefined(v) ? Number(v) : void 0
@@ -1858,6 +1893,8 @@ var Text = class extends Element_default {
       wordSpacing: (v) => util_default.isFinite(v),
       textAlign: (v) => util_default.isUndefined(v) || util_default.isString(v),
       lineWrap: (v) => util_default.isBoolean(v),
+      textEnterEffect: (v) => util_default.isUndefined(v) || TextEffect.isInstance(v),
+      textExitEffect: (v) => util_default.isUndefined(v) || TextEffect.isInstance(v),
       effectType: (v) => util_default.isUndefined(v) || util_default.isString(v),
       effectWordDuration: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
       effectWordInterval: (v) => util_default.isUndefined(v) || util_default.isFinite(v),
@@ -1869,6 +1906,13 @@ var Text = class extends Element_default {
       textFillColor: (v) => util_default.isUndefined(v) || util_default.isString(v),
       fillColorIntension: (v) => util_default.isUndefined(v) || util_default.isFinite(v)
     });
+    if (this.effectType && !this.textEnterEffect) {
+      this.textEnterEffect = new TextEffect({
+        type: this.effectType,
+        wordDuration: this.effectWordDuration,
+        wordInterval: this.effectWordInterval
+      });
+    }
   }
   renderXML(parent) {
     const text = super.renderXML(parent);
@@ -1882,9 +1926,20 @@ var Text = class extends Element_default {
     text.att("wordSpacing", this.wordSpacing);
     text.att("textAlign", this.textAlign);
     text.att("lineWrap", this.lineWrap);
-    text.att("effectType", this.effectType);
-    text.att("effectWordDuration", this.effectWordDuration);
-    text.att("effectWordInterval", this.effectWordInterval);
+    if (this.textEnterEffect) {
+      text.att("textEnterEffect-type", this.textEnterEffect.type);
+      text.att("textEnterEffect-wordDuration", this.textEnterEffect.wordDuration);
+      text.att("textEnterEffect-wordInterval", this.textEnterEffect.wordInterval);
+      text.att("textEnterEffect-duration", this.textEnterEffect.duration);
+      text.att("textEnterEffect-direction", this.textEnterEffect.direction);
+    }
+    if (this.textExitEffect) {
+      text.att("textExitEffect-type", this.textExitEffect.type);
+      text.att("textExitEffect-wordDuration", this.textExitEffect.wordDuration);
+      text.att("textExitEffect-wordInterval", this.textExitEffect.wordInterval);
+      text.att("textExitEffect-duration", this.textExitEffect.duration);
+      text.att("textExitEffect-direction", this.textExitEffect.direction);
+    }
     text.att("isSubtitle", this.isSubtitle);
     text.att("styleType", this.styleType);
     for (let key in this.textShadow) {
@@ -1951,9 +2006,8 @@ var Text = class extends Element_default {
       bold: this.fontWeight > 400 ? this.fontWeight : void 0,
       italic: this.fontStyle === "italic" ? "italic" : "normal",
       isSubtitle: this.isSubtitle,
-      effectType: this.effectType,
-      effectWordDuration: util_default.isFinite(this.effectWordDuration) ? util_default.millisecondsToSenconds(this.effectWordDuration) : void 0,
-      effectWordInterval: util_default.isFinite(this.effectWordInterval) ? util_default.millisecondsToSenconds(this.effectWordInterval) : void 0,
+      textEnterEffect: this.textEnterEffect,
+      textExitEffect: this.textExitEffect,
       styleType: this.styleType,
       textShadow: this.textShadow,
       textStroke: this.textStroke,
