@@ -168,7 +168,7 @@ class Compiler {
   private static eval(expression: string, data = {}, valueMap = {}, extendsScriptCtx = {}, debug: boolean) {
     let result;
     const _data = { ...data, ...valueMap, ...extension.functions, ...extendsScriptCtx };
-    const evalFun = this.prepareFunctionScript(`const {${Object.keys(_data).join(',')}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`); //将表达式和数据注入在方法内
+    const evalFun = this.prepareFunctionScript(`const {${Object.keys(_data).join(',')}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/g, ">")}`); //将表达式和数据注入在方法内
     try {
       result = evalFun.bind(_data)();
     } catch (err) {

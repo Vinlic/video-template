@@ -323,7 +323,7 @@ var Compiler = class {
   static eval(expression, data = {}, valueMap = {}, extendsScriptCtx = {}, debug) {
     let result;
     const _data = __spreadValues(__spreadValues(__spreadValues(__spreadValues({}, data), valueMap), extension_default.functions), extendsScriptCtx);
-    const evalFun = this.prepareFunctionScript(`const {${Object.keys(_data).join(",")}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/, ">")}`);
+    const evalFun = this.prepareFunctionScript(`const {${Object.keys(_data).join(",")}}=this;return ${expression.replace(/\$\#/g, "<").replace(/\#\$/g, ">")}`);
     try {
       result = evalFun.bind(_data)();
     } catch (err) {
