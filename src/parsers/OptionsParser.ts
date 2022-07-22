@@ -136,8 +136,20 @@ class OptionsParser {
                     lineHeight: parseFloat((Number(options.lineHeight) / Number(options.fontSize)).toFixed(3)),
                     wordSpacing: options.wordSpacing,
                     textAlign: options.textAlign,
-                    textEnterEffect: options.textEnterEffect,
-                    textExitEffect: options.textExitEffect,
+                    textEnterEffect: options.textEnterEffect ? {
+                        type: options.textEnterEffect.type,
+                        wordInterval: options.textEnterEffect.wordInterval ? options.textEnterEffect.wordInterval * 1000 : undefined,
+                        wordDuration: options.textEnterEffect.wordDuration ? options.textEnterEffect.wordDuration * 1000 : undefined,
+                        duration: options.textEnterEffect.duration ? options.textEnterEffect.duration * 1000 : undefined,
+                        direction: options.textEnterEffect.direction
+                    } : undefined,
+                    textExitEffect: options.textExitEffect ? {
+                        type: options.textExitEffect.type,
+                        wordInterval: options.textExitEffect.wordInterval ? options.textExitEffect.wordInterval * 1000 : undefined,
+                        wordDuration: options.textExitEffect.wordDuration ? options.textExitEffect.wordDuration * 1000 : undefined,
+                        duration: options.textExitEffect.duration ? options.textExitEffect.duration * 1000 : undefined,
+                        direction: options.textExitEffect.direction
+                    } : undefined,
                     // effectType: options.effectType,
                     // effectWordDuration: options.effectWordDuration ? options.effectWordDuration * 1000 : undefined,
                     // effectWordInterval: options.effectWordInterval ? options.effectWordInterval * 1000 : undefined,

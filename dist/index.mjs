@@ -1159,8 +1159,20 @@ var OptionsParser = class {
           lineHeight: parseFloat((Number(options.lineHeight) / Number(options.fontSize)).toFixed(3)),
           wordSpacing: options.wordSpacing,
           textAlign: options.textAlign,
-          textEnterEffect: options.textEnterEffect,
-          textExitEffect: options.textExitEffect,
+          textEnterEffect: options.textEnterEffect ? {
+            type: options.textEnterEffect.type,
+            wordInterval: options.textEnterEffect.wordInterval ? options.textEnterEffect.wordInterval * 1e3 : void 0,
+            wordDuration: options.textEnterEffect.wordDuration ? options.textEnterEffect.wordDuration * 1e3 : void 0,
+            duration: options.textEnterEffect.duration ? options.textEnterEffect.duration * 1e3 : void 0,
+            direction: options.textEnterEffect.direction
+          } : void 0,
+          textExitEffect: options.textExitEffect ? {
+            type: options.textExitEffect.type,
+            wordInterval: options.textExitEffect.wordInterval ? options.textExitEffect.wordInterval * 1e3 : void 0,
+            wordDuration: options.textExitEffect.wordDuration ? options.textExitEffect.wordDuration * 1e3 : void 0,
+            duration: options.textExitEffect.duration ? options.textExitEffect.duration * 1e3 : void 0,
+            direction: options.textExitEffect.direction
+          } : void 0,
           styleType: options.styleType === "" ? void 0 : options.styleType,
           isSubtitle: options.isSubtitle,
           textShadow: util_default.omitBy(options.textShadow, (v) => util_default.isNil(v) || v === 0 || v === ""),
@@ -2019,8 +2031,8 @@ var Text = class extends Element_default {
       bold: this.fontWeight > 400 ? this.fontWeight : void 0,
       italic: this.fontStyle === "italic" ? "italic" : "normal",
       isSubtitle: this.isSubtitle,
-      textEnterEffect: this.textEnterEffect,
-      textExitEffect: this.textExitEffect,
+      textEnterEffect: this.textEnterEffect ? this.textEnterEffect.toOptions() : void 0,
+      textExitEffect: this.textExitEffect ? this.textExitEffect.toOptions() : void 0,
       styleType: this.styleType,
       textShadow: this.textShadow,
       textStroke: this.textStroke,
@@ -3355,7 +3367,7 @@ var _Template = class {
 };
 var Template = _Template;
 _formObject2 = new WeakMap();
-__publicField(Template, "packageVersion", "1.1.78");
+__publicField(Template, "packageVersion", "1.1.834");
 __publicField(Template, "type", "template");
 __publicField(Template, "parseJSON", Parser_default.parseJSON.bind(Parser_default));
 __publicField(Template, "parseJSONPreprocessing", Parser_default.parseJSONPreprocessing.bind(Parser_default));
